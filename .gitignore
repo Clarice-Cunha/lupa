@@ -1,0 +1,72 @@
+# ===== Segredos e variáveis de ambiente =====
+# NUNCA commitar arquivos .env — contêm chaves de API
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# ===== Python (backend) =====
+# Bibliotecas instaladas (podem ser reinstaladas via requirements.txt)
+venv/
+env/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribuição / empacotamento
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testes e cobertura
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ===== Node.js / Next.js (frontend) =====
+# Pacotes baixados — reinstaláveis via package.json
+node_modules/
+
+# Builds do Next.js
+.next/
+out/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== Sistema Operacional =====
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# ===== Editores =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== Arquivos do LUPA =====
+# Uploads temporários de vídeo (não devem ser versionados)
+backend/uploads/
+backend/temp/
+
+# Cache de análises
+backend/cache/
