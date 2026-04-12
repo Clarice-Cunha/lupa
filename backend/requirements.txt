@@ -1,0 +1,22 @@
+# ============================================================
+# LUPA - Dependências do backend
+# ============================================================
+# Para instalar tudo de uma vez:
+#   venv/Scripts/pip install -r requirements.txt
+# ============================================================
+
+# --- Servidor web (API) ---
+fastapi==0.115.0          # framework web moderno e rápido
+uvicorn[standard]==0.32.0 # servidor que executa a FastAPI
+
+# --- Leitura de páginas web ---
+requests==2.32.3          # fazer requisições HTTP (baixar páginas)
+beautifulsoup4==4.12.3    # extrair texto/título/etc. do HTML
+lxml==5.3.0               # motor rápido usado pelo BeautifulSoup
+
+# --- Análise de domínios ---
+python-whois==0.9.4       # consultar idade/dono de um domínio
+
+# --- Configuração ---
+python-dotenv==1.0.1      # ler o arquivo .env com as variáveis
+pydantic==2.9.2           # validação de dados (já vem com FastAPI, mas deixamos explícito)
