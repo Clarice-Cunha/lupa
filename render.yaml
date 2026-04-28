@@ -1,0 +1,28 @@
+# ============================================================
+# Render Blueprint — configuração de deploy do backend LUPA
+# ============================================================
+# Como funciona:
+#   Quando você conecta este repositório ao Render (https://render.com),
+#   ele lê este arquivo e cria o serviço automaticamente com as
+#   definições abaixo. Evita configurar tudo clicando na interface.
+#
+# Documentação: https://render.com/docs/blueprint-spec
+# ============================================================
+
+services:
+  - type: web
+    name: lupa-backend
+    runtime: python
+    plan: free                 # plano gratuito do Render
+    rootDir: backend           # nosso backend fica nesta subpasta
+    buildCommand: pip install -r requirements.txt
+    # $PORT é injetado pelo Render — o servidor precisa escutar nele.
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      # FRONTEND_URL, GEMINI_API_KEY, YOUTUBE_API_KEY etc. são
+      # preenchidas manualmente no painel do Render (aba Environment).
+      # NÃO commite chaves reais aqui.
+      - key: ENVIRONMENT
+        value: production
