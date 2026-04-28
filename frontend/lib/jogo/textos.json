@@ -1,0 +1,458 @@
+[
+  {
+    "id": "t01",
+    "titulo": "Chá caseiro elimina diabetes em 7 dias, garante médica",
+    "conteudo": "Uma médica revelou o segredo que a indústria farmacêutica tenta esconder: um chá caseiro feito com folhas comuns elimina o diabetes em apenas 7 dias! Milhares de pessoas já se livraram da doença sem precisar de remédios. Especialistas dizem que o resultado é surpreendente. Compartilhe urgente com sua família antes que este post seja deletado!",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "falta_fontes",
+      "linguagem_sensacionalista",
+      "promessas_exageradas",
+      "apelo_emocional",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "falta_fontes": "Nenhum estudo, hospital ou órgão de saúde é citado para sustentar a afirmação.",
+      "linguagem_sensacionalista": "Palavras como 'segredo', 'surpreendente' e o ponto de exclamação criam urgência artificial.",
+      "promessas_exageradas": "'Elimina o diabetes em 7 dias' é uma garantia desproporcional — o diabetes é uma condição crônica sem cura conhecida.",
+      "apelo_emocional": "'Compartilhe urgente antes que seja deletado' pressiona a reação sem dar tempo de checar.",
+      "autoridade_vaga": "'Uma médica', 'especialistas' — nenhum nome, instituição ou artigo é identificado."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t02",
+    "titulo": "Brasil inicia vacinação contra dengue pelo SUS",
+    "conteudo": "O Ministério da Saúde começou em fevereiro de 2024 a distribuir a vacina Qdenga, da farmacêutica Takeda, pelo Sistema Único de Saúde. Em um primeiro momento, a aplicação é voltada a crianças e adolescentes de 10 a 14 anos em 521 municípios com alta incidência da doença. Segundo a Agência Nacional de Vigilância Sanitária (Anvisa), a vacina foi aprovada em março de 2023 após estudos clínicos em mais de 20 mil voluntários.",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://www.gov.br/saude"
+  },
+  {
+    "id": "t03",
+    "titulo": "BOMBÁSTICO: prefeito foge com dinheiro da merenda",
+    "conteudo": "ABSURDO! O prefeito sumiu com todo o dinheiro da merenda escolar! Fontes confiáveis confirmam que ele já está em outro país. As crianças passarão fome enquanto ele vive no luxo. COMPARTILHE para que todos fiquem sabendo! A mídia tradicional não vai mostrar isso.",
+    "nivel": "facil",
+    "categoria": "politica",
+    "indicios_corretos": [
+      "linguagem_sensacionalista",
+      "apelo_emocional",
+      "falta_fontes",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "linguagem_sensacionalista": "'BOMBÁSTICO', 'ABSURDO' e o uso de caixa alta são típicos de boato viral, não de jornalismo.",
+      "apelo_emocional": "Explora raiva e a imagem de crianças famintas para pressionar o compartilhamento imediato.",
+      "falta_fontes": "Nenhum órgão de controle, jornalista ou documento é citado.",
+      "autoridade_vaga": "'Fontes confiáveis' é a marca registrada do boato — não diz quem."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t09",
+    "titulo": "URGENTE: WhatsApp vai começar a cobrar por mensagem amanhã",
+    "conteudo": "Prepare-se! A partir de amanhã, o WhatsApp passará a cobrar R$ 0,50 por mensagem enviada. Para manter o serviço gratuito, basta compartilhar esta mensagem em 10 grupos nas próximas duas horas. Quem não compartilhar será cobrado automaticamente. ATENÇÃO: esta informação foi confirmada em um telejornal ontem à noite.",
+    "nivel": "facil",
+    "categoria": "tecnologia",
+    "indicios_corretos": [
+      "linguagem_sensacionalista",
+      "apelo_emocional",
+      "falta_fontes",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "linguagem_sensacionalista": "'URGENTE', 'ATENÇÃO' em caixa alta são gatilhos de boato de WhatsApp.",
+      "apelo_emocional": "O pedido de compartilhamento em grupos para 'escapar da cobrança' é um chamado ao pânico, não à informação.",
+      "falta_fontes": "Nenhum link, comunicado da empresa ou matéria é apresentado.",
+      "autoridade_vaga": "'Um telejornal' sem nome é a estratégia clássica para soar oficial sem sê-lo."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t11",
+    "titulo": "Vinagre de maçã 'desintoxica' o fígado em 3 dias",
+    "conteudo": "Pesquisadores descobriram que beber dois copos de vinagre de maçã por dia durante três dias é suficiente para desintoxicar o fígado completamente e eliminar anos de danos. O método foi testado e aprovado por nutricionistas renomados. Pessoas que seguiram o protocolo relataram mais energia, pele mais bonita e perda de até 5 kg na primeira semana. Evite remédios caros: a cura está na sua cozinha!",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga",
+      "promessas_exageradas",
+      "linguagem_sensacionalista"
+    ],
+    "explicacoes": {
+      "falta_fontes": "Nenhuma pesquisa, universidade ou publicação científica é identificada.",
+      "autoridade_vaga": "'Nutricionistas renomados' sem nomes ou credenciais é uma referência genérica.",
+      "promessas_exageradas": "'Desintoxicar completamente em 3 dias' e 'perder 5 kg em uma semana' são afirmações sem base fisiológica.",
+      "linguagem_sensacionalista": "'A cura está na sua cozinha' dramatiza desnecessariamente e induz a abandonar tratamentos médicos."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t12",
+    "titulo": "IBGE: Brasil tem 203 milhões de habitantes, aponta Censo 2022",
+    "conteudo": "O Censo Demográfico de 2022, realizado pelo Instituto Brasileiro de Geografia e Estatística (IBGE), apontou que o Brasil tem 203,1 milhões de habitantes. A coleta de dados durou 12 meses, com mais de 100 mil recenseadores percorrendo todo o território nacional. Segundo o presidente do IBGE, Eduardo Rios Neto, o dado servirá de base para políticas públicas nas áreas de saúde, educação e infraestrutura nos próximos anos.",
+    "nivel": "facil",
+    "categoria": "sociedade",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://censo2022.ibge.gov.br"
+  },
+  {
+    "id": "t13",
+    "titulo": "Foto mostra aeroporto de SP completamente alagado",
+    "conteudo": "Esta foto chocante está circulando nas redes sociais e mostra o principal aeroporto de São Paulo completamente inundado. Milhares de passageiros estão presos! Nenhum avião consegue decolar. A situação é caótica e a mídia não está mostrando nada. Compartilhe para alertar quem for viajar hoje!",
+    "nivel": "facil",
+    "categoria": "cotidiano",
+    "indicios_corretos": [
+      "data_descontextualizada",
+      "apelo_emocional",
+      "falta_fontes",
+      "linguagem_sensacionalista"
+    ],
+    "explicacoes": {
+      "data_descontextualizada": "'Está circulando' e 'hoje' criam urgência, mas a foto pode ser de anos atrás, de outro país ou digitalmente editada.",
+      "apelo_emocional": "A narrativa de 'presos' e 'caótico' gera alarme sem nenhuma verificação do fato.",
+      "falta_fontes": "Nenhum aeroporto, companhia aérea ou órgão de aviação civil é citado.",
+      "linguagem_sensacionalista": "'Completamente alagado', 'caótica' e o apelo para 'alertar quem for viajar hoje' intensificam a urgência artificial."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t14",
+    "titulo": "Seleção feminina conquista ouro nos Jogos Pan-Americanos de 2023",
+    "conteudo": "A seleção brasileira feminina de futebol conquistou a medalha de ouro nos Jogos Pan-Americanos de Santiago, em outubro de 2023, ao vencer a Argentina por 4 a 0 na final. O Brasil havia ganhado o ouro na mesma competição em 2019 e 2015. A artilheira do torneio foi a atacante Ary Borges, com seis gols em cinco jogos. A delegação brasileira encerrou os jogos com 66 medalhas no total.",
+    "nivel": "facil",
+    "categoria": "esportes",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://www.cob.org.br"
+  },
+  {
+    "id": "t15",
+    "titulo": "Pílula natural elimina 10 kg em 30 dias sem dieta nem exercício",
+    "conteudo": "A fórmula revolucionária que médicos não querem que você conheça! Esta pílula 100% natural, feita com ingredientes da Amazônia, elimina até 10 quilos em apenas 30 dias sem precisar fazer dieta ou praticar exercícios. Comprovado por estudos internacionais. Estoque limitado — garanta já o seu antes que acabe!",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "promessas_exageradas",
+      "falta_fontes",
+      "autoridade_vaga",
+      "apelo_emocional"
+    ],
+    "explicacoes": {
+      "promessas_exageradas": "Perder 10 kg em 30 dias sem dieta ou exercício contraria todo o conhecimento médico atual.",
+      "falta_fontes": "'Estudos internacionais' sem autor, revista ou instituição não são verificáveis.",
+      "autoridade_vaga": "'Médicos' não identificados servem apenas para criar uma oposição dramática sem nomes reais.",
+      "apelo_emocional": "'Estoque limitado' e 'garanta já' são técnicas de pressão que impedem a reflexão antes da compra."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t16",
+    "titulo": "5G vai fritar o cérebro de crianças, alertam grupos de pesquisa",
+    "conteudo": "A tecnologia 5G está sendo instalada nas escolas sem que os pais sejam avisados. Experimentos realizados por grupos de pesquisa independentes mostraram que as ondas emitidas pelo 5G superaquecem o tecido cerebral de crianças em desenvolvimento. Médicos que tentaram publicar esses dados foram silenciados pelas operadoras de telefonia. Assine a petição para proibir o 5G nas escolas!",
+    "nivel": "facil",
+    "categoria": "tecnologia",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga",
+      "apelo_emocional",
+      "promessas_exageradas"
+    ],
+    "explicacoes": {
+      "falta_fontes": "'Experimentos de grupos independentes' sem identificação não podem ser verificados.",
+      "autoridade_vaga": "'Médicos' e 'grupos de pesquisa' sem nomes são referências genéricas usadas para dar falsa credibilidade.",
+      "apelo_emocional": "A imagem de crianças em risco e a narrativa de 'silenciamento' buscam provocar indignação imediata antes da verificação.",
+      "promessas_exageradas": "A afirmação de que o 5G 'superaquece o tecido cerebral' não tem qualquer base na ciência reconhecida mundialmente."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t04",
+    "titulo": "Anatel aprova novas regras para portabilidade de celular",
+    "conteudo": "A Agência Nacional de Telecomunicações aprovou em reunião do conselho diretor novas regras que aceleram a portabilidade de número entre operadoras. Segundo o texto publicado no Diário Oficial da União, o prazo máximo cai de três dias úteis para 24 horas a partir do ano que vem. A medida foi discutida em consulta pública que recebeu 412 contribuições de cidadãos e empresas.",
+    "nivel": "medio",
+    "categoria": "tecnologia",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://www.gov.br/anatel"
+  },
+  {
+    "id": "t05",
+    "titulo": "Estudo mostra que celular causa câncer cerebral",
+    "conteudo": "Um novo estudo científico revelou que o uso de celular por mais de duas horas por dia aumenta em 300% o risco de câncer cerebral. Pesquisadores de uma universidade americana analisaram milhares de casos. No mesmo levantamento, porém, quem usa o aparelho raramente não desenvolveu a doença em taxa maior que a média. Apesar disso, os autores recomendam reduzir o tempo de tela imediatamente.",
+    "nivel": "medio",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga",
+      "contradicao_interna",
+      "linguagem_sensacionalista"
+    ],
+    "explicacoes": {
+      "falta_fontes": "Nenhum nome de pesquisador, revista científica ou título do estudo é mencionado.",
+      "autoridade_vaga": "'Uma universidade americana' é genérico demais para ser verificável.",
+      "contradicao_interna": "O próprio texto diz que quem usa pouco o celular também desenvolveu a doença na mesma taxa — o que derruba a afirmação inicial de '300% a mais'.",
+      "linguagem_sensacionalista": "'300% de risco' sem base metodológica é a construção típica de alarme."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t06",
+    "titulo": "Museu Nacional volta a receber público após reforma parcial",
+    "conteudo": "Cinco anos depois do incêndio que destruiu parte do prédio no Rio de Janeiro, o Museu Nacional começou a reabrir salas ao público em 2023. Segundo a reitoria da UFRJ, responsável pela instituição, cerca de 12 mil peças foram resgatadas dos escombros — um quinto do acervo original. A reabertura completa está prevista para 2027, com financiamento do BNDES e do governo federal.",
+    "nivel": "medio",
+    "categoria": "cultura",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://museunacional.ufrj.br"
+  },
+  {
+    "id": "t10",
+    "titulo": "INPE registra queda nos alertas de desmatamento na Amazônia",
+    "conteudo": "De acordo com dados do sistema DETER, do Instituto Nacional de Pesquisas Espaciais (INPE), a área de alerta de desmatamento na Amazônia Legal caiu 50% entre agosto de 2023 e julho de 2024 em comparação ao período anterior. Os alertas são cruzados com imagens de satélite e fiscalização em campo. O dado é considerado preliminar até a publicação do Prodes, sistema que consolida a taxa anual.",
+    "nivel": "medio",
+    "categoria": "ciencia",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://www.gov.br/inpe"
+  },
+  {
+    "id": "t17",
+    "titulo": "Brasileiros dormem em média 9 horas por noite, aponta levantamento",
+    "conteudo": "Um levantamento realizado com 2 mil brasileiros de todas as regiões do país apontou que a média nacional de sono é de 9 horas por noite — valor acima do mínimo recomendado pela Organização Mundial da Saúde. Os dados mostram variação expressiva entre faixas etárias: adultos de 25 a 60 anos dormem em média 5,5 horas, enquanto idosos e adolescentes dormem bem mais, elevando a média geral. Os pesquisadores afirmam que os achados reforçam a importância de políticas públicas voltadas à saúde do trabalhador.",
+    "nivel": "medio",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "falta_fontes": "O 'levantamento com 2 mil brasileiros' não identifica quem o realizou — nenhuma universidade, empresa de pesquisa ou órgão público é citado para que os dados possam ser verificados.",
+      "autoridade_vaga": "'Os pesquisadores' não são identificados — nenhum nome, instituição ou publicação científica é mencionado."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t18",
+    "titulo": "Banco Central mantém taxa Selic em 10,5% ao ano",
+    "conteudo": "O Comitê de Política Monetária (Copom) do Banco Central do Brasil manteve a taxa básica de juros, a Selic, em 10,5% ao ano na reunião de junho de 2024. A decisão foi unânime entre os nove membros do comitê. Segundo a ata publicada na semana seguinte, o Copom avaliou que o ritmo de queda dos juros deve ser gradual, condicionado à evolução da inflação medida pelo IPCA.",
+    "nivel": "medio",
+    "categoria": "economia",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://www.bcb.gov.br"
+  },
+  {
+    "id": "t19",
+    "titulo": "Criança de 8 anos cria remédio para dengue e surpreende cientistas",
+    "conteudo": "Uma criança de 8 anos de Fortaleza impressionou cientistas ao desenvolver um composto que, segundo testes, elimina o vírus da dengue em laboratório. A descoberta foi apresentada em uma feira de ciências e chamou a atenção de pesquisadores de várias universidades. O caso viralizou em 2018 nas redes sociais e volta a circular toda vez que há surto da dengue no país, sempre apresentado como se fosse uma notícia recente e uma solução disponível.",
+    "nivel": "medio",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "data_descontextualizada",
+      "falta_fontes",
+      "promessas_exageradas",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "data_descontextualizada": "A história é de 2018 mas recircula em surtos como novidade, gerando falsa esperança de solução imediata para a doença.",
+      "falta_fontes": "Nenhuma universidade, pesquisador ou publicação científica é identificada para confirmar os supostos 'testes'.",
+      "promessas_exageradas": "Uma descoberta de feira escolar que 'elimina o vírus da dengue' exigiria anos de validação científica — o que o texto omite completamente.",
+      "autoridade_vaga": "'Pesquisadores de várias universidades brasileiras' sem nomes nem instituições identificadas é uma referência vaga usada para sugerir validação científica que não foi comprovada. 'Segundo testes' na abertura tem o mesmo problema."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t20",
+    "titulo": "MEC amplia bolsas para estudantes de baixa renda em federais",
+    "conteudo": "O Ministério da Educação anunciou em março de 2024 a expansão do Programa Nacional de Assistência Estudantil (Pnaes), com aumento de 15% no valor das bolsas de moradia e alimentação. Segundo o ministro Camilo Santana, a medida atenderá 350 mil estudantes matriculados em universidades e institutos federais de todo o país. Os recursos, previstos na Lei Orçamentária Anual, serão repassados ao longo do segundo semestre.",
+    "nivel": "medio",
+    "categoria": "educacao",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://www.gov.br/mec"
+  },
+  {
+    "id": "t21",
+    "titulo": "Suco de beterraba reduz pressão alta em uma semana, confirma estudo",
+    "conteudo": "Um estudo publicado recentemente confirma que beber um copo de suco de beterraba por dia reduz a pressão arterial de forma significativa em apenas sete dias. Os pesquisadores acompanharam um grupo de voluntários e mediram a pressão antes e depois da intervenção. A pesquisa recomenda o consumo diário como alternativa natural para quem sofre de hipertensão. Médicos, porém, alertam que o efeito varia muito de pessoa para pessoa e não substitui o tratamento convencional.",
+    "nivel": "medio",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "autoridade_vaga",
+      "falta_fontes",
+      "promessas_exageradas",
+      "contradicao_interna"
+    ],
+    "explicacoes": {
+      "autoridade_vaga": "'Um estudo publicado recentemente' e 'os pesquisadores' sem identificação tornam a afirmação inverificável.",
+      "falta_fontes": "Nenhuma revista científica, universidade ou nome de autor é citado, impossibilitando conferir o estudo e seus métodos.",
+      "promessas_exageradas": "Apresentar como fato confirmado que o suco reduz a pressão 'de forma significativa em apenas sete dias' é otimismo excessivo para uma afirmação vinda de um estudo sem nome nem metodologia descrita.",
+      "contradicao_interna": "O título afirma universalmente que o suco reduz a pressão alta. O próprio texto depois reconhece que 'o efeito varia muito de pessoa para pessoa' — se varia muito, a afirmação universal do título é enganosa."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t22",
+    "titulo": "Nova lei obriga escolas a ensinar programação a partir do 1º ano",
+    "conteudo": "Uma nova lei federal determina que escolas públicas e privadas de todo o Brasil deverão incluir programação no currículo a partir do 1º ano do ensino fundamental, com início previsto para o próximo ano letivo. A medida foi aprovada na semana passada. Especialistas em educação afirmam que a mudança vai preparar os alunos para o mercado de trabalho digital e colocar o Brasil na vanguarda da educação tecnológica. O governo ainda não divulgou detalhes sobre a formação dos professores nem o cronograma de implantação.",
+    "nivel": "medio",
+    "categoria": "educacao",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "falta_fontes": "Nenhum número de lei, publicação no Diário Oficial ou link é citado — sem isso, é impossível confirmar que a medida realmente existe ou foi aprovada.",
+      "autoridade_vaga": "'Especialistas em educação' sem nomes, instituições ou estudos identificados é uma referência genérica que não pode ser verificada."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t07",
+    "titulo": "Cientistas anunciam tecnologia que gera água potável infinita do ar",
+    "conteudo": "Um grupo de cientistas anunciou a descoberta de um processo que gera água potável infinita a partir do ar, resolvendo a crise hídrica mundial. A tecnologia, segundo os pesquisadores, está pronta para ser implementada em larga escala em todos os países já no próximo mês. Governos de todo o mundo estariam atrasando o processo para proteger interesses de grandes empresas de saneamento.",
+    "nivel": "dificil",
+    "categoria": "ciencia",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga",
+      "promessas_exageradas",
+      "apelo_emocional"
+    ],
+    "explicacoes": {
+      "falta_fontes": "Nenhum artigo, instituto ou cientista é identificado — apesar do anúncio supostamente mudar o mundo.",
+      "autoridade_vaga": "'Um grupo de cientistas' sem nomes é um alerta: descobertas reais vêm assinadas.",
+      "promessas_exageradas": "'Água infinita' e 'implementação global no próximo mês' são escalas impossíveis para qualquer tecnologia real.",
+      "apelo_emocional": "A narrativa de 'governos escondendo a verdade' mobiliza indignação em vez de verificação."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t08",
+    "titulo": "Câmara aprova mudança em trecho da legislação trabalhista",
+    "conteudo": "A Câmara dos Deputados aprovou na última quarta-feira, por 287 votos a 143, projeto que altera trechos da CLT referentes a banco de horas. De acordo com o relator do projeto, o objetivo é dar flexibilidade a pequenas empresas. Centrais sindicais afirmaram em nota oficial que vão recorrer ao Supremo. O texto ainda precisa passar pelo Senado.",
+    "nivel": "dificil",
+    "categoria": "politica",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://www.camara.leg.br"
+  },
+  {
+    "id": "t23",
+    "titulo": "Exercício intenso aumenta risco cardíaco em adultos, diz pesquisa",
+    "conteudo": "Um estudo longitudinal acompanhou 5.400 adultos por doze anos e identificou que aqueles que praticavam exercício de alta intensidade mais de cinco vezes por semana apresentaram 18% mais eventos cardíacos do que sedentários. Os autores ressaltam, porém, que o grupo de alta intensidade era em média 11 anos mais velho que o grupo sedentário no início do estudo. Ainda assim, os pesquisadores concluem que 'a prática excessiva de esportes exige cautela'.",
+    "nivel": "dificil",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "contradicao_interna",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "contradicao_interna": "O texto revela que o grupo de exercício era 11 anos mais velho — o que já explica mais eventos cardíacos. A conclusão 'exige cautela' ignora essa diferença fundamental na metodologia do próprio estudo.",
+      "autoridade_vaga": "O estudo não é identificado por nome, revista ou instituição, impedindo a verificação da metodologia e dos dados."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t24",
+    "titulo": "Desmatamento no Cerrado cresce 29% em 2023, aponta MapBiomas",
+    "conteudo": "O MapBiomas, plataforma de monitoramento por satélite mantida por universidades, ONGs e empresas de tecnologia, registrou crescimento de 29% no desmatamento do Cerrado em 2023 comparado ao ano anterior. A região concentra 5% da biodiversidade global e abriga importantes nascentes de rios brasileiros. Os dados foram cruzados com imagens do Instituto Nacional de Pesquisas Espaciais (INPE) e serão publicados em relatório anual em julho.",
+    "nivel": "dificil",
+    "categoria": "ciencia",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://mapbiomas.org"
+  },
+  {
+    "id": "t25",
+    "titulo": "Brasil tem o maior número de médicos por habitante da América Latina",
+    "conteudo": "O Brasil registrou em 2022 uma taxa de 2,3 médicos por mil habitantes, o maior índice da América Latina, segundo levantamento de uma organização internacional de saúde. Os dados, coletados entre 2019 e 2021 em cada país, colocam o Brasil à frente de Argentina e Chile. O próprio relatório, no entanto, aponta que 78% dos médicos brasileiros estão concentrados em capitais e regiões metropolitanas, deixando o interior do país com cobertura muito abaixo da média.",
+    "nivel": "dificil",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "data_descontextualizada",
+      "autoridade_vaga",
+      "falta_fontes"
+    ],
+    "explicacoes": {
+      "data_descontextualizada": "Os dados foram coletados entre 2019 e 2021, mas o texto os apresenta como resultado de 2022 — uma imprecisão temporal relevante em um setor que passou por mudanças significativas no período.",
+      "autoridade_vaga": "'Uma organização internacional de saúde' sem nome não permite identificar quem produziu os dados nem avaliar sua credibilidade.",
+      "falta_fontes": "Nenhum nome de organização, título de relatório ou link é citado — impossível localizar e verificar os dados apresentados."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t26",
+    "titulo": "Brasil e União Europeia assinam acordo de reconhecimento de diplomas",
+    "conteudo": "O Brasil e a União Europeia assinaram em Bruxelas um memorando de entendimento para facilitar o reconhecimento mútuo de diplomas de ensino superior em áreas técnicas como engenharia e saúde. O documento foi negociado ao longo de dois anos entre o Ministério da Educação brasileiro e a Comissão Europeia e ainda precisa ser ratificado pelos parlamentos de ambas as partes. A previsão de entrada em vigor é para 2026.",
+    "nivel": "dificil",
+    "categoria": "educacao",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": null
+  },
+  {
+    "id": "t27",
+    "titulo": "Criança salva a própria vida com técnica aprendida no YouTube",
+    "conteudo": "Uma criança de 7 anos de Curitiba teria usado uma manobra aprendida em um canal de primeiros socorros do YouTube para desobstruir a própria via aérea quando começou a engasgar sozinha em casa. O caso foi relatado pela mãe em uma rede social e compartilhado 400 mil vezes. Médicos ouvidos por um portal de saúde afirmaram que a técnica descrita é clinicamente incorreta e pode ser perigosa se aplicada sem supervisão adulta.",
+    "nivel": "dificil",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "apelo_emocional",
+      "autoridade_vaga",
+      "falta_fontes"
+    ],
+    "explicacoes": {
+      "apelo_emocional": "A história de criança em risco de morte gera comoção intensa que favorece o compartilhamento antes da verificação dos fatos.",
+      "autoridade_vaga": "'Médicos ouvidos por um portal de saúde' — sem nomes, especialidade ou nome do portal — é uma referência genérica.",
+      "falta_fontes": "O caso é atribuído a relato de rede social, não a registro médico ou notícia verificável. O 'teria usado' indica que o fato não foi confirmado."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t28",
+    "titulo": "Brasileiro trabalha mais horas por ano do que o japonês, aponta USP",
+    "conteudo": "Uma pesquisa da Universidade de São Paulo concluiu que o trabalhador brasileiro formal acumula em média 2.150 horas de trabalho por ano, superando a média japonesa de 1.990 horas. O levantamento foi feito pelo Departamento de Economia com base em dados da PNAD Contínua e do Ministério do Trabalho. O estudo não inclui trabalhadores informais, que representam 40% da força de trabalho brasileira — grupo que, em geral, trabalha mais horas do que os formais.",
+    "nivel": "dificil",
+    "categoria": "economia",
+    "indicios_corretos": [
+      "contradicao_interna"
+    ],
+    "explicacoes": {
+      "contradicao_interna": "O próprio texto admite que o estudo exclui 40% da força de trabalho — exatamente o grupo que trabalha mais horas. Isso torna a conclusão 'brasileiros trabalham mais do que japoneses' estatisticamente inválida pelo recorte escolhido."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t29",
+    "titulo": "Embraer entrega primeiro eVTOL elétrico para certificação pela Anac",
+    "conteudo": "A Embraer entregou em março de 2024 à Agência Nacional de Aviação Civil (Anac) a primeira aeronave do projeto Eve para início dos testes de certificação. O modelo é um eVTOL — aeronave elétrica de decolagem e pouso vertical — com capacidade para seis passageiros, desenvolvido em parceria com a Wisk Aero. Antes desta etapa, o aparelho completou mais de 3.200 horas de voo em simulações computadorizadas. A certificação completa é esperada para 2026.",
+    "nivel": "dificil",
+    "categoria": "tecnologia",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": "https://eveairmobility.com"
+  },
+  {
+    "id": "t30",
+    "titulo": "Uso de redes sociais caiu entre jovens brasileiros, indica pesquisa",
+    "conteudo": "Uma pesquisa divulgada por instituto de mídia digital apontou queda de 12% no tempo médio que jovens de 16 a 24 anos passam nas redes sociais entre 2022 e 2023. O estudo foi feito com 1.800 participantes de São Paulo e Rio de Janeiro. Os dados nacionais do IBGE do mesmo período, no entanto, mostram crescimento de 8% no acesso a redes sociais na mesma faixa etária. Os autores não explicam a discrepância entre os dois levantamentos.",
+    "nivel": "dificil",
+    "categoria": "tecnologia",
+    "indicios_corretos": [
+      "autoridade_vaga",
+      "falta_fontes"
+    ],
+    "explicacoes": {
+      "autoridade_vaga": "'Instituto de mídia digital' sem nome identificável impede verificar a metodologia e a credibilidade de quem conduziu o estudo.",
+      "falta_fontes": "A pesquisa não é identificada por título, publicação ou link — impossível localizá-la e conferir seus métodos. O dado do IBGE é citado sem indicar de qual levantamento específico se trata."
+    },
+    "fonte_original": null
+  }
+]

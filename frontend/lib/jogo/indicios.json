@@ -1,0 +1,37 @@
+[
+  {
+    "id": "falta_fontes",
+    "nome": "Falta de fontes",
+    "descricao": "O texto não cita estudos, documentos, instituições ou veículos jornalísticos que sustentem o que afirma."
+  },
+  {
+    "id": "linguagem_sensacionalista",
+    "nome": "Linguagem sensacionalista",
+    "descricao": "Usa palavras de forte carga emocional ('chocante', 'absurdo', 'bombástico') ou CAIXA ALTA para gerar reação antes da reflexão."
+  },
+  {
+    "id": "contradicao_interna",
+    "nome": "Contradição interna",
+    "descricao": "Informações dentro do próprio texto se contradizem, ou números e datas não batem entre si."
+  },
+  {
+    "id": "promessas_exageradas",
+    "nome": "Promessas exageradas",
+    "descricao": "Resultados garantidos, 'milagrosos' ou desproporcionais — padrão comum em golpes e em desinformação sobre saúde."
+  },
+  {
+    "id": "data_descontextualizada",
+    "nome": "Data descontextualizada",
+    "descricao": "Apresenta um fato antigo como se fosse atual, ou esconde quando algo aconteceu para gerar pânico."
+  },
+  {
+    "id": "apelo_emocional",
+    "nome": "Apelo emocional exagerado",
+    "descricao": "Foca em medo, raiva ou indignação em vez de informar; costuma pedir compartilhamento urgente."
+  },
+  {
+    "id": "autoridade_vaga",
+    "nome": "Autoridade vaga",
+    "descricao": "Atribui afirmações a 'cientistas', 'especialistas' ou 'estudos' sem nome, instituição ou referência verificável."
+  }
+]
