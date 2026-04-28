@@ -70,3 +70,13 @@ backend/temp/
 
 # Cache de análises
 backend/cache/
+
+# Arquivos de vídeo locais (pesados, não pertencem ao repositório)
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Arquivos de texto com chaves (use .env em vez disso)
+write.env.txt
+*.env.txt

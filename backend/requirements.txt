@@ -17,6 +17,23 @@ lxml==5.3.0               # motor rápido usado pelo BeautifulSoup
 # --- Análise de domínios ---
 python-whois==0.9.4       # consultar idade/dono de um domínio
 
+# --- Controle de abuso ---
+slowapi==0.1.9            # limita requisições por IP (rate limiting)
+
 # --- Configuração ---
 python-dotenv==1.0.1      # ler o arquivo .env com as variáveis
 pydantic==2.9.2           # validação de dados (já vem com FastAPI, mas deixamos explícito)
+
+# --- Upload de arquivos ---
+python-multipart==0.0.26  # necessário para receber arquivos via formulário (FastAPI)
+
+# --- Análise de imagens e vídeos ---
+Pillow==10.4.0            # leitura de metadados EXIF de imagens (JPG, PNG, etc.)
+hachoir==3.3.0            # extrai metadados de arquivos de vídeo
+
+# --- Análise de YouTube ---
+youtube_transcript_api==1.2.4  # obtém transcrição/legendas de vídeos do YouTube
+
+# --- Testes ---
+pytest==8.3.3             # framework de testes — rodar com: venv/Scripts/python -m pytest
+httpx==0.28.1             # necessário para o TestClient do FastAPI funcionar nos testes
