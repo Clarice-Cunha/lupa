@@ -1,0 +1,62 @@
+[
+  {
+    "id": "exemplo-1",
+    "categoria": "escola",
+    "localidade": "Colégio Contemporâneo — Lagoa Nova, Natal/RN",
+    "descricao": "Está circulando em grupos de WhatsApp que as provas do 3º trimestre foram adiadas para depois das férias por causa de uma reforma no colégio.",
+    "contato": null,
+    "status": "verificado_falso",
+    "checagem": "A coordenação confirma: as datas das provas seguem o calendário oficial publicado no início do ano letivo. Não há reforma prevista que interfira no calendário escolar. O boato é falso.",
+    "fontes": [],
+    "criado_em": "2026-04-18T10:00:00+00:00",
+    "atualizado_em": "2026-04-19T14:30:00+00:00"
+  },
+  {
+    "id": "exemplo-2",
+    "categoria": "cidade",
+    "localidade": "Natal/RN",
+    "descricao": "Vídeo circulando nas redes mostra funcionários jogando entulho próximo ao Parque das Dunas. A legenda diz que é 'descarte ilegal autorizado pela prefeitura'.",
+    "contato": null,
+    "status": "em_apuracao",
+    "checagem": null,
+    "fontes": [],
+    "criado_em": "2026-04-22T09:00:00+00:00",
+    "atualizado_em": "2026-04-22T09:00:00+00:00"
+  },
+  {
+    "id": "exemplo-3",
+    "categoria": "condominio",
+    "localidade": "Condomínio (exemplo ilustrativo)",
+    "descricao": "No grupo do WhatsApp do condomínio estão dizendo que o síndico aprovou um aumento de 50% na taxa condominial sem realizar assembleia e sem avisar os moradores.",
+    "contato": null,
+    "status": "pendente",
+    "checagem": null,
+    "fontes": [],
+    "criado_em": "2026-04-25T16:00:00+00:00",
+    "atualizado_em": "2026-04-25T16:00:00+00:00"
+  },
+  {
+    "id": "exemplo-4",
+    "categoria": "escola",
+    "localidade": "Escolas da rede municipal de Natal/RN",
+    "descricao": "Estão dizendo que o governo municipal vai suspender a merenda escolar no 2º semestre por falta de verba.",
+    "contato": null,
+    "status": "verificado_falso",
+    "checagem": "Segundo a SEMEC (Secretaria Municipal de Educação de Natal), não há qualquer suspensão prevista da merenda escolar. O programa está garantido pelo Fundo Nacional de Desenvolvimento da Educação (FNDE) e não depende exclusivamente do orçamento municipal.",
+    "fontes": [],
+    "criado_em": "2026-04-20T11:00:00+00:00",
+    "atualizado_em": "2026-04-21T10:00:00+00:00"
+  },
+  {
+    "id": "412e729b-949f-428c-836e-6d941e3de39b",
+    "categoria": "escola",
+    "localidade": "xxxx",
+    "descricao": "xxxxxxxx",
+    "contato": null,
+    "status": "pendente",
+    "checagem": null,
+    "fontes": [],
+    "criado_em": "2026-04-26T21:53:45.755376+00:00",
+    "atualizado_em": "2026-04-26T21:53:45.755376+00:00"
+  }
+]
