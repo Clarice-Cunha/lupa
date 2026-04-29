@@ -9,7 +9,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const autenticado = request.cookies.get("lupa_acesso")?.value === "ok";
+  const senhaCorreta = process.env.ACESSO_SENHA;
+  const cookieValor = request.cookies.get("lupa_acesso")?.value;
+  const autenticado = !!senhaCorreta && cookieValor === senhaCorreta;
 
   if (!autenticado) {
     const url = request.nextUrl.clone();

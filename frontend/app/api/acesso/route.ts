@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   }
 
   const resposta = NextResponse.json({ ok: true });
-  resposta.cookies.set("lupa_acesso", "ok", {
+  resposta.cookies.set("lupa_acesso", senhaCorreta, {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
