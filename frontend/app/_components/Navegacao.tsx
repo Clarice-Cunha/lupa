@@ -22,6 +22,7 @@ const MENU: Item[] = [
     filhos: [
       { href: "/dicas-de-checagem", rotulo: "Dicas de Checagem" },
       { href: "/metodo-sift", rotulo: "Método SIFT" },
+      { href: "/neurobiologia", rotulo: "Acelerador e Freio" },
     ],
   },
   {
