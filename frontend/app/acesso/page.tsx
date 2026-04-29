@@ -1,30 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Lock, Loader2 } from "lucide-react";
 
 export default function PaginaAcesso() {
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState(false);
   const [carregando, setCarregando] = useState(false);
-  const router = useRouter();
 
-  async function verificar(e: React.FormEvent) {
+  async function verificar(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setCarregando(true);
     setErro(false);
 
-    const res = await fetch("/api/acesso", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ senha }),
-    });
+    try {
+      const res = await fetch("/api/acesso", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ senha }),
+      });
 
-    if (res.ok) {
-      router.push("/");
-      router.refresh();
-    } else {
+      if (res.ok) {
+        // Recarregamento completo garante que o cookie seja enviado ao servidor
+        window.location.href = "/";
+      } else {
+        setErro(true);
+        setCarregando(false);
+      }
+    } catch {
       setErro(true);
       setCarregando(false);
     }
