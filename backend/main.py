@@ -38,6 +38,16 @@ from text_analyzer import analisar_texto  # noqa: E402
 from boatos import Boato, BoatoAtualizacao, BoatoEntrada, Categoria, atualizar_boato, criar_boato, listar_boatos  # noqa: E402
 from parceria import Parceria, ParceiraEntrada, criar_parceria, listar_parcerias  # noqa: E402
 from feedback import Feedback, FeedbackEntrada, criar_feedback, listar_feedbacks  # noqa: E402
+from sugestoes import (  # noqa: E402
+    SugestaoPublica,
+    SugestaoInterno,
+    SugestaoEntrada,
+    SugestaoRespostaEntrada,
+    criar_sugestao,
+    listar_sugestoes_publicas,
+    listar_sugestoes_internas,
+    responder_sugestao,
+)
 
 
 # ============================================================
@@ -472,6 +482,56 @@ def endpoint_criar_parceria(request: Request, entrada: ParceiraEntrada) -> Parce
         return criar_parceria(entrada)
     except Exception as e:
         raise HTTPException(status_code=500, detail="Erro ao salvar a solicitação.") from e
+
+
+@app.get("/sugestoes", response_model=list[SugestaoPublica])
+def endpoint_listar_sugestoes() -> list[SugestaoPublica]:
+    """Lista sugestões da comunidade sem o campo email (listagem pública)."""
+    return listar_sugestoes_publicas()
+
+
+@app.get("/sugestoes/interno", response_model=list[SugestaoInterno])
+def endpoint_listar_sugestoes_internas(
+    x_moderacao_chave: str = Header(default=""),
+) -> list[SugestaoInterno]:
+    """Lista sugestões com email — uso exclusivo do painel de moderação."""
+    if x_moderacao_chave != _MODERACAO_CHAVE:
+        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    return listar_sugestoes_internas()
+
+
+@app.post("/sugestoes", response_model=SugestaoPublica, status_code=201)
+@limitador.limit("5/hour")
+def endpoint_criar_sugestao(request: Request, entrada: SugestaoEntrada) -> SugestaoPublica:
+    """Registra uma nova sugestão ou relato da comunidade.
+
+    Limite: 5 por IP por hora para evitar spam.
+    """
+    try:
+        return criar_sugestao(entrada)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao salvar a sugestão.") from e
+
+
+@app.patch("/sugestoes/{id}", response_model=SugestaoInterno)
+def endpoint_responder_sugestao(
+    id: str,
+    dados: SugestaoRespostaEntrada,
+    x_moderacao_chave: str = Header(default=""),
+) -> SugestaoInterno:
+    """Publica ou atualiza a resposta da equipe a uma sugestão.
+
+    Requer o cabeçalho 'X-Moderacao-Chave'. A resposta fica visível
+    publicamente na página de colaboração.
+    """
+    if x_moderacao_chave != _MODERACAO_CHAVE:
+        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    try:
+        return responder_sugestao(id, dados.resposta)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao salvar a resposta.") from e
 
 
 def _converter_resposta(resultado: ResultadoAnalise) -> RespostaAnalise:

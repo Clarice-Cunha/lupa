@@ -40,6 +40,7 @@ const MENU: Item[] = [
     icone: Users,
     filhos: [
       { href: "/comunidade", rotulo: "Comunidade" },
+      { href: "/colaboracao", rotulo: "Colaboração" },
       { href: "/pesquisa", rotulo: "Pesquisa" },
       { href: "/futuro", rotulo: "Futuro" },
     ],

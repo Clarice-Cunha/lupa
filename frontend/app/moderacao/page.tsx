@@ -7,6 +7,9 @@ import {
   type StatusBoato,
   listarBoatos,
   atualizarBoato,
+  type SugestaoInterno,
+  listarSugestoesInternas,
+  responderSugestao,
 } from "@/lib/api";
 
 const ROTULO_CATEGORIA: Record<string, string> = {
@@ -97,7 +100,6 @@ function CartaoModeracao({
     try {
       await navigator.clipboard.writeText(texto);
     } catch {
-      // Fallback para navegadores mais antigos
       const el = document.createElement("textarea");
       el.value = texto;
       document.body.appendChild(el);
@@ -198,7 +200,6 @@ function CartaoModeracao({
         {erro && <span className="text-sm text-red-600">{erro}</span>}
       </div>
 
-      {/* Encaminhar para autoridade */}
       <div className="pt-3 border-t border-slate-100 dark:border-slate-700 space-y-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
           Encaminhar para autoridade
@@ -242,13 +243,124 @@ function CartaoModeracao({
   );
 }
 
+function CartaoSugestao({
+  sugestao,
+  chave,
+  onAtualizado,
+}: {
+  sugestao: SugestaoInterno;
+  chave: string;
+  onAtualizado: (s: SugestaoInterno) => void;
+}) {
+  const [resposta, setResposta] = useState(sugestao.resposta ?? "");
+  const [salvando, setSalvando] = useState(false);
+  const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+
+  const jaTemResposta = Boolean(sugestao.resposta);
+  const alterado =
+    resposta.trim().length > 0 &&
+    resposta.trim() !== (sugestao.resposta ?? "").trim();
+
+  async function salvar() {
+    if (!resposta.trim()) return;
+    setSalvando(true);
+    setSucesso(false);
+    setErro(null);
+    try {
+      const atualizado = await responderSugestao(sugestao.id, resposta.trim(), chave);
+      onAtualizado(atualizado);
+      setSucesso(true);
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4 dark:border-slate-700 dark:bg-slate-800">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <span className="font-semibold text-slate-900 dark:text-slate-100">
+            {sugestao.nome}
+          </span>
+          {sugestao.email && (
+            <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
+              <Mail className="h-3 w-3" />
+              {sugestao.email}
+            </p>
+          )}
+        </div>
+        <span className="flex-shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+          {new Date(sugestao.criado_em).toLocaleDateString("pt-BR")}
+        </span>
+      </div>
+
+      <p className="text-sm text-slate-700 leading-relaxed dark:text-slate-300">
+        {sugestao.mensagem}
+      </p>
+
+      {jaTemResposta && (
+        <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-3 py-2.5 text-xs text-indigo-700 dark:border-indigo-800/40 dark:bg-indigo-900/20 dark:text-indigo-300">
+          <strong>Resposta atual:</strong> {sugestao.resposta}
+        </div>
+      )}
+
+      <div>
+        <label className="block text-xs font-semibold text-slate-500 mb-1">
+          {jaTemResposta
+            ? "Editar resposta pública"
+            : "Resposta pública (ficará visível no site)"}
+        </label>
+        <textarea
+          value={resposta}
+          onChange={(e) => setResposta(e.target.value)}
+          rows={3}
+          maxLength={2000}
+          placeholder="Escreva a resposta que ficará visível para todos…"
+          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
+        />
+        <p className="mt-1 text-right text-xs text-slate-400">
+          {resposta.length}/2000
+        </p>
+      </div>
+
+      <div className="flex items-center gap-3 flex-wrap">
+        <button
+          onClick={salvar}
+          disabled={salvando || !alterado}
+          className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          {salvando
+            ? "Salvando…"
+            : jaTemResposta
+              ? "Atualizar resposta"
+              : "Publicar resposta"}
+        </button>
+        {sucesso && (
+          <span className="text-sm text-emerald-600">Salvo com sucesso!</span>
+        )}
+        {erro && <span className="text-sm text-red-600">{erro}</span>}
+      </div>
+    </div>
+  );
+}
+
 export default function PaginaModeracao() {
   const [chaveDigitada, setChaveDigitada] = useState("");
   const [chave, setChave] = useState("");
   const [autenticado, setAutenticado] = useState(false);
+
+  const [aba, setAba] = useState<"boatos" | "sugestoes">("boatos");
+
   const [boatos, setBoatos] = useState<Boato[]>([]);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+
+  const [sugestoes, setSugestoes] = useState<SugestaoInterno[]>([]);
+  const [carregandoSugestoes, setCarregandoSugestoes] = useState(false);
+  const [erroSugestoes, setErroSugestoes] = useState<string | null>(null);
 
   const carregar = useCallback(async () => {
     setCarregando(true);
@@ -262,9 +374,29 @@ export default function PaginaModeracao() {
     }
   }, []);
 
+  const carregarSugestoes = useCallback(
+    async (chaveAtual: string) => {
+      setCarregandoSugestoes(true);
+      setErroSugestoes(null);
+      try {
+        setSugestoes(await listarSugestoesInternas(chaveAtual));
+      } catch {
+        setErroSugestoes(
+          "Não foi possível carregar as sugestões. Verifique se o servidor está no ar.",
+        );
+      } finally {
+        setCarregandoSugestoes(false);
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
-    if (autenticado) carregar();
-  }, [autenticado, carregar]);
+    if (autenticado) {
+      carregar();
+      carregarSugestoes(chave);
+    }
+  }, [autenticado, carregar, carregarSugestoes, chave]);
 
   function entrar(e: { preventDefault(): void }) {
     e.preventDefault();
@@ -274,9 +406,15 @@ export default function PaginaModeracao() {
     }
   }
 
-  function onAtualizado(atualizado: Boato) {
+  function onAtualizadoBoato(atualizado: Boato) {
     setBoatos((prev) =>
       prev.map((b) => (b.id === atualizado.id ? atualizado : b)),
+    );
+  }
+
+  function onAtualizadoSugestao(atualizado: SugestaoInterno) {
+    setSugestoes((prev) =>
+      prev.map((s) => (s.id === atualizado.id ? atualizado : s)),
     );
   }
 
@@ -320,44 +458,104 @@ export default function PaginaModeracao() {
   return (
     <main className="flex-1 px-4 py-10 sm:py-14">
       <div className="mx-auto max-w-3xl">
-        <header className="mb-8">
+        <header className="mb-6">
           <div className="flex items-center gap-3 mb-1">
             <ShieldCheck className="h-6 w-6 text-indigo-600" />
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
               Painel de Moderação
             </h1>
           </div>
-          <p className="text-sm text-slate-500">
-            {boatos.length} boato{boatos.length !== 1 ? "s" : ""} registrado
-            {boatos.length !== 1 ? "s" : ""}. Atualize o status e publique as
-            checagens.
-          </p>
         </header>
 
-        {carregando && (
-          <p className="text-sm text-slate-500">Carregando boatos…</p>
-        )}
-        {erro && (
-          <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
-            {erro}
-          </div>
-        )}
-        {!carregando && !erro && boatos.length === 0 && (
-          <p className="text-sm text-slate-500">
-            Nenhum boato registrado ainda.
-          </p>
+        {/* Abas */}
+        <div className="mb-6 flex gap-2">
+          <button
+            onClick={() => setAba("boatos")}
+            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              aba === "boatos"
+                ? "bg-indigo-600 text-white"
+                : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            }`}
+          >
+            Boatos ({boatos.length})
+          </button>
+          <button
+            onClick={() => setAba("sugestoes")}
+            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              aba === "sugestoes"
+                ? "bg-indigo-600 text-white"
+                : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            }`}
+          >
+            Sugestões ({sugestoes.length})
+          </button>
+        </div>
+
+        {/* Aba: Boatos */}
+        {aba === "boatos" && (
+          <>
+            <p className="mb-4 text-sm text-slate-500">
+              {boatos.length} boato{boatos.length !== 1 ? "s" : ""} registrado
+              {boatos.length !== 1 ? "s" : ""}. Atualize o status e publique as checagens.
+            </p>
+            {carregando && (
+              <p className="text-sm text-slate-500">Carregando boatos…</p>
+            )}
+            {erro && (
+              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                {erro}
+              </div>
+            )}
+            {!carregando && !erro && boatos.length === 0 && (
+              <p className="text-sm text-slate-500">
+                Nenhum boato registrado ainda.
+              </p>
+            )}
+            <div className="space-y-4">
+              {boatos.map((boato) => (
+                <CartaoModeracao
+                  key={boato.id}
+                  boato={boato}
+                  chave={chave}
+                  onAtualizado={onAtualizadoBoato}
+                />
+              ))}
+            </div>
+          </>
         )}
 
-        <div className="space-y-4">
-          {boatos.map((boato) => (
-            <CartaoModeracao
-              key={boato.id}
-              boato={boato}
-              chave={chave}
-              onAtualizado={onAtualizado}
-            />
-          ))}
-        </div>
+        {/* Aba: Sugestões */}
+        {aba === "sugestoes" && (
+          <>
+            <p className="mb-4 text-sm text-slate-500">
+              {sugestoes.length} sugestão{sugestoes.length !== 1 ? "ões" : ""} recebida
+              {sugestoes.length !== 1 ? "s" : ""}. Escreva e publique respostas.
+            </p>
+            {carregandoSugestoes && (
+              <p className="text-sm text-slate-500">Carregando sugestões…</p>
+            )}
+            {erroSugestoes && (
+              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                {erroSugestoes}
+              </div>
+            )}
+            {!carregandoSugestoes && !erroSugestoes && sugestoes.length === 0 && (
+              <p className="text-sm text-slate-500">
+                Nenhuma sugestão recebida ainda.
+              </p>
+            )}
+            <div className="space-y-4">
+              {sugestoes.map((s) => (
+                <CartaoSugestao
+                  key={s.id}
+                  sugestao={s}
+                  chave={chave}
+                  onAtualizado={onAtualizadoSugestao}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </main>
   );

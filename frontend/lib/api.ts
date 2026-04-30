@@ -244,6 +244,88 @@ export async function enviarParceria(dados: {
   return (await resposta.json()) as Parceria;
 }
 
+// ============================================================
+// Portal de colaboração — sugestões e melhorias
+// ============================================================
+
+export type Sugestao = {
+  id: string;
+  nome: string;
+  mensagem: string;
+  resposta: string | null;
+  criado_em: string;
+  respondido_em: string | null;
+};
+
+export type SugestaoInterno = Sugestao & { email: string | null };
+
+export async function listarSugestoes(): Promise<Sugestao[]> {
+  const resposta = await fetch(`${API_URL}/sugestoes`);
+  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+  return (await resposta.json()) as Sugestao[];
+}
+
+export async function listarSugestoesInternas(chave: string): Promise<SugestaoInterno[]> {
+  const resposta = await fetch(`${API_URL}/sugestoes/interno`, {
+    headers: { "X-Moderacao-Chave": chave },
+  });
+  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+  return (await resposta.json()) as SugestaoInterno[];
+}
+
+export async function enviarSugestao(dados: {
+  nome: string;
+  email?: string;
+  mensagem: string;
+}): Promise<Sugestao> {
+  const resposta = await fetch(`${API_URL}/sugestoes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  });
+  if (!resposta.ok) {
+    let mensagem = `Erro ${resposta.status}`;
+    try {
+      const d = await resposta.json();
+      if (Array.isArray(d?.detail)) {
+        mensagem = d.detail.map((e: { msg?: string }) => e.msg ?? "").join("; ");
+      } else if (d?.detail) {
+        mensagem = String(d.detail);
+      }
+    } catch {
+      // ignora
+    }
+    throw new Error(mensagem);
+  }
+  return (await resposta.json()) as Sugestao;
+}
+
+export async function responderSugestao(
+  id: string,
+  resposta: string,
+  chave: string,
+): Promise<SugestaoInterno> {
+  const resp = await fetch(`${API_URL}/sugestoes/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Moderacao-Chave": chave,
+    },
+    body: JSON.stringify({ resposta }),
+  });
+  if (!resp.ok) {
+    let mensagem = `Erro ${resp.status}`;
+    try {
+      const d = await resp.json();
+      if (d?.detail) mensagem = String(d.detail);
+    } catch {
+      // ignora
+    }
+    throw new Error(mensagem);
+  }
+  return (await resp.json()) as SugestaoInterno;
+}
+
 export async function analisarImagem(arquivo: File): Promise<RespostaImagem> {
   const formData = new FormData();
   formData.append("arquivo", arquivo);
