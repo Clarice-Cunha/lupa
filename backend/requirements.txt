@@ -34,6 +34,9 @@ hachoir==3.3.0            # extrai metadados de arquivos de vídeo
 # --- Análise de YouTube ---
 youtube_transcript_api==1.2.4  # obtém transcrição/legendas de vídeos do YouTube
 
+# --- Banco de dados ---
+supabase==2.15.1          # cliente para o Supabase (PostgreSQL na nuvem, substitui arquivos JSON)
+
 # --- Testes ---
 pytest==8.3.3             # framework de testes — rodar com: venv/Scripts/python -m pytest
 httpx==0.28.1             # necessário para o TestClient do FastAPI funcionar nos testes

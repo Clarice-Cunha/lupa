@@ -1,37 +1,22 @@
 """
 Módulo de feedback dos usuários — armazena registros de dificuldade
 reportados pelo widget flutuante presente em todas as páginas do LUPA.
+
+Os dados são persistidos no Supabase (PostgreSQL), substituindo o
+arquivo feedbacks.json que era apagado a cada reinício do Render.
 """
 
-import json
 import uuid
-from datetime import datetime
-from pathlib import Path
+from datetime import datetime, timezone
 
 from pydantic import BaseModel, Field
 
-ARQUIVO_FEEDBACKS = Path(__file__).parent / "feedbacks.json"
-
-
-def _carregar() -> list[dict]:
-    if not ARQUIVO_FEEDBACKS.exists():
-        return []
-    try:
-        return json.loads(ARQUIVO_FEEDBACKS.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return []
-
-
-def _salvar(dados: list[dict]) -> None:
-    ARQUIVO_FEEDBACKS.write_text(
-        json.dumps(dados, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+from db import get_db
 
 
 class FeedbackEntrada(BaseModel):
-    pagina: str = Field(..., max_length=500, description="Caminho da página onde o feedback foi dado")
-    texto: str = Field("", max_length=300, description="Texto livre do usuário (opcional)")
+    pagina: str = Field(..., max_length=500)
+    texto: str = Field("", max_length=300)
 
 
 class Feedback(BaseModel):
@@ -41,19 +26,27 @@ class Feedback(BaseModel):
     criado_em: str
 
 
+def _agora() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
 def criar_feedback(entrada: FeedbackEntrada) -> Feedback:
-    dados = _carregar()
-    novo = Feedback(
-        id=str(uuid.uuid4()),
-        pagina=entrada.pagina,
-        texto=entrada.texto,
-        criado_em=datetime.utcnow().isoformat(),
-    )
-    dados.append(novo.model_dump())
-    _salvar(dados)
-    return novo
+    dados = {
+        "id": str(uuid.uuid4()),
+        "pagina": entrada.pagina,
+        "texto": entrada.texto,
+        "criado_em": _agora(),
+    }
+    resultado = get_db().table("feedbacks").insert(dados).execute()
+    return Feedback(**resultado.data[0])
 
 
 def listar_feedbacks() -> list[Feedback]:
-    dados = _carregar()
-    return [Feedback(**d) for d in reversed(dados)]
+    resultado = (
+        get_db()
+        .table("feedbacks")
+        .select("*")
+        .order("criado_em", desc=True)
+        .execute()
+    )
+    return [Feedback(**d) for d in resultado.data]

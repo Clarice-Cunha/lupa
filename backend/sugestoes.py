@@ -1,20 +1,18 @@
 """
 Portal de colaboração — sugestões e melhorias enviadas pelos usuários.
 
-Armazenado em sugestoes.json. O campo email é salvo internamente
-mas nunca retornado na listagem pública (proteção de privacidade).
+Os dados são persistidos no Supabase (PostgreSQL), substituindo o
+arquivo sugestoes.json que era apagado a cada reinício do Render.
+O campo email é salvo internamente mas nunca retornado publicamente.
 """
 
-import json
 import uuid
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Optional
 
 from pydantic import BaseModel, Field
 
-
-_ARQUIVO = Path(__file__).parent / "sugestoes.json"
+from db import get_db
 
 
 class SugestaoPublica(BaseModel):
@@ -54,50 +52,34 @@ def _agora() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _carregar() -> list[dict]:
-    if not _ARQUIVO.exists():
-        return []
-    try:
-        return json.loads(_ARQUIVO.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return []
-
-
-def _salvar(dados: list[dict]) -> None:
-    _ARQUIVO.write_text(
-        json.dumps(dados, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-
-
 def listar_sugestoes_publicas() -> list[SugestaoPublica]:
     """Retorna sugestões sem o email, da mais recente para a mais antiga."""
-    dados = _carregar()
-    dados.sort(key=lambda s: s.get("criado_em", ""), reverse=True)
-    return [
-        SugestaoPublica(
-            id=s["id"],
-            nome=s["nome"],
-            mensagem=s["mensagem"],
-            resposta=s.get("resposta"),
-            criado_em=s["criado_em"],
-            respondido_em=s.get("respondido_em"),
-        )
-        for s in dados
-    ]
+    resultado = (
+        get_db()
+        .table("sugestoes")
+        .select("id,nome,mensagem,resposta,criado_em,respondido_em")
+        .order("criado_em", desc=True)
+        .execute()
+    )
+    return [SugestaoPublica(**r) for r in resultado.data]
 
 
 def listar_sugestoes_internas() -> list[SugestaoInterno]:
     """Retorna sugestões completas (com email) para o painel de moderação."""
-    dados = _carregar()
-    dados.sort(key=lambda s: s.get("criado_em", ""), reverse=True)
-    return [SugestaoInterno(**s) for s in dados]
+    resultado = (
+        get_db()
+        .table("sugestoes")
+        .select("*")
+        .order("criado_em", desc=True)
+        .execute()
+    )
+    return [SugestaoInterno(**r) for r in resultado.data]
 
 
 def criar_sugestao(entrada: SugestaoEntrada) -> SugestaoPublica:
     """Persiste uma nova sugestão e retorna a versão pública."""
     agora = _agora()
-    registro = {
+    dados = {
         "id": str(uuid.uuid4()),
         "nome": entrada.nome.strip(),
         "email": entrada.email.strip() if entrada.email else None,
@@ -106,26 +88,22 @@ def criar_sugestao(entrada: SugestaoEntrada) -> SugestaoPublica:
         "criado_em": agora,
         "respondido_em": None,
     }
-    dados = _carregar()
-    dados.append(registro)
-    _salvar(dados)
+    resultado = get_db().table("sugestoes").insert(dados).execute()
+    r = resultado.data[0]
     return SugestaoPublica(
-        id=registro["id"],
-        nome=registro["nome"],
-        mensagem=registro["mensagem"],
+        id=r["id"],
+        nome=r["nome"],
+        mensagem=r["mensagem"],
         resposta=None,
-        criado_em=agora,
+        criado_em=r["criado_em"],
         respondido_em=None,
     )
 
 
 def responder_sugestao(id: str, resposta: str) -> SugestaoInterno:
     """Adiciona ou atualiza a resposta pública de uma sugestão."""
-    dados = _carregar()
-    for i, sugestao in enumerate(dados):
-        if sugestao.get("id") == id:
-            dados[i]["resposta"] = resposta.strip()
-            dados[i]["respondido_em"] = _agora()
-            _salvar(dados)
-            return SugestaoInterno(**dados[i])
-    raise ValueError(f"Sugestão '{id}' não encontrada.")
+    dados = {"resposta": resposta.strip(), "respondido_em": _agora()}
+    resultado = get_db().table("sugestoes").update(dados).eq("id", id).execute()
+    if not resultado.data:
+        raise ValueError(f"Sugestão '{id}' não encontrada.")
+    return SugestaoInterno(**resultado.data[0])
