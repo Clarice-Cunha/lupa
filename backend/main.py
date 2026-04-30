@@ -82,15 +82,19 @@ def _cache_set(url: str, resultado: ResultadoAnalise) -> None:
     _CACHE_URL[url] = (time.time(), resultado)
 
 # Permitir que o frontend (outro endereço/porta) chame esta API.
-# Em produção, FRONTEND_URL deve ser a URL real do frontend (ex: https://lupa.vercel.app).
+# FRONTEND_URL pode ser definida como variável de ambiente no Render/Vercel.
 # Em desenvolvimento, aceitamos localhost para facilitar testes.
 _frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
 _origens_permitidas = [
     _frontend_url,
+    # Desenvolvimento local
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3001",
+    # Produção — URL do Vercel (inclui aliases de deploy)
+    "https://lupa-clarice-cunha-s-projects.vercel.app",
+    "https://lupa-clarice-cunha-s-projects-git-main-clarice-cunha-s-projects.vercel.app",
 ]
 app.add_middleware(
     CORSMiddleware,
