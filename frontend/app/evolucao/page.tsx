@@ -26,6 +26,7 @@ import {
   CheckCircle2,
   Clock,
   Swords,
+  Brain,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -277,6 +278,19 @@ const MARCOS: Marco[] = [
     icone: Swords,
     corFundo: "bg-amber-100",
     corIcone: "text-amber-600",
+  },
+  {
+    id: 18,
+    data: "Abril de 2026",
+    titulo: "Conteúdo pedagógico ampliado",
+    descricao:
+      "O LUPA ganhou quatro novos blocos de conteúdo educativo, pensados especialmente para o público jovem. Na página de Dicas de Checagem foram adicionadas duas novas seções: um guia para identificar bots e perfis falsos nas redes sociais — usando a analogia do NPC (personagem de videogame que segue roteiros rígidos) para explicar como contas automatizadas se comportam — e um guia visual de sinais de deepfake em vídeos e imagens, ensinando o leitor a reconhecer piscadas irregulares, bocas fora de sincronia e dedos distorcidos. Na página de Jogos, foi adicionada uma seção com três jogos externos criados por universidades, baseados na teoria da inoculação psicológica: a ideia de que aprender as táticas da desinformação por dentro protege contra elas na vida real — como uma vacina. Na página de Fontes Confiáveis, foi incluída uma explicação detalhada sobre como as agências brasileiras de checagem trabalham: o sistema de etiquetas do Aos Fatos, o chatbot Fátima, o Radar de monitoramento em tempo real, a metodologia colaborativa do Projeto Comprova e o histórico da Agência Lupa.",
+    notaTecnica:
+      "Dicas de Checagem: dois novos componentes CartaoSinal com dados SINAIS_BOT (6 itens) e SINAIS_DEEPFAKE (6 itens). Jogos: array JOGOS_EXTERNOS com links para Bad News Game (Cambridge), Go Viral! (Cambridge) e Factitious (AU Game Studio). Fontes Confiáveis: array METODOLOGIAS com descrição estruturada de Aos Fatos, Agência Lupa e Projeto Comprova.",
+    status: "concluido",
+    icone: Brain,
+    corFundo: "bg-violet-100",
+    corIcone: "text-violet-600",
   },
 ];
 

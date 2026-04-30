@@ -6,7 +6,7 @@
  * Fact-Checking Network (IFCN) e por universidades/veículos tradicionais.
  */
 
-import { Library, ExternalLink, ShieldCheck, Newspaper, GraduationCap } from "lucide-react";
+import { Library, ExternalLink, ShieldCheck, Newspaper, GraduationCap, Microscope } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type Fonte = {
@@ -149,6 +149,49 @@ const CATEGORIAS: Categoria[] = [
   },
 ];
 
+type Metodologia = {
+  agencia: string;
+  url: string;
+  descricao: string;
+  destaques: string[];
+};
+
+const METODOLOGIAS: Metodologia[] = [
+  {
+    agencia: "Aos Fatos",
+    url: "https://www.aosfatos.org/metodologia/",
+    descricao:
+      "Usa um sistema de seis etiquetas para classificar declarações: Verdadeiro, Exagerado, Contraditório, Impreciso, Distorcido e Falso. Cada checagem aponta a afirmação exata, identifica quem a fez, cita fontes primárias e explica o raciocínio passo a passo.",
+    destaques: [
+      "Radar Aos Fatos: painel em tempo real com monitoramento de boatos circulando nas redes.",
+      "Chatbot Fátima: disponível no WhatsApp para consulta rápida de checagens anteriores.",
+      "Membro certificado da IFCN desde 2016.",
+    ],
+  },
+  {
+    agencia: "Agência Lupa",
+    url: "https://lupa.uol.com.br/sobre-a-lupa/metodologia/",
+    descricao:
+      "Pioneira no Brasil (2015), classifica afirmações em seis notas: Verdadeiro, Verdadeiro, mas…, Ainda é cedo para dizer, Exagerado, Falso e Insustentável. Foca em declarações de figuras públicas e no contexto político.",
+    destaques: [
+      "Parceria com o UOL e distribuição em veículos regionais.",
+      "Programa de educação midiática com kits para professores.",
+      "Participante do Facebook Third-Party Fact-Checking Program.",
+    ],
+  },
+  {
+    agencia: "Projeto Comprova",
+    url: "https://projetocomprova.com.br/metodologia/",
+    descricao:
+      "Coalizão de mais de 40 veículos jornalísticos brasileiros que trabalham colaborativamente para checar conteúdos virais, especialmente em períodos eleitorais. Uma checagem só é publicada após consenso entre os parceiros.",
+    destaques: [
+      "Verificação colaborativa: vários redatores de veículos concorrentes revisam a mesma checagem.",
+      "Foco em conteúdo viral do WhatsApp, Instagram e TikTok.",
+      "Parceria com o Google News Initiative.",
+    ],
+  },
+];
+
 export default function FontesConfiaveis() {
   return (
     <main className="flex-1 px-4 py-10 sm:py-16">
@@ -185,6 +228,67 @@ export default function FontesConfiaveis() {
             <Categoria key={cat.titulo} categoria={cat} ordem={i} />
           ))}
         </div>
+
+        {/* Como as agências trabalham */}
+        <section
+          className="animate-fade-in-up mt-12"
+          style={{ animationDelay: "0.5s" }}
+        >
+          <div className="mb-6 flex items-start gap-3">
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-100">
+              <Microscope className="h-5 w-5 text-indigo-600" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">
+                Como as agências de checagem trabalham
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Entender o método por trás da checagem ajuda a usar esses recursos com mais
+                consciência — e a reconhecer quando uma "checagem" não segue padrões sérios.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {METODOLOGIAS.map((item, i) => (
+              <div
+                key={item.agencia}
+                className="animate-fade-in-up rounded-3xl border border-slate-200/60 bg-white/80 p-5 shadow-md shadow-indigo-100/20 backdrop-blur-sm"
+                style={{ animationDelay: `${0.55 + i * 0.05}s` }}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-slate-900">{item.agencia}</h3>
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-indigo-600 underline hover:text-indigo-800"
+                      >
+                        Visitar
+                        <ExternalLink className="ml-0.5 inline h-3 w-3" />
+                      </a>
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                      {item.descricao}
+                    </p>
+                    {item.destaques.length > 0 && (
+                      <ul className="mt-3 space-y-1">
+                        {item.destaques.map((d) => (
+                          <li key={d} className="flex items-start gap-2 text-sm text-slate-700">
+                            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-indigo-400" />
+                            {d}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );
