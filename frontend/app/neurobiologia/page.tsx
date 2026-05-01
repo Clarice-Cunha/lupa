@@ -1,4 +1,4 @@
-import { Zap, Shield, AlertTriangle, Lightbulb } from "lucide-react";
+import { Zap, Shield, AlertTriangle, Lightbulb, FlaskConical } from "lucide-react";
 
 const ARMADILHAS = [
   {
@@ -203,6 +203,43 @@ export default function PaginaNeurobiologia() {
         </div>
       </div>
 
+      {/* Inoculação Psicológica / Prebunking */}
+      <div className="mb-8">
+        <div className="mb-4 flex items-center gap-2">
+          <FlaskConical className="h-5 w-5 text-teal-500" />
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+            A vacina mental: inoculação psicológica
+          </h2>
+        </div>
+        <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5 dark:border-teal-800 dark:bg-teal-900/20 space-y-3">
+          <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300 text-justify">
+            O pesquisador <strong>Sander van der Linden</strong> (Universidade
+            de Cambridge) desenvolveu a{" "}
+            <strong>Teoria da Inoculação Psicológica</strong> — também chamada
+            de <em>prebunking</em>. A ideia é inspirada nas vacinas: assim como
+            o sistema imunológico aprende a combater um vírus ao ser exposto a
+            uma versão enfraquecida dele, o cérebro aprende a reconhecer a
+            desinformação ao ser exposto — em ambiente seguro — às táticas que
+            ela usa.
+          </p>
+          <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300 text-justify">
+            Em vez de esperar a desinformação chegar e tentar corrigi-la depois
+            (o que raramente funciona, pois o acelerador já reagiu), o
+            prebunking <strong>treina o freio com antecedência</strong>. Quando
+            o truque já é familiar, o reconhecimento acontece mais rápido — e o
+            compartilhamento impulsivo, mais devagar.
+          </p>
+          <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300 text-justify">
+            Os jogos do LUPA — <strong>Detetive LUPA</strong> e{" "}
+            <strong>Agente LUPA</strong> — são construídos sobre esse princípio.
+            Cada caso que você resolve é um treino de baixo risco: o cérebro
+            pratica identificar os padrões da desinformação sem as pressões
+            sociais do mundo real. Com a prática, o reconhecimento se torna
+            mais automático.
+          </p>
+        </div>
+      </div>
+
       {/* Rodapé científico */}
       <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-700 dark:bg-slate-800/40">
         <h3 className="font-semibold text-slate-800 dark:text-slate-200">
@@ -220,9 +257,17 @@ export default function PaginaNeurobiologia() {
           que afetam diretamente como adolescentes avaliam e compartilham
           informações nas redes sociais.
         </p>
+        <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+          A Teoria da Inoculação Psicológica foi formalizada por Sander van der
+          Linden (Cambridge) e colaboradores, com evidências de que expor
+          pessoas a versões enfraquecidas de táticas de manipulação reduz
+          significativamente a susceptibilidade a conteúdos enganosos — mesmo
+          semanas após o treinamento.
+        </p>
         <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
-          Referências: Blakemore, S.J. (2012). <em>Imaging brain development</em>, NeuroImage. Casey, B.J. et al. (2008).{" "}
-          <em>The adolescent brain</em>, Developmental Review.
+          Referências: Blakemore, S.J. (2012). <em>Imaging brain development</em>, NeuroImage.
+          Casey, B.J. et al. (2008). <em>The adolescent brain</em>, Developmental Review.
+          van der Linden, S. et al. (2020). <em>Inoculating Against Misinformation</em>, Scientific American.
         </p>
       </div>
     </main>

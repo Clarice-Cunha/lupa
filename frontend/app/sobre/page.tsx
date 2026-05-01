@@ -1,4 +1,4 @@
-import { Search, Shield, Lightbulb, Scale, Heart, AlertTriangle } from "lucide-react";
+import { Search, Shield, Lightbulb, Scale, Heart, AlertTriangle, Cpu } from "lucide-react";
 
 export const metadata = {
   title: "Sobre o LUPA",
@@ -62,6 +62,55 @@ const SECOES: Secao[] = [
           para que o usuário entenda o raciocínio e possa discordar ou
           aprofundar a verificação por conta própria.
         </p>
+      </div>
+    ),
+  },
+  {
+    icone: <Cpu className="h-5 w-5" />,
+    cor: "text-violet-600",
+    corFundo: "bg-violet-100",
+    titulo: "Como o algoritmo funciona?",
+    conteudo: (
+      <div className="space-y-4 text-slate-700">
+        <p className="leading-relaxed text-justify">
+          O LUPA combina dois tipos de análise:{" "}
+          <strong>verificações automáticas</strong> (rápidas e objetivas) e{" "}
+          <strong>análise por inteligência artificial</strong> (mais profunda,
+          mas também mais interpretativa). Nenhuma é infalível — por isso as
+          duas trabalham juntas.
+        </p>
+        <ul className="space-y-3">
+          {[
+            {
+              titulo: "Inteligência Artificial — Gemini (Google)",
+              texto:
+                "O texto da página, a transcrição do vídeo ou o conteúdo extraído do site é enviado ao Gemini, modelo de linguagem do Google. Ele identifica padrões de sensacionalismo, inconsistências lógicas, apelos emocionais excessivos e sinais de manipulação. É a camada com maior peso na pontuação final.",
+            },
+            {
+              titulo: "Verificações automáticas",
+              texto:
+                "Checagens objetivas que não dependem de IA: o site usa conexão segura (HTTPS)? O domínio foi criado há menos de 6 meses? O texto usa caixa alta excessiva ou muitos pontos de exclamação? Cada item contribui com um peso fixo na nota.",
+            },
+            {
+              titulo: "Metadados",
+              texto:
+                "Em imagens, extraímos dados invisíveis embutidos no arquivo: câmera usada, software de edição, data e até localização GPS. Em vídeos do YouTube, analisamos o histórico do canal, a data de publicação e o padrão de crescimento das visualizações.",
+            },
+            {
+              titulo: "O que o LUPA não faz",
+              texto:
+                "O LUPA não consulta um banco de dados de notícias falsas já catalogadas — ele identifica sinais de risco no próprio conteúdo. Isso significa que pode errar. Por isso a nota sempre vem com justificativas: para você julgar se concorda com o raciocínio.",
+            },
+          ].map((item) => (
+            <li key={item.titulo} className="flex gap-3 text-sm text-slate-700">
+              <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-violet-400" />
+              <span className="text-justify">
+                <strong className="text-slate-900">{item.titulo}:</strong>{" "}
+                {item.texto}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     ),
   },
