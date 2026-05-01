@@ -27,6 +27,8 @@ import {
   Clock,
   Swords,
   Brain,
+  MessageSquare,
+  Database,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -221,7 +223,7 @@ const MARCOS: Marco[] = [
     descricao:
       "O LUPA ganhou uma seção dedicada à comunidade: qualquer pessoa pode reportar um boato que está circulando no seu bairro, escola ou condomínio. O relato vai para a equipe LUPA, que o direciona à autoridade responsável — diretor da escola, ouvidoria da prefeitura ou síndico. Se a resposta for de interesse coletivo, ela é publicada no próprio site para que toda a comunidade possa consultar. Assim o LUPA deixa de ser apenas uma ferramenta de análise e passa a ser também um registro público de desinformação hiperlocal.",
     notaTecnica:
-      "Backend: arquivo boatos.json como banco de dados MVP; endpoints GET /boatos (listagem com filtro por categoria) e POST /boatos (envio com rate limit de 10/hora por IP). Frontend: página /comunidade com formulário de envio, abas de filtro e cartões de resultado com badges de status coloridos.",
+      "Backend: endpoints GET /boatos (listagem com filtro por categoria) e POST /boatos (envio com rate limit de 10/hora por IP). Frontend: página /comunidade com formulário de envio, abas de filtro e cartões de resultado com badges de status coloridos. Dados persistidos em banco de dados PostgreSQL via Supabase.",
     status: "concluido",
     icone: Users,
     corFundo: "bg-cyan-100",
@@ -291,6 +293,32 @@ const MARCOS: Marco[] = [
     icone: Brain,
     corFundo: "bg-violet-100",
     corIcone: "text-violet-600",
+  },
+  {
+    id: 19,
+    data: "Abril de 2026",
+    titulo: "Portal de Colaboração com a Comunidade",
+    descricao:
+      "O LUPA ganhou um canal direto de comunicação com o público: o Portal de Colaboração. Diferente do Portal Comunitário de Boatos — voltado para reportar rumores sobre fatos concretos —, este espaço é aberto a sugestões de melhoria, relatos de dificuldade e propostas de novas funcionalidades. Qualquer pessoa pode enviar uma mensagem (com e-mail opcional). As sugestões ficam visíveis a todos — sem expor o e-mail — e a equipe LUPA pode responder publicamente a cada uma. A aba de moderação está integrada à própria página, acessível apenas com a chave de acesso da equipe.",
+    notaTecnica:
+      "Backend: módulo sugestoes.py com endpoints GET /sugestoes (listagem pública — exclui o campo e-mail), POST /sugestoes (envio com rate limit de 5/hora por IP) e PATCH /sugestoes/{id}/responder (resposta da equipe, protegido pelo cabeçalho X-Moderacao-Chave). Frontend: página /colaboracao com formulário de envio, lista de sugestões ordenada por data e aba de moderação integrada.",
+    status: "concluido",
+    icone: MessageSquare,
+    corFundo: "bg-lime-100",
+    corIcone: "text-lime-600",
+  },
+  {
+    id: 20,
+    data: "Abril de 2026",
+    titulo: "Persistência permanente de dados com Supabase",
+    descricao:
+      "Um problema silencioso foi descoberto: os dados enviados pelos usuários — boatos, sugestões, feedbacks e parcerias — desapareciam toda vez que o servidor reiniciava. Isso acontecia porque o serviço de hospedagem gratuito usa um armazenamento temporário: arquivos gravados no servidor são apagados automaticamente a cada reinício, que pode ocorrer a cada poucas horas. A solução foi migrar todo o armazenamento para o Supabase, um banco de dados gratuito na nuvem que guarda os dados de forma permanente — independente de quantas vezes o servidor reiniciar. A partir dessa mudança, nenhuma colaboração da comunidade se perde mais.",
+    notaTecnica:
+      "Migração de quatro módulos (boatos.py, sugestoes.py, feedback.py, parceria.py) de arquivos JSON locais para PostgreSQL via Supabase. Criado módulo db.py com cliente HTTP próprio contra a API REST do Supabase (PostgREST), substituindo a biblioteca supabase-py — incompatível com o novo formato de chaves sb_secret_ lançado em 2025. Interface de chamadas encadeadas (_Cliente → _Tabela → _Query → _Resultado) mantém a sintaxe dos módulos existentes inalterada.",
+    status: "concluido",
+    icone: Database,
+    corFundo: "bg-sky-100",
+    corIcone: "text-sky-600",
   },
 ];
 
