@@ -326,9 +326,10 @@ export async function responderSugestao(
   return (await resp.json()) as SugestaoInterno;
 }
 
-export async function analisarImagem(arquivo: File): Promise<RespostaImagem> {
+export async function analisarImagem(arquivo: File, contexto = ""): Promise<RespostaImagem> {
   const formData = new FormData();
   formData.append("arquivo", arquivo);
+  formData.append("contexto", contexto);
 
   const resposta = await fetch(`${API_URL}/analisar-imagem`, {
     method: "POST",

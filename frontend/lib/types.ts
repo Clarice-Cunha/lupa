@@ -51,6 +51,7 @@ export type RespostaImagem = {
   longitude: number | null;
   alertas: AlertaImagem[];
   links_busca_reversa: LinkBuscaReversa[];
+  analise_visual: string | null;
 };
 
 export type RespostaAnalise = {

@@ -164,7 +164,7 @@ class LinkBuscaReversaResposta(BaseModel):
 
 
 class RespostaImagem(BaseModel):
-    """Resultado da análise de metadados EXIF de uma imagem."""
+    """Resultado da análise de imagem (EXIF + análise visual por IA)."""
     nome_arquivo: str
     formato: str
     largura: int
@@ -179,6 +179,7 @@ class RespostaImagem(BaseModel):
     longitude: float | None
     alertas: list[AlertaImagemResposta]
     links_busca_reversa: list[LinkBuscaReversaResposta]
+    analise_visual: str | None = None
 
 
 class RespostaAnalise(BaseModel):
@@ -329,9 +330,12 @@ def endpoint_analisar_texto(request: Request, pedido: PedidoTexto) -> RespostaAn
 async def endpoint_analisar_imagem(
     request: Request,
     arquivo: UploadFile = File(..., description="Imagem a ser analisada"),
+    contexto: str = Form("", description="Suspeita ou contexto opcional do usuário"),
 ) -> RespostaImagem:
-    """Recebe uma imagem e devolve seus metadados EXIF com alertas pedagógicos.
+    """Recebe uma imagem, extrai metadados EXIF e realiza análise visual via Gemini.
 
+    O campo `contexto` é opcional: se preenchido, o Gemini confronta a suspeita
+    do usuário com o que observa na imagem.
     O arquivo é apagado após a análise — nada fica armazenado. Limite: 20/hora por IP.
     """
     nome_original = arquivo.filename or "imagem"
@@ -348,19 +352,19 @@ async def endpoint_analisar_imagem(
     caminho = temporario.name
     try:
         total_bytes = 0
-        limite_bytes = 20 * 1024 * 1024  # 20 MB
+        limite_bytes = 10 * 1024 * 1024  # 10 MB
         while bloco := await arquivo.read(1024 * 1024):
             total_bytes += len(bloco)
             if total_bytes > limite_bytes:
                 raise HTTPException(
                     status_code=413,
-                    detail="Imagem maior que o limite de 20 MB.",
+                    detail="Imagem maior que o limite de 10 MB.",
                 )
             temporario.write(bloco)
         temporario.close()
 
         try:
-            resultado = analisar_imagem(caminho, nome_original)
+            resultado = analisar_imagem(caminho, nome_original, contexto)
         except Exception as e:
             raise HTTPException(
                 status_code=500,
@@ -388,6 +392,7 @@ async def endpoint_analisar_imagem(
                 LinkBuscaReversaResposta(nome=lk.nome, url=lk.url, descricao=lk.descricao)
                 for lk in resultado.links_busca_reversa
             ],
+            analise_visual=resultado.analise_visual,
         )
     finally:
         try:
