@@ -81,7 +81,7 @@ class _Query:
 
         if not resp.ok:
             raise RuntimeError(
-                f"Supabase REST error {resp.status_code}: {resp.text}"
+                f"Supabase REST error {resp.status_code}: {resp.text} | URL usada: {resp.url}"
             )
 
         corpo = resp.json() if resp.content else []
