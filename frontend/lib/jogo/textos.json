@@ -454,5 +454,87 @@
       "falta_fontes": "A pesquisa não é identificada por título, publicação ou link — impossível localizá-la e conferir seus métodos. O dado do IBGE é citado sem indicar de qual levantamento específico se trata."
     },
     "fonte_original": null
+  },
+  {
+    "id": "t31",
+    "titulo": "URGENTE: SAMU de Natal suspende atendimentos por falta de macas",
+    "conteudo": "⚠️ ATENÇÃO NATALENSES! O SAMU de Natal SUSPENDEU todos os atendimentos de emergência a partir desta madrugada. Fontes da área da saúde informam que dezenas de macas foram retidas no Hospital Walfredo Gurgel e a frota está completamente imobilizada. Pacientes em estado grave estão sem socorro! A Prefeitura tenta esconder a situação. Compartilhe urgente para que as famílias saibam que não podem contar com o SAMU hoje!",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "linguagem_sensacionalista",
+      "falta_fontes",
+      "apelo_emocional",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "linguagem_sensacionalista": "Palavras em caixa alta ('URGENTE', 'ATENÇÃO', 'SUSPENDEU') e exclamações repetidas criam pânico artificial em vez de informar.",
+      "falta_fontes": "Nenhum órgão oficial — SAMU, Secretaria Municipal de Saúde ou Prefeitura de Natal — é citado com data ou declaração verificável.",
+      "apelo_emocional": "A imagem de 'pacientes em estado grave sem socorro' pressiona o compartilhamento imediato por medo, antes de qualquer verificação.",
+      "autoridade_vaga": "'Fontes da área da saúde' sem nome, cargo ou instituição é a fórmula clássica para parecer bem informado sem sê-lo."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t32",
+    "titulo": "Planilha mostra dívida de R$ 4,7 bilhões escondida pela Prefeitura de Natal",
+    "conteudo": "Uma planilha obtida por servidores municipais revela que a Prefeitura de Natal acumulou uma dívida de R$ 4,7 bilhões que não aparece nas prestações de contas oficiais. Os dados mostram contratos superfaturados em obras paradas e salários atrasados de mais de 8 mil servidores. Especialistas em finanças públicas confirmaram a autenticidade do documento. A oposição já entrou com pedido de impeachment. Compartilhe antes que a planilha seja deletada dos grupos.",
+    "nivel": "medio",
+    "categoria": "politica",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga",
+      "apelo_emocional",
+      "linguagem_sensacionalista"
+    ],
+    "explicacoes": {
+      "falta_fontes": "A 'planilha obtida por servidores' nunca é exibida nem vinculada a nenhum processo oficial, portal de transparência ou documento verificável.",
+      "autoridade_vaga": "'Servidores municipais' e 'especialistas em finanças públicas' sem nome, cargo ou instituição não permitem confirmar quem fez a análise.",
+      "apelo_emocional": "'Compartilhe antes que a planilha seja deletada' é uma técnica clássica de urgência artificial para forçar reação antes da verificação.",
+      "linguagem_sensacionalista": "'Escondida', 'superfaturados' e 'pedido de impeachment' constroem um cenário grave sem nenhuma base documental apresentada."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t33",
+    "titulo": "Governo do RN vai fechar 47 escolas estaduais em Natal a partir de segunda",
+    "conteudo": "CONFIRMADO: o Governo do Rio Grande do Norte anunciou nesta semana o fechamento imediato de 47 escolas estaduais na Grande Natal por 'reorganização'. Pais de alunos estão desesperados, pois não foram avisados e os filhos ficarão sem aulas a partir de segunda-feira. Uma mãe relatou: 'Fui até a escola e estava fechada, ninguém sabia de nada.' Professores dizem que foram pegos de surpresa. Compartilhe para que os pais fiquem em alerta!",
+    "nivel": "facil",
+    "categoria": "educacao",
+    "indicios_corretos": [
+      "linguagem_sensacionalista",
+      "falta_fontes",
+      "apelo_emocional",
+      "contradicao_interna",
+      "autoridade_vaga"
+    ],
+    "explicacoes": {
+      "linguagem_sensacionalista": "'CONFIRMADO' em caixa alta e o apelo para 'pais em alerta' criam urgência emocional sem nenhuma fonte oficial.",
+      "falta_fontes": "Nenhum comunicado da SEEC-RN (Secretaria de Educação do RN), portal do Governo do Estado ou número oficial de escola é citado.",
+      "apelo_emocional": "'Pais desesperados' e o pedido de compartilhamento para 'alertar' exploram o medo de responsáveis para acelerar a viralização.",
+      "contradicao_interna": "O texto diz que as escolas fechariam 'a partir de segunda-feira', mas a mãe já foi e encontrou a escola fechada antes disso — o relato contradiz a cronologia do próprio boato.",
+      "autoridade_vaga": "'Uma mãe' e 'Professores' sem nomes, escola ou qualquer dado identificável são citados como testemunhas sem que haja como verificar os relatos."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "t34",
+    "titulo": "Surto misterioso em UPAs infantis de Natal deixa crianças internadas",
+    "conteudo": "Médicos e enfermeiros de plantão em três UPAs infantis de Natal relataram nesta semana um surto de doença ainda não identificada. A Secretaria Municipal de Saúde estaria ocultando a informação para evitar pânico. Segundo um profissional de saúde que pediu anonimato, os sintomas lembram dengue hemorrágica, mas os exames dão negativo. 'Nunca vi nada assim em 15 anos de carreira', teria dito. Pais de crianças com febre devem evitar as UPAs até segunda ordem.",
+    "nivel": "medio",
+    "categoria": "saude",
+    "indicios_corretos": [
+      "falta_fontes",
+      "autoridade_vaga",
+      "apelo_emocional",
+      "linguagem_sensacionalista"
+    ],
+    "explicacoes": {
+      "falta_fontes": "Nenhum boletim epidemiológico, nota da Secretaria Municipal de Saúde ou documento oficial é apresentado para sustentar a existência do surto.",
+      "autoridade_vaga": "'Um profissional de saúde que pediu anonimato' e 'Médicos e enfermeiros' sem nomes, unidades ou CRM impedem qualquer verificação.",
+      "apelo_emocional": "Recomendar que 'pais de crianças com febre evitem as UPAs' sem base oficial pode causar danos reais — e explora o medo de pais para viralizar.",
+      "linguagem_sensacionalista": "'Doença ainda não identificada', 'Secretaria ocultando informação' e 'Nunca vi nada assim' constroem narrativa alarmante sem nenhuma evidência verificável."
+    },
+    "fonte_original": null
   }
 ]

@@ -122,4 +122,51 @@ export const PERGUNTAS_MUNDO1: PerguntaAventura[] = [
       },
     ],
   },
+  {
+    id: "bot_rn1",
+    tipoInimigo: "bot",
+    nomeInimigo: "Bot Coordenado",
+    situacao:
+      "Uma investigação do Ministério Público do RN desmantelou uma central de fake news em Natal: dezenas de perfis diferentes publicavam o mesmo texto atacando políticos locais — todos ao mesmo tempo e com fotos de perfil distintas.",
+    enunciado: "Como você identifica que uma notícia pode vir de uma operação coordenada de bots?",
+    opcoes: [
+      {
+        texto:
+          "Vejo se vários perfis diferentes publicam o mesmo texto quase simultaneamente — ação coordenada é sinal clássico de bot",
+        correta: true,
+        feedback:
+          "Correto! Quando perfis distintos postam o mesmo conteúdo ao mesmo tempo, isso indica automação coordenada — não popularidade real. O MP/RN descobriu exatamente esse tipo de central operando em Natal e Parnamirim em 2024.",
+      },
+      {
+        texto:
+          "Se muitos perfis diferentes falam a mesma coisa, a informação provavelmente é verdadeira",
+        correta: false,
+        feedback:
+          "Cuidado! Volume e repetição são justamente o objetivo de uma operação de bots. Quanto mais perfis repetem o mesmo texto simultaneamente, mais suspeita fica a origem — não o contrário.",
+      },
+    ],
+  },
+  {
+    id: "corrente_rn1",
+    tipoInimigo: "corrente",
+    nomeInimigo: "Corrente de Emergência",
+    situacao:
+      "Chega um áudio no grupo de família no WhatsApp: 'Gente, tô avisando: o SAMU de Natal não está funcionando por causa das macas retidas no Walfredo Gurgel. Não liguem pro SAMU em emergências, procurem o pronto-socorro mais próximo!'",
+    enunciado: "O que você faz com esse áudio?",
+    opcoes: [
+      {
+        texto:
+          "Ligo direto para o SAMU (192) para confirmar antes de repassar — informações falsas sobre emergências podem custar vidas",
+        correta: true,
+        feedback:
+          "Perfeito! Boatos sobre serviços de emergência são especialmente perigosos — podem fazer alguém deixar de acionar o socorro. Sempre verifique na fonte oficial. Esse boato circulou em Natal em 2025 e foi desmentido pela própria Secretaria de Saúde.",
+      },
+      {
+        texto: "Encaminho para os grupos da família para protegê-los",
+        correta: false,
+        feedback:
+          "Ao encaminhar sem verificar, você pode fazer alguém evitar o SAMU em uma emergência real. Essa é exatamente a intenção de boatos sobre serviços públicos: paralisar a confiança nas instituições.",
+      },
+    ],
+  },
 ];
