@@ -275,7 +275,25 @@ def analisar_texto(texto: str, origem: str = "") -> ResultadoAnalise:
     fontes_web = buscar_na_web(texto[:200])
     contexto_web = resumir_para_prompt(fontes_web)
 
-    resultado_ia = _chamar_gemini(texto, contexto_web)
+    # Fact-check: cruza o texto com o banco global de checagens da IFCN.
+    # Se GOOGLE_FACT_CHECK_API_KEY não estiver configurada, retorna lista vazia.
+    from fact_check import (
+        avaliar_impacto as fc_avaliar_impacto,
+        buscar_checagens as fc_buscar,
+        resumir_para_prompt as fc_resumir,
+    )
+    checagens_fc = fc_buscar(texto[:200])
+    contexto_fc = fc_resumir(checagens_fc)
+
+    # Combina contexto web + fact-checks para enviar ao Gemini.
+    # O Gemini recebe as checagens da IFCN como evidência adicional.
+    contexto_completo = (
+        (contexto_fc + "\n\n" + contexto_web).strip()
+        if contexto_fc
+        else contexto_web
+    )
+
+    resultado_ia = _chamar_gemini(texto, contexto_completo)
 
     from tips import sugerir_fontes
 
@@ -284,6 +302,18 @@ def analisar_texto(texto: str, origem: str = "") -> ResultadoAnalise:
         {"titulo": r["titulo"], "url": r["url"], "descricao": r["descricao"]}
         for r in fontes_web
     ]
+
+    # Prepara a justificativa de fact-check (só exibe se a chave estiver configurada)
+    justificativa_fc = None
+    impacto_fc = 0
+    if os.getenv("GOOGLE_FACT_CHECK_API_KEY", "").strip():
+        impacto_fc, texto_fc = fc_avaliar_impacto(checagens_fc)
+        justificativa_fc = Justificativa(
+            criterio="Checagem em banco de dados IFCN",
+            resultado=texto_fc,
+            impacto=impacto_fc,
+            camada="fonte",
+        )
 
     if resultado_ia:
         pontuacao = max(0, min(100, int(resultado_ia.get("pontuacao", 50))))
@@ -296,6 +326,9 @@ def analisar_texto(texto: str, origem: str = "") -> ResultadoAnalise:
             )
             for j in resultado_ia.get("justificativas", [])
         ]
+        if justificativa_fc:
+            justificativas.append(justificativa_fc)
+            pontuacao = max(0, min(100, pontuacao + impacto_fc))
         return ResultadoAnalise(
             url=rotulo,
             pontuacao=pontuacao,
@@ -311,6 +344,9 @@ def analisar_texto(texto: str, origem: str = "") -> ResultadoAnalise:
 
     # Fallback heurístico quando o Gemini não está disponível
     justificativas, pontuacao = _analisar_heuristicamente(texto)
+    if justificativa_fc:
+        justificativas.append(justificativa_fc)
+        pontuacao = max(0, min(100, pontuacao + impacto_fc))
     return ResultadoAnalise(
         url=rotulo,
         pontuacao=pontuacao,

@@ -8,6 +8,7 @@ com as justificativas de cada critério.
 
 from __future__ import annotations
 
+import os
 import re
 import socket
 from dataclasses import dataclass, field
@@ -319,6 +320,22 @@ def analisar_url(url: str) -> ResultadoAnalise:
         camada="conteudo",
     ))
     pontuacao += impacto
+
+    # --- Checagem 10: Fact-checks de agências certificadas (IFCN) ---
+    # Só executa se a chave GOOGLE_FACT_CHECK_API_KEY estiver configurada.
+    # Cruza o título (ou domínio) com o banco global de checagens da IFCN.
+    if os.getenv("GOOGLE_FACT_CHECK_API_KEY", "").strip():
+        from fact_check import avaliar_impacto, buscar_checagens
+        consulta_fc = titulo or urlparse(url).netloc
+        checagens = buscar_checagens(consulta_fc)
+        impacto_fc, texto_fc = avaliar_impacto(checagens)
+        justificativas.append(Justificativa(
+            criterio="Checagem em banco de dados IFCN",
+            resultado=texto_fc,
+            impacto=impacto_fc,
+            camada="fonte",
+        ))
+        pontuacao += impacto_fc
 
     # --- Resumo do conteúdo (via IA, se a chave estiver configurada) ---
     from summary import gerar_resumo
