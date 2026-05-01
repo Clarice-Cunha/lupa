@@ -510,7 +510,7 @@ def endpoint_criar_sugestao(request: Request, entrada: SugestaoEntrada) -> Suges
     try:
         return criar_sugestao(entrada)
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Erro ao salvar a sugestão.") from e
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}") from e
 
 
 @app.patch("/sugestoes/{id}", response_model=SugestaoInterno)
