@@ -280,9 +280,11 @@ def analisar_texto(texto: str, origem: str = "") -> ResultadoAnalise:
     from fact_check import (
         avaliar_impacto as fc_avaliar_impacto,
         buscar_checagens as fc_buscar,
+        filtrar_relevantes as fc_filtrar,
         resumir_para_prompt as fc_resumir,
     )
     checagens_fc = fc_buscar(texto[:200])
+    checagens_fc = fc_filtrar(checagens_fc, texto[:200])
     contexto_fc = fc_resumir(checagens_fc)
 
     # Combina contexto web + fact-checks para enviar ao Gemini.

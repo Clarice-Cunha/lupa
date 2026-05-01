@@ -14,6 +14,8 @@ neutros — o restante do sistema continua funcionando normalmente.
 from __future__ import annotations
 
 import os
+import re
+import unicodedata
 import requests
 from dataclasses import dataclass
 
@@ -134,6 +136,29 @@ def avaliar_impacto(checagens: list[ResultadoChecagem]) -> tuple[int, str]:
         f"com a classificação \"{c.avaliacao}\". "
         f"Consulte a checagem: {c.url_checagem}"
     )
+
+
+def filtrar_relevantes(
+    checagens: list[ResultadoChecagem],
+    texto_referencia: str,
+    min_palavras_comuns: int = 2,
+) -> list[ResultadoChecagem]:
+    """Remove checagens sem sobreposição real com o conteúdo analisado.
+
+    Evita falsos positivos onde o banco da IFCN retorna uma checagem que
+    compartilha apenas palavras genéricas (ex: "Lula", "Brasil") com o texto.
+    Só considera palavras com 5+ caracteres para ignorar artigos e preposições.
+    """
+    def _palavras(texto: str) -> set[str]:
+        sem_acento = unicodedata.normalize("NFD", texto)
+        sem_acento = "".join(c for c in sem_acento if unicodedata.category(c) != "Mn")
+        return {p for p in re.findall(r"\b\w{5,}\b", sem_acento.lower())}
+
+    palavras_ref = _palavras(texto_referencia)
+    return [
+        c for c in checagens
+        if len(palavras_ref & _palavras(c.afirmacao)) >= min_palavras_comuns
+    ]
 
 
 def resumir_para_prompt(checagens: list[ResultadoChecagem]) -> str:

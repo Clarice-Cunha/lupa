@@ -329,9 +329,10 @@ def analisar_url(url: str) -> ResultadoAnalise:
     if os.getenv("GOOGLE_FACT_CHECK_API_KEY", "").strip():
         caminho_url = urlparse(url).path.rstrip("/")
         if caminho_url:  # só verifica artigos/páginas internas, não homepages
-            from fact_check import avaliar_impacto, buscar_checagens
+            from fact_check import avaliar_impacto, buscar_checagens, filtrar_relevantes
             consulta_fc = titulo or texto_corpo[:200]
             checagens = buscar_checagens(consulta_fc)
+            checagens = filtrar_relevantes(checagens, consulta_fc)
             impacto_fc, texto_fc = avaliar_impacto(checagens)
             justificativas.append(Justificativa(
                 criterio="Checagem em banco de dados IFCN",
