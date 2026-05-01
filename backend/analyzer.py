@@ -322,20 +322,24 @@ def analisar_url(url: str) -> ResultadoAnalise:
     pontuacao += impacto
 
     # --- Checagem 10: Fact-checks de agências certificadas (IFCN) ---
-    # Só executa se a chave GOOGLE_FACT_CHECK_API_KEY estiver configurada.
-    # Cruza o título (ou domínio) com o banco global de checagens da IFCN.
+    # Só executa para URLs com caminho específico (artigos, páginas internas).
+    # Páginas iniciais de portais (ex: globo.com) são ignoradas: buscar pelo
+    # nome do portal retorna checagens SOBRE ele, não DO conteúdo publicado —
+    # o que gera falsos positivos quando o portal foi alvo de desinformação.
     if os.getenv("GOOGLE_FACT_CHECK_API_KEY", "").strip():
-        from fact_check import avaliar_impacto, buscar_checagens
-        consulta_fc = titulo or urlparse(url).netloc
-        checagens = buscar_checagens(consulta_fc)
-        impacto_fc, texto_fc = avaliar_impacto(checagens)
-        justificativas.append(Justificativa(
-            criterio="Checagem em banco de dados IFCN",
-            resultado=texto_fc,
-            impacto=impacto_fc,
-            camada="fonte",
-        ))
-        pontuacao += impacto_fc
+        caminho_url = urlparse(url).path.rstrip("/")
+        if caminho_url:  # só verifica artigos/páginas internas, não homepages
+            from fact_check import avaliar_impacto, buscar_checagens
+            consulta_fc = titulo or texto_corpo[:200]
+            checagens = buscar_checagens(consulta_fc)
+            impacto_fc, texto_fc = avaliar_impacto(checagens)
+            justificativas.append(Justificativa(
+                criterio="Checagem em banco de dados IFCN",
+                resultado=texto_fc,
+                impacto=impacto_fc,
+                camada="fonte",
+            ))
+            pontuacao += impacto_fc
 
     # --- Resumo do conteúdo (via IA, se a chave estiver configurada) ---
     from summary import gerar_resumo
