@@ -391,16 +391,53 @@ def _verificar_idade_dominio(url: str) -> tuple[int | None, int]:
 def _baixar_pagina(url: str) -> tuple[str | None, str | None, int, str]:
     """Baixa o HTML da URL.
 
+    Tenta primeiro via Firecrawl (melhor para sites em React/Vue e com
+    bloqueio anti-bot). Se a chave não estiver configurada ou o Firecrawl
+    falhar, usa requests como alternativa.
+
     Retorna (html, erro_msg, penalidade, tipo_erro).
     - Sucesso:           (html, None, 0, "")
     - Domínio inexiste:  (None, msg, -40, "dns")
     - Timeout:           (None, msg, -15, "timeout")
     - Erro HTTP:         (None, msg, -15, "http")
     - Outros:            (None, msg, -25, "conexao")
-
-    Separar o tipo_erro do texto da mensagem permite que analisar_url
-    tome decisões diferentes para cada situação.
     """
+    chave_fc = os.getenv("FIRECRAWL_API_KEY", "").strip()
+    if chave_fc:
+        html_fc = _tentar_firecrawl(url, chave_fc)
+        if html_fc:
+            return html_fc, None, 0, ""
+
+    return _baixar_com_requests(url)
+
+
+def _tentar_firecrawl(url: str, chave: str) -> str | None:
+    """Tenta buscar o HTML da URL via Firecrawl.
+
+    Retorna o HTML como string, ou None se falhar por qualquer motivo.
+    Quando retorna None, _baixar_pagina usa requests como fallback.
+    """
+    try:
+        resposta = requests.post(
+            "https://api.firecrawl.dev/v1/scrape",
+            headers={
+                "Authorization": f"Bearer {chave}",
+                "Content-Type": "application/json",
+            },
+            json={"url": url, "formats": ["html"]},
+            timeout=TIMEOUT_REQUISICAO,
+        )
+        resposta.raise_for_status()
+        dados = resposta.json()
+        if not dados.get("success"):
+            return None
+        return dados.get("data", {}).get("html") or None
+    except Exception:
+        return None
+
+
+def _baixar_com_requests(url: str) -> tuple[str | None, str | None, int, str]:
+    """Baixa o HTML via requests (método direto, sem Firecrawl)."""
     try:
         cabecalhos = {
             "User-Agent": "Mozilla/5.0 (LUPA-bot/0.1; educacional)"
