@@ -20,6 +20,9 @@ Critérios:
 
 from __future__ import annotations
 
+import os
+
+import requests as _requests
 from datetime import datetime, timezone
 
 # Reaproveitamos os helpers já testados do analisador de sites.
@@ -45,6 +48,11 @@ from youtube import (
 )
 from summary import gerar_resumo
 
+_URL_GEMINI = (
+    "https://generativelanguage.googleapis.com/v1beta/models"
+    "/gemini-2.5-flash:generateContent"
+)
+
 
 # ============================================================
 # Pesos específicos do YouTube
@@ -60,6 +68,68 @@ INSCRITOS_BAIXOS = 1_000     # -5 abaixo disso
 
 # Quantidade de vídeos publicados (consistência de canal)
 VIDEOS_SUFICIENTES = 50      # +5 se o canal tem 50+ vídeos
+
+
+# ============================================================
+# Análise semântica do conteúdo falado via Gemini
+# ============================================================
+
+def _analisar_transcript_gemini(transcript: str, titulo: str) -> str | None:
+    """Envia a transcrição ao Gemini para análise de desinformação.
+
+    Retorna None se GEMINI_API_KEY não estiver configurada ou a chamada falhar.
+    Sem a chave, o sistema continua funcionando normalmente — a análise
+    semântica é um enriquecimento opcional, não um requisito.
+    """
+    chave = os.getenv("GEMINI_API_KEY", "").strip()
+    if not chave or chave in ("sua_chave_aqui", "COLE_SUA_CHAVE_AQUI"):
+        return None
+
+    texto = transcript[:10_000]
+
+    prompt = (
+        f'Você é especialista em verificação de conteúdo e combate à desinformação. '
+        f'Analise a transcrição abaixo de um vídeo do YouTube intitulado "{titulo}".\n\n'
+        "Sua análise deve cobrir:\n"
+        "1. O que o vídeo diz (resumo em 1 a 2 frases)\n"
+        "2. Sinais de desinformação: afirmações sem fonte, dados distorcidos ou inverificáveis\n"
+        "3. Técnicas de manipulação emocional: alarmismo, apelos ao medo, polarização\n"
+        "4. Linguagem sensacionalista\n"
+        "5. Se as afirmações principais podem ser verificadas — e como o espectador pode fazer isso\n\n"
+        "Use linguagem simples, acessível a estudantes do ensino médio. "
+        "Aponte indícios, não afirme certezas absolutas. "
+        "Seja neutro e pedagógico. Responda em até 5 parágrafos curtos.\n\n"
+        f'Transcrição:\n"""\n{texto}\n"""'
+    )
+
+    corpo = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "temperature": 0.3,
+            "maxOutputTokens": 1200,
+            "thinkingConfig": {"thinkingBudget": 0},
+        },
+    }
+
+    try:
+        resposta = _requests.post(
+            _URL_GEMINI,
+            params={"key": chave},
+            json=corpo,
+            timeout=60,
+        )
+        resposta.raise_for_status()
+        dados = resposta.json()
+        texto_resp = (
+            dados.get("candidates", [{}])[0]
+                 .get("content", {})
+                 .get("parts", [{}])[0]
+                 .get("text", "")
+                 .strip()
+        )
+        return texto_resp or None
+    except Exception:
+        return None
 
 
 # ============================================================
@@ -192,9 +262,13 @@ def analisar_youtube(url: str) -> ResultadoAnalise:
             camada="geral",
         ))
 
-    # --- Resumo do conteúdo por IA (usando legendas, se houver) ---
-    texto_para_resumo = legendas or dados.descricao
-    resumo = gerar_resumo(texto_para_resumo) if texto_para_resumo else None
+    # --- Análise do conteúdo falado por IA ---
+    # Com transcrição: Gemini analisa desinformação, manipulação e verificabilidade.
+    # Sem transcrição: resumo neutro da descrição (comportamento anterior).
+    if legendas:
+        resumo = _analisar_transcript_gemini(legendas, dados.titulo) or gerar_resumo(legendas)
+    else:
+        resumo = gerar_resumo(dados.descricao) if dados.descricao else None
 
     # O título exibido no cartão do resultado:
     titulo_exibicao = f"{dados.titulo} — {dados.canal_nome}"
