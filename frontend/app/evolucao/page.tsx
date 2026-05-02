@@ -32,6 +32,8 @@ import {
   Sparkles,
   Mic,
   Scale,
+  Bot,
+  LayoutDashboard,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -362,6 +364,32 @@ const MARCOS: Marco[] = [
     icone: Scale,
     corFundo: "bg-blue-100",
     corIcone: "text-blue-600",
+  },
+  {
+    id: 24,
+    data: "Maio de 2026",
+    titulo: "Modo Professor — Painel de turmas",
+    descricao:
+      "Professores agora podem criar uma 'turma digital' no LUPA e acompanhar em tempo real as análises feitas pelos alunos. O fluxo é simples: o professor acessa /professor/turma, informa seu nome e o nome da turma, e recebe dois códigos — um público (para compartilhar com os alunos) e uma chave privada (para acessar o painel depois). Na página inicial, os alunos podem digitar o código da turma antes de fazer qualquer análise; ao concluir, o resultado é automaticamente registrado. O painel do professor mostra o total de análises, a pontuação média da turma, a distribuição entre 'suspeito', 'requer atenção' e 'confiável', e a tabela completa com cada análise, tipo (URL, texto, vídeo), data e resumo. O botão de impressão permite salvar o relatório em PDF diretamente pelo navegador.",
+    notaTecnica:
+      "Novo módulo backend/turma.py com funções criar_turma(), registrar_analise() e obter_painel(). Três endpoints em main.py: POST /turmas, POST /turmas/{codigo}/analises (rate-limit 60/h), GET /turmas/{codigo}/painel (autenticado por X-Turma-Chave). Duas tabelas no Supabase: turmas e analises_turma. No frontend, campo CampoCodigoTurma persiste entre abas na página principal; análises de URL, texto e vídeo chamam registrarAnaliseTurma() em fire-and-forget após resultado bem-sucedido.",
+    status: "concluido",
+    icone: LayoutDashboard,
+    corFundo: "bg-violet-100",
+    corIcone: "text-violet-600",
+  },
+  {
+    id: 25,
+    data: "Maio de 2026",
+    titulo: "Calculador de Probabilidade de Bot",
+    descricao:
+      "A página de Dicas de Checagem ganhou uma ferramenta interativa: o Calculador de Probabilidade de Bot. O usuário observa um perfil suspeito nas redes sociais e marca os sinais que identifica — foto de perfil gerada por IA, nome com números aleatórios, posts em horários de madrugada, conteúdo repetitivo sobre o mesmo tema, ausência de interações reais, entre outros. A partir de 5 respostas, o calculador exibe o resultado: 'Provável humano', 'Suspeito', 'Alta suspeita' ou 'Muito provável bot', com uma barra de risco visual e uma orientação sobre o que fazer com o conteúdo daquela conta.",
+    notaTecnica:
+      "Componente cliente calculador-bot.tsx com 10 perguntas binárias (Sim/Não). Pontuação = número de 'Sim'. Classificação em 4 níveis: 0–2 humano, 3–4 suspeito, 5–7 alto, 8–10 bot. Resultado exibido progressivamente a partir de 5 respostas respondidas.",
+    status: "concluido",
+    icone: Bot,
+    corFundo: "bg-violet-100",
+    corIcone: "text-violet-600",
   },
 ];
 
