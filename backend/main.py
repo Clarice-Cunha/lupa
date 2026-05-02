@@ -48,6 +48,16 @@ from sugestoes import (  # noqa: E402
     listar_sugestoes_internas,
     responder_sugestao,
 )
+from turma import (  # noqa: E402
+    TurmaEntrada,
+    TurmaCriada,
+    AnaliseEntrada,
+    AnaliseRegistrada,
+    PainelTurma,
+    criar_turma,
+    registrar_analise,
+    obter_painel,
+)
 
 
 # ============================================================
@@ -538,6 +548,63 @@ def endpoint_responder_sugestao(
         raise HTTPException(status_code=404, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail="Erro ao salvar a resposta.") from e
+
+
+# ============================================================
+# Endpoints de turma (Modo Professor)
+# ============================================================
+
+@app.post("/turmas", response_model=TurmaCriada, status_code=201)
+@limitador.limit("10/hour")
+def endpoint_criar_turma(request: Request, entrada: TurmaEntrada) -> TurmaCriada:
+    """Cria uma turma nova para o professor.
+
+    Retorna o código da turma (para compartilhar com os alunos)
+    e a chave de acesso privada (para o professor ver o painel).
+    Guarde a chave — ela não pode ser recuperada depois.
+    """
+    try:
+        return criar_turma(entrada)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao criar a turma.") from e
+
+
+@app.post("/turmas/{codigo}/analises", response_model=AnaliseRegistrada, status_code=201)
+@limitador.limit("60/hour")
+def endpoint_registrar_analise(
+    request: Request, codigo: str, entrada: AnaliseEntrada
+) -> AnaliseRegistrada:
+    """Registra uma análise feita por um aluno vinculada ao código da turma.
+
+    Chamado automaticamente pelo frontend após cada análise concluída
+    quando o aluno informou um código de turma.
+    """
+    try:
+        return registrar_analise(codigo, entrada)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao registrar a análise.") from e
+
+
+@app.get("/turmas/{codigo}/painel", response_model=PainelTurma)
+def endpoint_painel_turma(
+    codigo: str,
+    x_turma_chave: str = Header(default=""),
+) -> PainelTurma:
+    """Retorna o painel da turma com todas as análises registradas.
+
+    Requer o cabeçalho HTTP 'X-Turma-Chave' com a chave de acesso
+    gerada no momento da criação da turma.
+    """
+    try:
+        return obter_painel(codigo, x_turma_chave)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    except PermissionError as e:
+        raise HTTPException(status_code=401, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao carregar o painel.") from e
 
 
 def _converter_resposta(resultado: ResultadoAnalise) -> RespostaAnalise:

@@ -327,6 +327,89 @@ export async function responderSugestao(
   return (await resp.json()) as SugestaoInterno;
 }
 
+// ============================================================
+// Modo Professor — turmas e painel
+// ============================================================
+
+export type TurmaCriada = {
+  codigo: string;
+  chave_acesso: string;
+  nome_professor: string;
+  nome_turma: string;
+  criado_em: string;
+};
+
+export type AnaliseRegistrada = {
+  id: string;
+  tipo: string;
+  pontuacao: number;
+  classificacao: string;
+  resumo: string | null;
+  criado_em: string;
+};
+
+export type PainelTurma = {
+  nome_professor: string;
+  nome_turma: string;
+  codigo: string;
+  total_analises: number;
+  media_pontuacao: number | null;
+  analises: AnaliseRegistrada[];
+};
+
+export async function criarTurma(dados: {
+  nome_professor: string;
+  nome_turma: string;
+}): Promise<TurmaCriada> {
+  const resposta = await fetch(`${API_URL}/turmas`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  });
+  if (!resposta.ok) {
+    let mensagem = `Erro ${resposta.status}`;
+    try {
+      const d = await resposta.json();
+      if (d?.detail) mensagem = String(d.detail);
+    } catch { /* ignora */ }
+    throw new Error(mensagem);
+  }
+  return (await resposta.json()) as TurmaCriada;
+}
+
+export async function registrarAnaliseTurma(
+  codigoTurma: string,
+  tipo: "url" | "texto" | "imagem" | "video",
+  pontuacao: number,
+  classificacao: string,
+  resumo?: string,
+): Promise<void> {
+  // Fire-and-forget: não bloqueia o fluxo principal se falhar.
+  await fetch(`${API_URL}/turmas/${codigoTurma}/analises`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tipo, pontuacao, classificacao, resumo: resumo ?? null }),
+  });
+}
+
+export async function obterPainelTurma(
+  codigo: string,
+  chaveAcesso: string,
+): Promise<PainelTurma> {
+  const resposta = await fetch(`${API_URL}/turmas/${codigo}/painel`, {
+    headers: { "X-Turma-Chave": chaveAcesso },
+  });
+  if (!resposta.ok) {
+    let mensagem = `Erro ${resposta.status}`;
+    try {
+      const d = await resposta.json();
+      if (d?.detail) mensagem = String(d.detail);
+    } catch { /* ignora */ }
+    throw new Error(mensagem);
+  }
+  return (await resposta.json()) as PainelTurma;
+}
+
 export async function analisarImagem(arquivo: File, contexto = ""): Promise<RespostaImagem> {
   const formData = new FormData();
   formData.append("arquivo", arquivo);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   School,
   ChevronDown,
@@ -15,6 +16,9 @@ import {
   Loader2,
   Users,
   Award,
+  GraduationCap,
+  ArrowRight,
+  BarChart2,
 } from "lucide-react";
 import { enviarParceria, type NivelEnsino } from "@/lib/api";
 
@@ -707,6 +711,37 @@ export default function PaginaProfessor() {
               <CartaoPlano key={plano.id} plano={plano} />
             ))}
           </div>
+        </section>
+
+        {/* Painel do Professor */}
+        <section className="animate-fade-in-up" style={{ animationDelay: "0.12s" }}>
+          <Link
+            href="/professor/turma"
+            className="group flex items-center justify-between gap-4 rounded-3xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-violet-50 p-6 shadow-md transition hover:border-indigo-400 hover:shadow-lg sm:p-8"
+          >
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 shadow">
+                <GraduationCap className="h-6 w-6 text-white" strokeWidth={2} />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">Painel do Professor</h2>
+                <p className="mt-1 text-sm text-slate-600 leading-relaxed">
+                  Crie uma turma, compartilhe o código com seus alunos e acompanhe em tempo
+                  real as análises que eles fizeram — com pontuação média e distribuição por
+                  classificação.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="flex items-center gap-1.5 rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700">
+                    <BarChart2 className="h-3.5 w-3.5" /> Desempenho da turma
+                  </span>
+                  <span className="flex items-center gap-1.5 rounded-full bg-violet-100 px-3 py-1 text-xs font-medium text-violet-700">
+                    <Users className="h-3.5 w-3.5" /> Código de turma para alunos
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ArrowRight className="h-5 w-5 shrink-0 text-indigo-400 transition group-hover:translate-x-1 group-hover:text-indigo-600" />
+          </Link>
         </section>
 
         {/* Formulário de parceria */}

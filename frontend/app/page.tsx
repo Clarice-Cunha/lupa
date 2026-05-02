@@ -36,8 +36,9 @@ import {
   Camera,
   CalendarDays,
   Cpu,
+  GraduationCap,
 } from "lucide-react";
-import { analisarImagem, analisarTexto, analisarUpload, analisarUrl } from "@/lib/api";
+import { analisarImagem, analisarTexto, analisarUpload, analisarUrl, registrarAnaliseTurma } from "@/lib/api";
 import type { FonteWeb, Justificativa, RespostaAnalise, RespostaImagem } from "@/lib/types";
 import { salvarAnalise } from "@/lib/historico";
 import { registrarReset } from "@/lib/resetHome";
@@ -99,6 +100,7 @@ export default function Home() {
   const [textoOrigem, setTextoOrigem] = useState("");
   const [textoSuspeita, setTextoSuspeita] = useState("");
   const [contexto, setContexto] = useState("");
+  const [codigoTurma, setCodigoTurma] = useState("");
   const [resultado, setResultado] = useState<ResultadoEstado>(null);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -112,6 +114,7 @@ export default function Home() {
     setTextoOrigem("");
     setTextoSuspeita("");
     setContexto("");
+    setCodigoTurma("");
     setErro(null);
     setEstado("formulario");
   }
@@ -129,6 +132,9 @@ export default function Home() {
     try {
       const dados = await analisarUrl(url);
       salvarAnalise(dados);
+      if (codigoTurma.trim()) {
+        registrarAnaliseTurma(codigoTurma.trim(), "url", dados.pontuacao, dados.classificacao, dados.resumo ?? undefined).catch(() => {});
+      }
       setResultado({ tipo: "analise", dados });
       setEstado("resultado");
     } catch (e) {
@@ -145,6 +151,9 @@ export default function Home() {
     try {
       const dados = await analisarUpload(arquivo, contexto);
       salvarAnalise(dados);
+      if (codigoTurma.trim()) {
+        registrarAnaliseTurma(codigoTurma.trim(), "video", dados.pontuacao, dados.classificacao, dados.resumo ?? undefined).catch(() => {});
+      }
       setResultado({ tipo: "analise", dados });
       setEstado("resultado");
     } catch (e) {
@@ -178,6 +187,9 @@ export default function Home() {
     try {
       const dados = await analisarTexto(textoConteudo, textoOrigem, textoSuspeita);
       salvarAnalise(dados);
+      if (codigoTurma.trim()) {
+        registrarAnaliseTurma(codigoTurma.trim(), "texto", dados.pontuacao, dados.classificacao, dados.resumo ?? undefined).catch(() => {});
+      }
       setResultado({ tipo: "texto", dados });
       setEstado("resultado");
     } catch (e) {
@@ -194,6 +206,7 @@ export default function Home() {
         {estado === "formulario" && (
           <>
             <SeletorAba aba={aba} setAba={setAba} />
+            <CampoCodigoTurma codigo={codigoTurma} setCodigo={setCodigoTurma} />
             {aba === "url" && (
               <Formulario
                 url={url}
@@ -275,6 +288,39 @@ function Cabecalho() {
         Apoio à checagem de confiabilidade de conteúdos digitais.
       </p>
     </header>
+  );
+}
+
+// Campo opcional que aparece entre o seletor de abas e o formulário.
+// O aluno digita aqui o código da turma recebido do professor.
+function CampoCodigoTurma({
+  codigo,
+  setCodigo,
+}: {
+  codigo: string;
+  setCodigo: (v: string) => void;
+}) {
+  return (
+    <div className="mb-3 flex items-center gap-2 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-2.5">
+      <GraduationCap className="h-4 w-4 shrink-0 text-indigo-400" />
+      <input
+        type="text"
+        value={codigo}
+        onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+        placeholder="Código da turma (opcional)"
+        maxLength={6}
+        className="flex-1 bg-transparent font-mono text-sm font-semibold uppercase tracking-widest text-indigo-700 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal placeholder:text-indigo-300 focus:outline-none"
+      />
+      {codigo.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setCodigo("")}
+          className="text-xs text-indigo-400 hover:text-indigo-600"
+        >
+          ✕
+        </button>
+      )}
+    </div>
   );
 }
 
