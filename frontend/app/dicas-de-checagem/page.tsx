@@ -19,6 +19,7 @@ import {
   XCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { CalculadorBot } from "./calculador-bot";
 
 type Dica = {
   icone: LucideIcon;
@@ -238,6 +239,8 @@ export default function DicasDeChecagem() {
             sinais você identificar na mesma conta, maior a suspeita. Na dúvida, não interaja com o
             conteúdo e não o compartilhe.
           </div>
+
+          <CalculadorBot />
         </section>
 
         {/* Seção: Deepfakes */}
