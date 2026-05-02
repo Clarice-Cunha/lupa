@@ -29,6 +29,9 @@ import {
   Brain,
   MessageSquare,
   Database,
+  Sparkles,
+  Mic,
+  Scale,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -311,6 +314,7 @@ const MARCOS: Marco[] = [
     id: 20,
     data: "Abril de 2026",
     titulo: "Persistência permanente de dados com Supabase",
+
     descricao:
       "Um problema silencioso foi descoberto: os dados enviados pelos usuários — boatos, sugestões, feedbacks e parcerias — desapareciam toda vez que o servidor reiniciava. Isso acontecia porque o serviço de hospedagem gratuito usa um armazenamento temporário: arquivos gravados no servidor são apagados automaticamente a cada reinício, que pode ocorrer a cada poucas horas. A solução foi migrar todo o armazenamento para o Supabase, um banco de dados gratuito na nuvem que guarda os dados de forma permanente — independente de quantas vezes o servidor reiniciar. A partir dessa mudança, nenhuma colaboração da comunidade se perde mais.",
     notaTecnica:
@@ -319,6 +323,45 @@ const MARCOS: Marco[] = [
     icone: Database,
     corFundo: "bg-sky-100",
     corIcone: "text-sky-600",
+  },
+  {
+    id: 21,
+    data: "Maio de 2026",
+    titulo: "Análise visual de imagens com IA e detecção forense de manipulação",
+    descricao:
+      "A análise de imagens ganhou duas melhorias importantes. A primeira: o Gemini — a inteligência artificial do Google — passou a examinar visualmente o conteúdo da imagem, não apenas seus dados técnicos. O usuário pode descrever o que o deixa desconfiado — por exemplo, 'acho que essa foto foi tirada em outro país' — e a IA confronta diretamente essa suspeita com o que observa na imagem. A segunda melhoria é a análise ELA — sigla em inglês para 'Análise de Nível de Erro' —, uma técnica forense usada por investigadores de imagem. Quando uma foto é editada e salva novamente, as regiões modificadas ficam com uma 'impressão digital' de compressão diferente do restante. A ELA lê essas diferenças pixel a pixel e emite alertas quando encontra padrões suspeitos. O LUPA também passou a aceitar até 3 imagens por análise, com limite de 10 MB cada.",
+    notaTecnica:
+      "image_analyzer.py: _analisar_com_gemini() envia a imagem em base64 ao gemini-2.5-flash com prompt adaptativo (confronto direto quando campo 'contexto' preenchido). _analisar_ela() re-salva a imagem em buffer de memória com JPEG quality=95, calcula ImageChops.difference() pixel a pixel, amplifica 10× via ImageEnhance.Brightness — índice médio > 15/255 → alerta; > 6/255 → aviso. Frontend: FormularioImagem reescrito para array File[] com validação prévia de tipo e tamanho, análise paralela via Promise.all.",
+    status: "concluido",
+    icone: Sparkles,
+    corFundo: "bg-fuchsia-100",
+    corIcone: "text-fuchsia-600",
+  },
+  {
+    id: 22,
+    data: "Maio de 2026",
+    titulo: "Análise do conteúdo falado em vídeos do YouTube",
+    descricao:
+      "Analisar o título e a descrição de um vídeo diz muito, mas o que importa de verdade é o que a pessoa fala. O LUPA passou a usar as legendas automáticas geradas pelo YouTube para ler a transcrição completa do vídeo e enviá-la à inteligência artificial. O Gemini examina o conteúdo falado em busca de cinco pontos: um resumo do que foi dito, afirmações sem fonte ou com dados distorcidos, técnicas de manipulação emocional como alarmismo e apelo ao medo, linguagem sensacionalista, e orientações sobre como verificar as afirmações principais. Esse resultado aparece na área de resumo do cartão, que antes exibia apenas uma descrição neutra. Quando o vídeo não tem legenda disponível, o LUPA usa a descrição como alternativa.",
+    notaTecnica:
+      "youtube_analyzer.py: função _analisar_transcript_gemini(transcript, titulo) envia até 10.000 caracteres da transcrição ao gemini-2.5-flash com prompt estruturado em 5 critérios de desinformação. Substitui gerar_resumo() quando transcrição disponível; fallback mantido para vídeos sem legendas. Sem mudanças no frontend ou nos endpoints — resultado aparece no campo 'resumo' já existente.",
+    status: "concluido",
+    icone: Mic,
+    corFundo: "bg-purple-100",
+    corIcone: "text-purple-600",
+  },
+  {
+    id: 23,
+    data: "Maio de 2026",
+    titulo: "Verificação cruzada com banco global de checagens e campo de suspeita",
+    descricao:
+      "O LUPA passou a cruzar o conteúdo analisado com um banco de dados de organizações profissionais de verificação de fatos de todo o mundo — chamado de IFCN, sigla em inglês para 'Rede Internacional de Verificação de Fatos'. Se uma afirmação semelhante já foi checada por agências como Aos Fatos, Agência Lupa ou parceiros internacionais, o resultado aparece com a classificação original ('falso', 'distorcido', 'enganoso', etc.) e o link para a checagem completa. Um filtro inteligente garante que só apareçam checagens realmente relacionadas ao conteúdo — evitando erros por simples coincidência de palavras. Em paralelo, os formulários de análise de texto e vídeo ganharam um campo opcional onde o usuário descreve a própria suspeita. Em vez de uma análise genérica, a IA confronta diretamente aquela dúvida específica com o conteúdo analisado — o mesmo mecanismo que já existia para imagens.",
+    notaTecnica:
+      "Módulo fact_check.py com busca via Google Fact Check Tools API. filtrar_relevantes() usa intersecção de palavras ≥ 5 caracteres normalizadas com unicodedata.NFD — mínimo de 2 palavras em comum para considerar relevante. Checagem pulada para homepages (path vazio após urlparse). Campo 'suspeita' adicionado a PedidoTexto em main.py, propagado ao text_analyzer.py e inserido no prompt do Gemini quando preenchido.",
+    status: "concluido",
+    icone: Scale,
+    corFundo: "bg-blue-100",
+    corIcone: "text-blue-600",
   },
 ];
 
