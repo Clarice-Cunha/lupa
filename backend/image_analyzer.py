@@ -8,6 +8,7 @@ contexto enganoso e confrontando a suspeita descrita pelo usuário.
 """
 
 import base64
+import io
 import os
 import re
 
@@ -15,7 +16,7 @@ import requests
 from dataclasses import dataclass, field
 from typing import Optional
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageEnhance
 from PIL.ExifTags import GPSTAGS, TAGS
 
 
@@ -170,6 +171,59 @@ def _analisar_com_gemini(caminho: str, contexto: str = "") -> Optional[str]:
         return None
 
 
+def _analisar_ela(caminho: str) -> "AlertaImagem | None":
+    """Análise de Nível de Erro (ELA) para detectar manipulação em JPEG.
+
+    Re-salva a imagem com qualidade 95 e mede a diferença pixel a pixel.
+    Regiões editadas e re-salvas tendem a ter padrões de compressão
+    inconsistentes — esse desequilíbrio é o que ELA detecta.
+    Só é relevante para JPEG; outros formatos retornam None.
+    """
+    try:
+        with Image.open(caminho) as img:
+            if img.format not in ("JPEG", "MPO"):
+                return None
+            original = img.convert("RGB")
+
+        buffer = io.BytesIO()
+        original.save(buffer, format="JPEG", quality=95)
+        buffer.seek(0)
+
+        with Image.open(buffer) as resalva:
+            resalva_rgb = resalva.convert("RGB")
+
+        # Diferença pixel a pixel em escala de cinza, amplificada 10×
+        diferenca = ImageChops.difference(original, resalva_rgb).convert("L")
+        amplificada = ImageEnhance.Brightness(diferenca).enhance(10)
+
+        pixels = list(amplificada.getdata())
+        media = sum(pixels) / len(pixels)
+
+        if media > 15:
+            return AlertaImagem(
+                nivel="alerta",
+                mensagem=(
+                    f"Análise de Nível de Erro (ELA): índice {media:.1f}/255. "
+                    "Padrões de compressão inconsistentes foram detectados, o que pode "
+                    "indicar que partes da imagem foram editadas digitalmente. "
+                    "Use as ferramentas de busca reversa abaixo para verificar a origem."
+                ),
+            )
+        if media > 6:
+            return AlertaImagem(
+                nivel="aviso",
+                mensagem=(
+                    f"Análise de Nível de Erro (ELA): índice {media:.1f}/255. "
+                    "Há variações de compressão que podem indicar algum nível de edição. "
+                    "Imagens recomprimidas por redes sociais também podem apresentar "
+                    "esse padrão — verifique a origem antes de concluir."
+                ),
+            )
+        return None
+    except Exception:
+        return None
+
+
 def _graus_para_decimal(graus: tuple, ref: str) -> float:
     """Converte coordenadas GPS (graus, minutos, segundos) para decimal."""
     d, m, s = graus
@@ -214,6 +268,20 @@ def analisar_imagem(caminho_arquivo: str, nome_original: str, contexto: str = ""
         exif_bruto = img._getexif() if hasattr(img, "_getexif") else None  # type: ignore[attr-defined]
 
     if not exif_bruto:
+        alertas_sem_exif: list[AlertaImagem] = [
+            AlertaImagem(
+                nivel="aviso",
+                mensagem=(
+                    "Esta imagem não contém metadados EXIF. Isso pode indicar que "
+                    "foi tirada com um dispositivo que não grava metadados, que passou "
+                    "por ferramentas de edição que os removeram, ou que é uma captura "
+                    "de tela. A ausência de metadados dificulta verificar a origem."
+                ),
+            )
+        ]
+        ela = _analisar_ela(caminho_arquivo)
+        if ela:
+            alertas_sem_exif.append(ela)
         analise_visual = _analisar_com_gemini(caminho_arquivo, contexto)
         return ResultadoImagem(
             nome_arquivo=nome_original,
@@ -228,17 +296,7 @@ def analisar_imagem(caminho_arquivo: str, nome_original: str, contexto: str = ""
             tem_gps=False,
             latitude=None,
             longitude=None,
-            alertas=[
-                AlertaImagem(
-                    nivel="aviso",
-                    mensagem=(
-                        "Esta imagem não contém metadados EXIF. Isso pode indicar que "
-                        "foi tirada com um dispositivo que não grava metadados, que passou "
-                        "por ferramentas de edição que os removeram, ou que é uma captura "
-                        "de tela. A ausência de metadados dificulta verificar a origem."
-                    ),
-                )
-            ],
+            alertas=alertas_sem_exif,
             links_busca_reversa=_LINKS_BUSCA_REVERSA,
             analise_visual=analise_visual,
         )
@@ -299,6 +357,10 @@ def analisar_imagem(caminho_arquivo: str, nome_original: str, contexto: str = ""
                 ),
             )
         )
+
+    ela = _analisar_ela(caminho_arquivo)
+    if ela:
+        alertas.append(ela)
 
     analise_visual = _analisar_com_gemini(caminho_arquivo, contexto)
 
