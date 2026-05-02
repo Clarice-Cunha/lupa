@@ -16,7 +16,7 @@ import requests
 from dataclasses import dataclass, field
 from typing import Optional
 
-from PIL import Image, ImageChops, ImageEnhance
+from PIL import Image, ImageChops, ImageEnhance, ImageStat
 from PIL.ExifTags import GPSTAGS, TAGS
 
 
@@ -113,16 +113,28 @@ def _analisar_com_gemini(caminho: str, contexto: str = "") -> Optional[str]:
     with open(caminho, "rb") as f:
         imagem_b64 = base64.b64encode(f.read()).decode("utf-8")
 
+    _instrucoes_deepfake = (
+        "Preste atenção especial a sinais de geração por IA ou deepfake: "
+        "pele com textura artificial (muito lisa ou com ruído incomum), "
+        "olhos com reflexos impossíveis ou assimétricos, bordas do rosto borradas "
+        "ou com halo ao redor do cabelo/orelhas, dedos com número ou formato estranho, "
+        "textos ao fundo ilegíveis ou embaralhados, iluminação que não bate com o fundo, "
+        "e fundo com padrões repetitivos ou desfocagem excessiva seletiva. "
+        "Se identificar esses sinais, mencione-os explicitamente. "
+    )
+
     if contexto.strip():
         prompt = (
             f'Você é especialista em verificação de imagens e combate à desinformação. '
             f'O usuário reportou a seguinte suspeita: "{contexto.strip()}"\n\n'
             "Analise a imagem e: (1) confronte diretamente a suspeita com o que você "
             "observa — confirme ou descarte com base em evidências visuais concretas; "
-            "(2) aponte outros sinais de manipulação digital, montagem, recorte suspeito "
-            "ou uso fora de contexto que você identificou; (3) use linguagem simples, "
-            "acessível a estudantes do ensino médio; (4) seja neutro — aponte indícios, "
-            "não afirme certezas absolutas. Responda em até 5 parágrafos curtos."
+            "(2) aponte sinais de manipulação digital, montagem, recorte suspeito "
+            "ou uso fora de contexto; "
+            f"(3) {_instrucoes_deepfake}"
+            "(4) use linguagem simples, acessível a estudantes do ensino médio; "
+            "(5) seja neutro — aponte indícios, não afirme certezas absolutas. "
+            "Responda em até 5 parágrafos curtos."
         )
     else:
         prompt = (
@@ -130,9 +142,11 @@ def _analisar_com_gemini(caminho: str, contexto: str = "") -> Optional[str]:
             "Analise esta imagem e: (1) descreva o que você observa; "
             "(2) aponte sinais de manipulação digital, montagem ou recorte suspeito; "
             "(3) identifique elementos que possam indicar uso fora de contexto — como "
-            "legenda falsa ou reaproveitamento de imagem antiga; (4) use linguagem "
-            "simples, acessível a estudantes do ensino médio; (5) aponte indícios, "
-            "não afirme certezas absolutas. Responda em até 5 parágrafos curtos."
+            "legenda falsa ou reaproveitamento de imagem antiga; "
+            f"(4) {_instrucoes_deepfake}"
+            "(5) use linguagem simples, acessível a estudantes do ensino médio; "
+            "(6) aponte indícios, não afirme certezas absolutas. "
+            "Responda em até 5 parágrafos curtos."
         )
 
     corpo = {
@@ -224,6 +238,57 @@ def _analisar_ela(caminho: str) -> "AlertaImagem | None":
         return None
 
 
+def _analisar_ghost(caminho: str) -> "AlertaImagem | None":
+    """Análise GHOST (multi-qualidade) para detectar colagem de imagens.
+
+    O princípio: ao re-salvar um JPEG em diferentes qualidades, a qualidade
+    mais próxima da original produz o menor erro médio. Numa imagem intacta,
+    todos os pixels "concordam" com uma única qualidade ótima. Numa imagem
+    com pedaços colados de fontes diferentes, cada região tem sua própria
+    qualidade de origem — o que resulta em alta variação (desvio padrão) no
+    mapa de diferenças, mesmo na qualidade de menor erro global.
+
+    Usa apenas Pillow (já instalado), sem dependências externas.
+    Só analisa JPEG porque a compressão lossy do formato é o que o teste mede.
+    """
+    try:
+        with Image.open(caminho) as img:
+            if img.format not in ("JPEG", "MPO"):
+                return None
+            original = img.convert("RGB")
+
+        qualidades = [55, 65, 75, 85, 90, 95]
+        resultados: list[tuple[int, float, float]] = []  # (qualidade, média, desvio)
+
+        for q in qualidades:
+            buf = io.BytesIO()
+            original.save(buf, format="JPEG", quality=q)
+            buf.seek(0)
+            with Image.open(buf) as resalva:
+                diff = ImageChops.difference(original, resalva.convert("RGB")).convert("L")
+            stat = ImageStat.Stat(diff)
+            resultados.append((q, stat.mean[0], stat.stddev[0]))
+
+        # Qualidade que produz menor erro médio — candidata à qualidade original
+        _q_min, media_min, std_min = min(resultados, key=lambda x: x[1])
+
+        # Sinal de colagem: alto desvio padrão mesmo na melhor qualidade indica
+        # que regiões distintas da imagem têm históricos de compressão diferentes.
+        if std_min > 22 and media_min > 6:
+            return AlertaImagem(
+                nivel="aviso",
+                mensagem=(
+                    f"Análise GHOST (multi-qualidade): desvio σ={std_min:.1f} na melhor "
+                    "qualidade testada. Regiões com históricos de compressão diferentes "
+                    "podem indicar que a imagem é uma composição de múltiplas fontes. "
+                    "ELA e busca reversa podem confirmar a suspeita."
+                ),
+            )
+        return None
+    except Exception:
+        return None
+
+
 def _graus_para_decimal(graus: tuple, ref: str) -> float:
     """Converte coordenadas GPS (graus, minutos, segundos) para decimal."""
     d, m, s = graus
@@ -282,6 +347,9 @@ def analisar_imagem(caminho_arquivo: str, nome_original: str, contexto: str = ""
         ela = _analisar_ela(caminho_arquivo)
         if ela:
             alertas_sem_exif.append(ela)
+        ghost = _analisar_ghost(caminho_arquivo)
+        if ghost:
+            alertas_sem_exif.append(ghost)
         analise_visual = _analisar_com_gemini(caminho_arquivo, contexto)
         return ResultadoImagem(
             nome_arquivo=nome_original,
@@ -361,6 +429,9 @@ def analisar_imagem(caminho_arquivo: str, nome_original: str, contexto: str = ""
     ela = _analisar_ela(caminho_arquivo)
     if ela:
         alertas.append(ela)
+    ghost = _analisar_ghost(caminho_arquivo)
+    if ghost:
+        alertas.append(ghost)
 
     analise_visual = _analisar_com_gemini(caminho_arquivo, contexto)
 

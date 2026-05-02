@@ -391,6 +391,19 @@ const MARCOS: Marco[] = [
     corFundo: "bg-violet-100",
     corIcone: "text-violet-600",
   },
+  {
+    id: 26,
+    data: "Maio de 2026",
+    titulo: "Detecção de deepfake e imagens geradas por IA",
+    descricao:
+      "A análise de imagens ganhou duas novas camadas de verificação. A primeira é a análise GHOST (sigla em inglês para 'Espectro de Compressão JPEG'): a ferramenta re-salva a imagem em seis qualidades diferentes e mede a variação de compressão por região. Em uma imagem intacta, todos os pedaços 'concordam' com uma mesma qualidade de origem. Em uma imagem montada a partir de partes de fontes diferentes — como um rosto colado em outra foto — cada região tem seu próprio histórico de compressão, o que gera uma variação anormalmente alta. A segunda melhoria está na análise da inteligência artificial: o Gemini agora recebe instruções específicas para procurar sinais clássicos de geração artificial, como textura de pele irreal, bordas borradas ao redor do rosto, dedos com formato impossível, reflexos de olho inconsistentes com o ambiente e textos ilegíveis ao fundo — características que denunciam imagens criadas por modelos como Midjourney, DALL-E ou deepfake.",
+    notaTecnica:
+      "Nova função _analisar_ghost() em image_analyzer.py: salva o JPEG em qualidades [55, 65, 75, 85, 90, 95] e usa ImageStat.Stat para obter média e desvio padrão do mapa de diferenças em cada qualidade. Alerta disparado quando std_min > 22 e media_min > 6 na melhor qualidade. Prompt do Gemini expandido com lista explícita de artefatos de IA/deepfake. Usa apenas Pillow (ImageStat já incluso) — sem dependências novas.",
+    status: "concluido",
+    icone: ShieldCheck,
+    corFundo: "bg-rose-100",
+    corIcone: "text-rose-600",
+  },
 ];
 
 export const metadata = {
