@@ -526,13 +526,13 @@ function FormularioUpload({
             htmlFor="contexto"
             className="mb-2 block text-sm font-medium text-slate-700"
           >
-            Contexto (opcional)
+            Qual a sua suspeita sobre este vídeo? (opcional)
           </label>
           <textarea
             id="contexto"
             value={contexto}
             onChange={(e) => setContexto(e.target.value)}
-            placeholder="De onde veio esse vídeo? Quem compartilhou? Qualquer informação ajuda a análise."
+            placeholder="Ex.: Acho que as imagens não correspondem ao que a legenda diz. O vídeo parece antigo mas está sendo compartilhado como atual..."
             rows={3}
             className="w-full resize-none rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-100"
           />
