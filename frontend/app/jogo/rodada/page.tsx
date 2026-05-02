@@ -148,6 +148,8 @@ export default function PaginaRodada() {
       textoCapturado.indicios_corretos.length,
       acertouLimpo,
       rodadaPerfeita,
+      resultado.acertos,
+      textoCapturado.indicios_corretos,
     );
     setProgresso(novoProgresso);
     setAvancouNivel(avancou);

@@ -24,6 +24,8 @@ export type ProgressoJogo = {
   rodadasJogadas: number;
   /** IDs das conquistas (badges) desbloqueadas pelo jogador. */
   conquistas: string[];
+  /** Acertos e aparições por tipo de indício (para o painel de estatísticas). */
+  estatisticasPorIndicio: Record<string, { acertos: number; visto: number }>;
 };
 
 function criarProgressoInicial(): ProgressoJogo {
@@ -36,6 +38,7 @@ function criarProgressoInicial(): ProgressoJogo {
     pontosTotal: 0,
     rodadasJogadas: 0,
     conquistas: [],
+    estatisticasPorIndicio: {},
   };
 }
 
@@ -46,8 +49,9 @@ export function carregarProgresso(): ProgressoJogo {
     if (!raw) return criarProgressoInicial();
     const salvo = JSON.parse(raw) as ProgressoJogo;
     if (!salvo.indiciosTotaisPorNivel) return criarProgressoInicial();
-    // Garante compatibilidade com saves antigos sem o campo conquistas.
+    // Garante compatibilidade com saves antigos sem estes campos.
     if (!salvo.conquistas) salvo.conquistas = [];
+    if (!salvo.estatisticasPorIndicio) salvo.estatisticasPorIndicio = {};
     return salvo;
   } catch {
     return criarProgressoInicial();
@@ -97,10 +101,23 @@ export function registrarRodada(
   indiciosNoTexto: number,
   acertouTextoLimpo: boolean = false,
   rodadaPerfeita: boolean = false,
+  acertosIds: string[] = [],
+  indiciosNoTextoIds: string[] = [],
 ): { novoProgresso: ProgressoJogo; avancouNivel: boolean; novasConquistas: string[] } {
   const nivel = progresso.nivelAtual;
   const conquistasAtuais = progresso.conquistas ?? [];
   const novasConquistas: string[] = [];
+
+  // Atualiza estatísticas por tipo de indício.
+  const statsAtuais = { ...(progresso.estatisticasPorIndicio ?? {}) };
+  for (const id of indiciosNoTextoIds) {
+    const s = statsAtuais[id] ?? { acertos: 0, visto: 0 };
+    statsAtuais[id] = { ...s, visto: s.visto + 1 };
+  }
+  for (const id of acertosIds) {
+    const s = statsAtuais[id] ?? { acertos: 0, visto: 0 };
+    statsAtuais[id] = { ...s, acertos: s.acertos + 1 };
+  }
 
   const vistos = [...progresso.textosVistosPorNivel[nivel]];
   if (!vistos.includes(textoId)) vistos.push(textoId);
@@ -129,6 +146,7 @@ export function registrarRodada(
     pontosTotal: progresso.pontosTotal + pontos,
     rodadasJogadas: progresso.rodadasJogadas + 1,
     conquistas: conquistasAtuais,
+    estatisticasPorIndicio: statsAtuais,
   };
 
   // --- Conquistas da rodada ---
