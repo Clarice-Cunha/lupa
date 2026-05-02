@@ -97,6 +97,7 @@ export default function Home() {
   const [imagemContexto, setImagemContexto] = useState("");
   const [textoConteudo, setTextoConteudo] = useState("");
   const [textoOrigem, setTextoOrigem] = useState("");
+  const [textoSuspeita, setTextoSuspeita] = useState("");
   const [contexto, setContexto] = useState("");
   const [resultado, setResultado] = useState<ResultadoEstado>(null);
   const [erro, setErro] = useState<string | null>(null);
@@ -109,6 +110,7 @@ export default function Home() {
     setImagemContexto("");
     setTextoConteudo("");
     setTextoOrigem("");
+    setTextoSuspeita("");
     setContexto("");
     setErro(null);
     setEstado("formulario");
@@ -174,7 +176,7 @@ export default function Home() {
     setErro(null);
     setEstado("carregando");
     try {
-      const dados = await analisarTexto(textoConteudo, textoOrigem);
+      const dados = await analisarTexto(textoConteudo, textoOrigem, textoSuspeita);
       salvarAnalise(dados);
       setResultado({ tipo: "texto", dados });
       setEstado("resultado");
@@ -226,6 +228,8 @@ export default function Home() {
                 setTexto={setTextoConteudo}
                 origem={textoOrigem}
                 setOrigem={setTextoOrigem}
+                suspeita={textoSuspeita}
+                setSuspeita={setTextoSuspeita}
                 aoEnviar={aoEnviarTexto}
                 erro={erro}
               />
@@ -1002,11 +1006,13 @@ type FormularioTextoProps = {
   setTexto: (v: string) => void;
   origem: string;
   setOrigem: (v: string) => void;
+  suspeita: string;
+  setSuspeita: (v: string) => void;
   aoEnviar: (e: React.FormEvent) => void;
   erro: string | null;
 };
 
-function FormularioTexto({ texto, setTexto, origem, setOrigem, aoEnviar, erro }: FormularioTextoProps) {
+function FormularioTexto({ texto, setTexto, origem, setOrigem, suspeita, setSuspeita, aoEnviar, erro }: FormularioTextoProps) {
   const caracteres = texto.length;
   const LIMITE = 20_000;
 
@@ -1047,6 +1053,24 @@ function FormularioTexto({ texto, setTexto, origem, setOrigem, aoEnviar, erro }:
               <option key={o.valor} value={o.valor}>{o.rotulo}</option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label htmlFor="suspeita-texto" className="mb-2 block text-sm font-medium text-slate-700">
+            Por que você desconfia deste texto? (opcional)
+          </label>
+          <textarea
+            id="suspeita-texto"
+            value={suspeita}
+            onChange={(e) => setSuspeita(e.target.value)}
+            placeholder="Ex.: Acho que os números estão errados. Vi uma versão diferente circulando..."
+            rows={2}
+            maxLength={500}
+            className="w-full resize-none rounded-2xl border-2 border-slate-200 bg-white px-5 py-3 text-sm text-slate-800 placeholder:text-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-100"
+          />
+          {suspeita.length > 0 && (
+            <p className="mt-1 text-right text-xs text-slate-400">{suspeita.length}/500</p>
+          )}
         </div>
 
         <button

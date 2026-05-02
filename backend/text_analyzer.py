@@ -33,7 +33,7 @@ PROMPT_ANALISE = """\
 Você é um especialista em letramento midiático e combate à desinformação, \
 trabalhando de forma EDUCACIONAL. Analise o texto a seguir e identifique \
 sinais de desinformação.
-
+{suspeita_bloco}
 Seja neutro: não afirme que o texto é verdadeiro ou falso — apenas aponte \
 os sinais que o leitor deve considerar. Use linguagem simples, acessível a \
 estudantes do ensino médio.
@@ -104,7 +104,7 @@ def _cor(pontuacao: int) -> str:
 
 # ── Chamada ao Gemini ───────────────────────────────────────────────────────────
 
-def _chamar_gemini(texto: str, contexto_web: str = "") -> dict | None:
+def _chamar_gemini(texto: str, contexto_web: str = "", suspeita: str = "") -> dict | None:
     """Envia o texto ao Gemini e devolve o dicionário JSON, ou None em caso de erro."""
     chave = os.getenv("GEMINI_API_KEY")
     if not chave or chave.strip() in ("", "sua_chave_aqui", "COLE_SUA_CHAVE_AQUI"):
@@ -113,7 +113,18 @@ def _chamar_gemini(texto: str, contexto_web: str = "") -> dict | None:
     texto_com_contexto = texto[:MAX_CARACTERES]
     if contexto_web:
         texto_com_contexto = f"{contexto_web}\n\n---\n\n{texto_com_contexto}"
-    prompt = PROMPT_ANALISE.format(texto=texto_com_contexto)
+
+    suspeita_bloco = ""
+    if suspeita.strip():
+        suspeita_bloco = (
+            f'\nO usuário relatou a seguinte suspeita sobre este texto: '
+            f'"{suspeita.strip()}"\n'
+            "Confronte diretamente essa suspeita com o que você observa no texto — "
+            "confirme ou descarte com base em evidências concretas. Inclua esse confronto "
+            'no campo "resultado" do critério mais relevante.\n'
+        )
+
+    prompt = PROMPT_ANALISE.format(texto=texto_com_contexto, suspeita_bloco=suspeita_bloco)
     corpo = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
@@ -236,12 +247,14 @@ def _analisar_heuristicamente(texto: str) -> tuple[list[Justificativa], int]:
 
 # ── Função principal ────────────────────────────────────────────────────────────
 
-def analisar_texto(texto: str, origem: str = "") -> ResultadoAnalise:
+def analisar_texto(texto: str, origem: str = "", suspeita: str = "") -> ResultadoAnalise:
     """Analisa um texto em busca de indícios de desinformação.
 
     Args:
         texto: O texto colado pelo usuário.
         origem: De onde o texto vem (ex: 'WhatsApp', 'Instagram'). Opcional.
+        suspeita: Descrição da desconfiança do usuário. Quando fornecida,
+                  o Gemini confronta diretamente a suspeita com o que lê.
 
     Returns:
         ResultadoAnalise com pontuação, justificativas e dicas educacionais.
@@ -295,7 +308,7 @@ def analisar_texto(texto: str, origem: str = "") -> ResultadoAnalise:
         else contexto_web
     )
 
-    resultado_ia = _chamar_gemini(texto, contexto_completo)
+    resultado_ia = _chamar_gemini(texto, contexto_completo, suspeita)
 
     from tips import sugerir_fontes
 

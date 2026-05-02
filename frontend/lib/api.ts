@@ -65,11 +65,12 @@ export async function analisarUpload(
 export async function analisarTexto(
   texto: string,
   origem: string,
+  suspeita = "",
 ): Promise<RespostaAnalise> {
   const resposta = await fetch(`${API_URL}/analisar-texto`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ texto, origem }),
+    body: JSON.stringify({ texto, origem, suspeita }),
   });
 
   if (!resposta.ok) {

@@ -130,6 +130,7 @@ class PedidoAnalise(BaseModel):
 class PedidoTexto(BaseModel):
     texto: str = Field(..., description="Texto a ser analisado")
     origem: str = Field("", description="Origem do texto (ex: WhatsApp, Instagram)")
+    suspeita: str = Field("", description="Suspeita ou razão da desconfiança (opcional)")
 
 
 class JustificativaResposta(BaseModel):
@@ -315,7 +316,7 @@ def endpoint_analisar_texto(request: Request, pedido: PedidoTexto) -> RespostaAn
         raise HTTPException(status_code=400, detail="Texto muito longo. Envie no máximo 20.000 caracteres.")
 
     try:
-        resultado = analisar_texto(pedido.texto, pedido.origem)
+        resultado = analisar_texto(pedido.texto, pedido.origem, pedido.suspeita)
     except Exception as e:
         raise HTTPException(
             status_code=500,
