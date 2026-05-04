@@ -51,12 +51,14 @@ from sugestoes import (  # noqa: E402
 from turma import (  # noqa: E402
     TurmaEntrada,
     TurmaCriada,
+    TurmaResumida,
     AnaliseEntrada,
     AnaliseRegistrada,
     PainelTurma,
     criar_turma,
     registrar_analise,
     obter_painel,
+    buscar_turmas,
 )
 
 
@@ -605,6 +607,26 @@ def endpoint_painel_turma(
         raise HTTPException(status_code=401, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail="Erro ao carregar o painel.") from e
+
+
+@app.get("/turmas/buscar", response_model=list[TurmaResumida])
+def endpoint_buscar_turmas(
+    nome_professor: str = "",
+    nome_turma: str = "",
+    x_moderacao_chave: str = Header(default=""),
+) -> list[TurmaResumida]:
+    """Busca turmas por nome do professor e/ou nome da turma.
+
+    Exclusivo para a equipe LUPA (requer X-Moderacao-Chave).
+    Permite recuperar o código de uma turma quando o professor entra em contato.
+    Retorna código público — nunca a chave de acesso privada.
+    """
+    if x_moderacao_chave != _MODERACAO_CHAVE:
+        raise HTTPException(status_code=403, detail="Chave de moderação incorreta.")
+    try:
+        return buscar_turmas(nome_professor, nome_turma)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao buscar turmas.") from e
 
 
 def _converter_resposta(resultado: ResultadoAnalise) -> RespostaAnalise:

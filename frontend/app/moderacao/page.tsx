@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ShieldCheck, Lock, Mail, Copy, Check } from "lucide-react";
+import { ShieldCheck, Lock, Mail, Copy, Check, Search, GraduationCap, Loader2 } from "lucide-react";
 import {
   type Boato,
   type StatusBoato,
@@ -10,6 +10,8 @@ import {
   type SugestaoInterno,
   listarSugestoesInternas,
   responderSugestao,
+  type TurmaResumida,
+  buscarTurmas,
 } from "@/lib/api";
 
 const ROTULO_CATEGORIA: Record<string, string> = {
@@ -347,12 +349,141 @@ function CartaoSugestao({
   );
 }
 
+// ============================================================
+// Seção: Buscar turmas (recuperação de código)
+// ============================================================
+
+function SecaoBuscarTurmas({ chave }: { chave: string }) {
+  const [nomeProfessor, setNomeProfessor] = useState("");
+  const [nomeTurma, setNomeTurma] = useState("");
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const [resultados, setResultados] = useState<TurmaResumida[] | null>(null);
+  const [copiado, setCopiado] = useState<string | null>(null);
+
+  async function buscar(e: { preventDefault(): void }) {
+    e.preventDefault();
+    setErro(null);
+    setCarregando(true);
+    try {
+      const dados = await buscarTurmas(nomeProfessor, nomeTurma, chave);
+      setResultados(dados);
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro ao buscar.");
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  async function copiarCodigo(codigo: string) {
+    await navigator.clipboard.writeText(codigo);
+    setCopiado(codigo);
+    setTimeout(() => setCopiado(null), 2000);
+  }
+
+  return (
+    <div className="space-y-5">
+      <p className="text-sm text-slate-500">
+        Busque pelo nome do professor ou da turma para recuperar o código de acesso.
+        A chave de acesso privada nunca é exibida aqui.
+      </p>
+
+      <form onSubmit={buscar} className="flex flex-col gap-3 sm:flex-row">
+        <input
+          type="text"
+          value={nomeProfessor}
+          onChange={(e) => setNomeProfessor(e.target.value)}
+          placeholder="Nome do professor"
+          className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+        />
+        <input
+          type="text"
+          value={nomeTurma}
+          onChange={(e) => setNomeTurma(e.target.value)}
+          placeholder="Nome da turma"
+          className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
+        />
+        <button
+          type="submit"
+          disabled={carregando}
+          className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60 transition"
+        >
+          {carregando ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Search className="h-4 w-4" />
+          )}
+          Buscar
+        </button>
+      </form>
+
+      {erro && (
+        <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+          {erro}
+        </div>
+      )}
+
+      {resultados !== null && (
+        <>
+          <p className="text-xs text-slate-400">
+            {resultados.length === 0
+              ? "Nenhuma turma encontrada com esses critérios."
+              : `${resultados.length} turma${resultados.length !== 1 ? "s" : ""} encontrada${resultados.length !== 1 ? "s" : ""}.`}
+          </p>
+          <div className="space-y-3">
+            {resultados.map((t) => (
+              <div
+                key={t.codigo}
+                className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="h-4 w-4 text-indigo-500" />
+                    <span className="font-semibold text-slate-800 dark:text-slate-100">
+                      {t.nome_turma}
+                    </span>
+                  </div>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    Prof. {t.nome_professor} · {new Date(t.criado_em).toLocaleDateString("pt-BR")}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="font-mono text-lg font-bold tracking-widest text-indigo-700 dark:text-indigo-300">
+                    {t.codigo}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => copiarCodigo(t.codigo)}
+                    className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300"
+                  >
+                    {copiado === t.codigo ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-emerald-600" />
+                        <span className="text-emerald-600">Copiado!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" />
+                        Copiar
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function PaginaModeracao() {
   const [chaveDigitada, setChaveDigitada] = useState("");
   const [chave, setChave] = useState("");
   const [autenticado, setAutenticado] = useState(false);
 
-  const [aba, setAba] = useState<"boatos" | "sugestoes">("boatos");
+  const [aba, setAba] = useState<"boatos" | "sugestoes" | "turmas">("boatos");
 
   const [boatos, setBoatos] = useState<Boato[]>([]);
   const [carregando, setCarregando] = useState(false);
@@ -489,6 +620,16 @@ export default function PaginaModeracao() {
           >
             Sugestões ({sugestoes.length})
           </button>
+          <button
+            onClick={() => setAba("turmas")}
+            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              aba === "turmas"
+                ? "bg-indigo-600 text-white"
+                : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            }`}
+          >
+            Turmas
+          </button>
         </div>
 
         {/* Aba: Boatos */}
@@ -523,6 +664,9 @@ export default function PaginaModeracao() {
             </div>
           </>
         )}
+
+        {/* Aba: Turmas */}
+        {aba === "turmas" && <SecaoBuscarTurmas chave={chave} />}
 
         {/* Aba: Sugestões */}
         {aba === "sugestoes" && (

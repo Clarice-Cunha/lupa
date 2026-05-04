@@ -85,6 +85,14 @@ class PainelTurma(BaseModel):
     analises: list[AnaliseRegistrada]
 
 
+class TurmaResumida(BaseModel):
+    """Resultado da busca de turmas — sem chave de acesso."""
+    codigo: str
+    nome_professor: str
+    nome_turma: str
+    criado_em: str
+
+
 # ── Funções ──────────────────────────────────────────────────────────────────────
 
 def criar_turma(entrada: TurmaEntrada) -> TurmaCriada:
@@ -138,6 +146,23 @@ def registrar_analise(codigo: str, entrada: AnaliseEntrada) -> AnaliseRegistrada
         resumo=r.get("resumo"),
         criado_em=r["criado_em"],
     )
+
+
+def buscar_turmas(nome_professor: str = "", nome_turma: str = "") -> list[TurmaResumida]:
+    """Busca turmas por nome do professor e/ou nome da turma.
+
+    Usado pela equipe LUPA para recuperar o código de uma turma
+    quando o professor entra em contato.
+    Ambos os parâmetros são opcionais — se omitidos, retorna todas as turmas.
+    """
+    db = get_db()
+    query = db.table("turmas").select("codigo, nome_professor, nome_turma, criado_em")
+    if nome_professor.strip():
+        query = query.ilike("nome_professor", f"%{nome_professor.strip()}%")
+    if nome_turma.strip():
+        query = query.ilike("nome_turma", f"%{nome_turma.strip()}%")
+    resultado = query.order("criado_em", desc=True).execute()
+    return [TurmaResumida(**row) for row in resultado.data]
 
 
 def obter_painel(codigo: str, chave_acesso: str) -> PainelTurma:

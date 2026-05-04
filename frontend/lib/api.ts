@@ -392,6 +392,35 @@ export async function registrarAnaliseTurma(
   });
 }
 
+export type TurmaResumida = {
+  codigo: string;
+  nome_professor: string;
+  nome_turma: string;
+  criado_em: string;
+};
+
+export async function buscarTurmas(
+  nomeProfessor: string,
+  nomeTurma: string,
+  chaveModeracao: string,
+): Promise<TurmaResumida[]> {
+  const params = new URLSearchParams();
+  if (nomeProfessor.trim()) params.set("nome_professor", nomeProfessor.trim());
+  if (nomeTurma.trim()) params.set("nome_turma", nomeTurma.trim());
+  const resposta = await fetch(`${API_URL}/turmas/buscar?${params.toString()}`, {
+    headers: { "X-Moderacao-Chave": chaveModeracao },
+  });
+  if (!resposta.ok) {
+    let mensagem = `Erro ${resposta.status}`;
+    try {
+      const d = await resposta.json();
+      if (d?.detail) mensagem = String(d.detail);
+    } catch { /* ignora */ }
+    throw new Error(mensagem);
+  }
+  return (await resposta.json()) as TurmaResumida[];
+}
+
 export async function obterPainelTurma(
   codigo: string,
   chaveAcesso: string,
