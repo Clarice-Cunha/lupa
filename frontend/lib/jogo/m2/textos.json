@@ -1,0 +1,99 @@
+[
+  {
+    "id": "m2_01",
+    "titulo": "Instituto lança vitamina que previne gripe em 100% dos casos, diz pesquisa",
+    "conteudo": "O Instituto Brasileiro de Saúde Natural divulgou os resultados de uma pesquisa própria mostrando que sua linha de vitaminas SupraVit previne 100% das ocorrências de gripe sazonal. De acordo com o comunicado, 312 voluntários testaram o produto por seis meses com 'resultados surpreendentes'. 'Especialistas independentes já reconhecem que esta é a maior descoberta preventiva da última década', afirma o documento. O SupraVit está à venda no site oficial do Instituto a partir de R$ 89 por frasco mensal.",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": ["conflito_de_interesse", "fonte_anonima"],
+    "explicacoes": {
+      "conflito_de_interesse": "O próprio Instituto que vende o SupraVit realizou e publicou a pesquisa que valida seu produto. Quando quem tem interesse financeiro no resultado é também quem produz o estudo, os dados precisam ser verificados por fontes independentes antes de serem aceitos.",
+      "fonte_anonima": "'Especialistas independentes' sem nome, instituição ou publicação não constituem evidência verificável. Qualquer comunicado pode usar essa expressão — o que importa é saber quem são esses especialistas e onde publicaram seus trabalhos."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "m2_02",
+    "titulo": "Estudo confirma: refrigerante provoca diabetes tipo 2",
+    "conteudo": "Um artigo publicado no portal Saúde em Foco revelou que o consumo de refrigerante está diretamente ligado ao aumento de diabetes tipo 2 no Brasil. Os autores observaram que, entre 2010 e 2022, tanto as vendas de refrigerantes quanto os diagnósticos de diabetes cresceram cerca de 30%. 'Os dados são inequívocos: beber refrigerante provoca diabetes', concluiu o texto. Nenhum outro veículo científico ou jornalístico confirmou ou reproduziu os dados apresentados.",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": ["correlacao_causalidade", "unica_fonte"],
+    "explicacoes": {
+      "correlacao_causalidade": "Dois indicadores que cresceram no mesmo período não significa que um causou o outro. Refrigerantes e diabetes cresceram junto com smartphones, apps de delivery, sedentarismo e outros fatores — isso é correlação. Provar causalidade exige experimentos controlados e peer review.",
+      "unica_fonte": "A informação aparece em um único portal sem que outros veículos especializados, universidades ou agências de checagem confirmem o estudo. Uma descoberta tão relevante teria ampla repercussão na comunidade científica."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "m2_03",
+    "titulo": "Prefeitura anuncia pacote de R$ 12 milhões para ampliar UBS em Natal",
+    "conteudo": "A Prefeitura Municipal de Natal anunciou um pacote de investimentos de R$ 12 milhões para ampliar a rede de Unidades Básicas de Saúde na cidade. O prefeito assinou a ordem de serviço em cerimônia na Câmara Municipal e afirmou que as obras serão iniciadas 'em breve'. O comunicado foi publicado no portal oficial da Prefeitura. O documento, porém, não informa a data em que o anúncio foi feito, quando as obras devem começar nem o prazo previsto para entrega.",
+    "nivel": "facil",
+    "categoria": "politica",
+    "indicios_corretos": ["sem_data"],
+    "explicacoes": {
+      "sem_data": "Sem saber quando o anúncio foi feito, é impossível avaliar se as obras já começaram, foram canceladas ou se o comunicado tem anos. A ausência de data é um sinal de alerta: informações confiáveis sempre indicam quando foram produzidas e quando os eventos ocorreram."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "m2_04",
+    "titulo": "Médico alerta: uso de celular próximo ao ouvido causa tumor cerebral",
+    "conteudo": "Uma mensagem viral afirma que um médico especialista em neurologia declarou em entrevista que o uso contínuo de celular próximo ao ouvido provoca tumor cerebral. 'Ele disse ter visto dezenas de casos assim no próprio consultório', relata a mensagem. O nome do médico, o hospital onde trabalha e a entrevista original não são identificados em nenhum momento. A Organização Mundial da Saúde e o IARC (Agência Internacional de Pesquisa em Câncer) não encontraram evidências suficientes para classificar celulares como cancerígenos confirmados.",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": ["fonte_anonima", "citacao_fora_contexto"],
+    "explicacoes": {
+      "fonte_anonima": "Um médico sem nome, hospital ou entrevista identificável não pode ser verificado. Qualquer pessoa pode inventar uma declaração atribuída a um 'especialista anônimo'. Para ser credível, a fonte precisa ter nome e ser rastreável.",
+      "citacao_fora_contexto": "A mensagem usa aspas para dar aparência de citação real, mas sem a entrevista original é impossível saber se as palavras foram realmente ditas, distorcidas ou completamente inventadas. Aspas sem fonte identificada são uma técnica comum de desinformação."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "m2_05",
+    "titulo": "Anvisa aprova vacina Qdenga contra dengue para uso em crianças e adultos",
+    "conteudo": "A Agência Nacional de Vigilância Sanitária (Anvisa) aprovou, em reunião de diretoria realizada em 15 de fevereiro de 2024, o registro da vacina Qdenga, do laboratório Takeda, para uso em pessoas de 4 a 60 anos. A vacina foi avaliada com base em ensaios clínicos publicados na revista científica The Lancet, com dados de mais de 20.000 participantes em países da América Latina e Ásia. O relatório técnico completo está disponível no portal oficial da Anvisa (gov.br/anvisa). A aprovação foi confirmada pelos jornais O Globo, Folha de S.Paulo e pela Agência Brasil.",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": null
+  },
+  {
+    "id": "m2_06",
+    "titulo": "Pesquisa: 80% das crianças brasileiras têm deficiência grave de vitamina D",
+    "conteudo": "A Associação Nacional de Suplementação Infantil (ANSI) divulgou uma pesquisa indicando que quatro em cada cinco crianças brasileiras sofrem de deficiência grave de vitamina D e precisariam de suplementação diária. O estudo foi realizado com 500 crianças em três capitais e recomenda o uso de vitaminas do portfólio dos laboratórios parceiros da ANSI. O documento não apresenta data de publicação, metodologia detalhada nem a lista completa dos pesquisadores envolvidos.",
+    "nivel": "facil",
+    "categoria": "saude",
+    "indicios_corretos": ["conflito_de_interesse", "sem_data"],
+    "explicacoes": {
+      "conflito_de_interesse": "A ANSI é financiada por laboratórios que vendem suplementos e, ao mesmo tempo, publica pesquisas que recomendam os produtos desses mesmos laboratórios. Isso cria um incentivo claro para inflar os resultados — a fonte não é independente.",
+      "sem_data": "Uma pesquisa de saúde sem data de publicação não permite saber se os dados ainda são válidos. Dados nutricionais mudam com o tempo e podem não refletir a realidade atual das crianças brasileiras."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "m2_07",
+    "titulo": "Vídeo mostra ministro admitindo 'falhas graves' no sistema eleitoral",
+    "conteudo": "Um clipe de 18 segundos circulando nas redes sociais mostra o Ministro da Justiça dizendo: 'O sistema tem falhas graves que precisam ser corrigidas urgentemente.' O post que acompanha o vídeo afirma que o ministro estaria confessando fraudes nas eleições brasileiras. O clipe foi publicado por apenas um canal com poucos seguidores, sem identificar a entrevista original ou o contexto da declaração. A fala foi extraída de uma entrevista de 45 minutos sobre reformas no sistema prisional — tema completamente diferente de eleições.",
+    "nivel": "facil",
+    "categoria": "politica",
+    "indicios_corretos": ["citacao_fora_contexto", "unica_fonte"],
+    "explicacoes": {
+      "citacao_fora_contexto": "A frase é real, mas foi extraída de uma discussão sobre o sistema prisional e apresentada como se fosse sobre eleições. Retirar um trecho de seu contexto para dar outro sentido à fala é uma das técnicas mais comuns de desinformação política.",
+      "unica_fonte": "Apenas um canal desconhecido publicou o clipe editado. Se o ministro tivesse realmente confessado algo grave sobre eleições, o episódio teria repercutido amplamente na imprensa nacional e internacional — a ausência de confirmações é um forte sinal de alerta."
+    },
+    "fonte_original": null
+  },
+  {
+    "id": "m2_08",
+    "titulo": "IBGE: taxa de desemprego cai para 7,8% no segundo trimestre de 2024",
+    "conteudo": "O Instituto Brasileiro de Geografia e Estatística (IBGE) divulgou, em 29 de agosto de 2024, os resultados da Pesquisa Nacional por Amostra de Domicílios Contínua (PNAD Contínua) do segundo trimestre de 2024. A taxa de desemprego recuou de 8,2% para 7,8%, o menor índice registrado desde 2012. Os dados foram coletados em 211.000 domicílios em todo o Brasil. O relatório completo, com metodologia e tabelas detalhadas, está disponível em ibge.gov.br. A informação foi amplamente confirmada por jornais, emissoras de televisão e agências de notícias nacionais.",
+    "nivel": "facil",
+    "categoria": "politica",
+    "indicios_corretos": [],
+    "explicacoes": {},
+    "fonte_original": null
+  }
+]

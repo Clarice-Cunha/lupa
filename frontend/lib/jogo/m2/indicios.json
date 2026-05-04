@@ -1,0 +1,32 @@
+[
+  {
+    "id": "fonte_anonima",
+    "nome": "Fonte anônima",
+    "descricao": "O texto atribui afirmações a 'especialistas', 'pesquisadores' ou 'fontes' sem nome, instituição ou referência que possa ser verificada."
+  },
+  {
+    "id": "unica_fonte",
+    "nome": "Fonte única",
+    "descricao": "A informação vem de apenas um veículo ou autor, sem confirmação de outras fontes independentes."
+  },
+  {
+    "id": "conflito_de_interesse",
+    "nome": "Conflito de interesse",
+    "descricao": "Quem divulga ou financia a pesquisa tem interesse direto (financeiro, político) no resultado apresentado."
+  },
+  {
+    "id": "sem_data",
+    "nome": "Sem data",
+    "descricao": "O texto não informa quando foi publicado, quando os dados foram coletados ou quando o evento ocorreu, impossibilitando avaliar se a informação ainda é atual."
+  },
+  {
+    "id": "correlacao_causalidade",
+    "nome": "Correlação ≠ Causalidade",
+    "descricao": "Dois eventos que ocorreram juntos são apresentados como se um causasse o outro, sem evidências de relação direta entre eles."
+  },
+  {
+    "id": "citacao_fora_contexto",
+    "nome": "Citação fora de contexto",
+    "descricao": "Uma fala, trecho ou dado real é apresentado de forma distorcida, separado do contexto original que mudaria completamente seu significado."
+  }
+]

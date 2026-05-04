@@ -25,6 +25,7 @@ import {
   BarChart2,
   FileDown,
   X,
+  Globe,
 } from "lucide-react";
 import {
   carregarProgresso,
@@ -78,6 +79,14 @@ export default function PaginaJogo() {
       <div className="mx-auto max-w-2xl">
         {/* Cabeçalho */}
         <header className="mb-10 text-center animate-fade-in-up">
+          <Link
+            href="/jogo/mundos"
+            className="mb-4 inline-flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900"
+          >
+            <Globe className="h-4 w-4" />
+            Ver todos os mundos
+          </Link>
+
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-rose-500 shadow-lg shadow-indigo-200">
             <Gamepad2 className="h-8 w-8 text-white" strokeWidth={2.5} aria-hidden="true" />
           </div>
