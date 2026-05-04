@@ -68,7 +68,7 @@ export default function PaginaMenuJogos() {
         <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {/* Solo */}
           <Link
-            href="/jogo"
+            href="/jogo/mundos"
             className="group animate-fade-in-up flex flex-col rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-xl shadow-indigo-100/50 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-indigo-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
             style={{ animationDelay: "0.1s" }}
           >
@@ -79,13 +79,13 @@ export default function PaginaMenuJogos() {
               Detetive LUPA Solo
             </h2>
             <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
-              Jogue sozinho no seu ritmo. Três níveis de dificuldade,
-              conquistas para desbloquear e progresso salvo no seu navegador.
+              Jogue sozinho no seu ritmo. 5 mundos temáticos, conquistas para
+              desbloquear e progresso salvo no seu navegador.
             </p>
             <div className="mt-5 flex items-center justify-between">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
                 <Sparkles className="h-3 w-3" aria-hidden="true" />
-                Disponível
+                Mundos 1 e 2 disponíveis
               </span>
               <span className="flex items-center gap-1 text-sm font-semibold text-indigo-600 transition group-hover:gap-2">
                 Jogar
