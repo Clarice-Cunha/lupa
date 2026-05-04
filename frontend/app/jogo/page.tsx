@@ -26,6 +26,8 @@ import {
   FileDown,
   X,
   Globe,
+  Search,
+  ArrowRight,
 } from "lucide-react";
 import {
   carregarProgresso,
@@ -81,7 +83,7 @@ export default function PaginaJogo() {
         <header className="mb-10 text-center animate-fade-in-up">
           <Link
             href="/jogo/mundos"
-            className="mb-4 inline-flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900"
+            className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100"
           >
             <Globe className="h-4 w-4" />
             Ver todos os mundos
@@ -90,11 +92,14 @@ export default function PaginaJogo() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-rose-500 shadow-lg shadow-indigo-200">
             <Gamepad2 className="h-8 w-8 text-white" strokeWidth={2.5} aria-hidden="true" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600">
+            Mundo 1
+          </p>
+          <h1 className="mt-1 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
             Detetive LUPA
           </h1>
           <p className="mt-3 text-lg text-slate-600">
-            Jogo educativo de detecção de desinformação
+            Análise de Texto
           </p>
         </header>
 
@@ -325,6 +330,28 @@ export default function PaginaJogo() {
             </p>
           </div>
         </div>
+
+        {/* Banner Mundo 2 */}
+        <Link
+          href="/jogo/mundo2"
+          className="group mt-4 flex items-center justify-between gap-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-4 transition hover:border-emerald-400 hover:bg-emerald-100 animate-fade-in-up"
+          style={{ animationDelay: "0.45s" }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 shadow">
+              <Search className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                Novo — Mundo 2
+              </p>
+              <p className="text-sm font-semibold text-slate-900">
+                Fontes e Evidências
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="h-5 w-5 shrink-0 text-emerald-600 transition group-hover:translate-x-1" />
+        </Link>
       </div>
 
       {/* Modal do certificado */}
