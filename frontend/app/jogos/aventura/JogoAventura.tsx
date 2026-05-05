@@ -12,7 +12,6 @@
  *   - Comunicação React → Phaser: ref para a cena atual (cenaRef).
  */
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
   ShieldCheck,
@@ -786,6 +785,7 @@ function PainelVitoria({
   total: number;
   aoReiniciar: () => void;
 }) {
+  const [emBreve, setEmBreve] = useState(false);
   const pct = Math.round((corretas / total) * 100);
   const medalha = pct === 100 ? "🥇" : pct >= 60 ? "🥈" : "🥉";
 
@@ -823,13 +823,22 @@ function PainelVitoria({
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
-            <Link
-              href="/jogo/mundo2"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 py-2.5 font-semibold text-white shadow-lg transition hover:brightness-110"
-            >
-              Avançar para Mundo 2
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {emBreve ? (
+              <div className="rounded-xl border border-emerald-600/40 bg-emerald-900/30 p-3">
+                <p className="text-sm font-semibold text-emerald-300">🚧 Mundo 2 — Em breve!</p>
+                <p className="mt-0.5 text-xs text-slate-400">
+                  A próxima fase está sendo construída. Fique ligado!
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={() => setEmBreve(true)}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 py-2.5 font-semibold text-white shadow-lg transition hover:brightness-110"
+              >
+                Avançar para Mundo 2
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
             <button
               onClick={aoReiniciar}
               className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-600 bg-slate-700 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-slate-600"
