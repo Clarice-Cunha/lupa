@@ -134,7 +134,7 @@ export default function PaginaMenuJogos() {
 
           {/* Agente LUPA — Aventura por mundos */}
           <Link
-            href="/jogo/mundos"
+            href="/jogos/aventura"
             className="group animate-fade-in-up flex flex-col rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-xl shadow-amber-100/50 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-amber-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
             style={{ animationDelay: "0.3s" }}
           >
@@ -145,13 +145,14 @@ export default function PaginaMenuJogos() {
               Agente LUPA
             </h2>
             <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
-              Aventura por mundos temáticos: analise textos, avalie fontes e
-              desvende campanhas de desinformação avançando fase a fase.
+              Aventura por mundos temáticos. Responda 3 perguntas por mundo com
+              apenas 3 vidas — perca todas e recomece do início. Até o Mundo 5
+              para conquistar.
             </p>
             <div className="mt-5 flex items-center justify-between">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
                 <Sparkles className="h-3 w-3" aria-hidden="true" />
-                Mundos 1 e 2 disponíveis
+                Disponível
               </span>
               <span className="flex items-center gap-1 text-sm font-semibold text-amber-600 transition group-hover:gap-2">
                 Jogar

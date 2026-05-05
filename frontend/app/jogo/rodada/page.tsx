@@ -26,7 +26,6 @@ import {
   Trophy,
   ShieldCheck,
   Star,
-  ArrowRight,
 } from "lucide-react";
 import { INDICIOS, INDICIOS_POR_ID, textosDoNivel } from "@/lib/jogo/dados";
 import {
@@ -335,19 +334,6 @@ export default function PaginaRodada() {
                   </div>
                 )}
 
-                {/* Convite para o Mundo 2 */}
-                <div className="mt-5 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-4 text-left">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                    Próxima missão desbloqueada
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-slate-900">
-                    Mundo 2 — Fontes e Evidências
-                  </p>
-                  <p className="mt-1 text-xs text-slate-600">
-                    Aprenda a avaliar a credibilidade das fontes antes de
-                    acreditar ou compartilhar uma informação.
-                  </p>
-                </div>
               </>
             ) : passou ? (
               <>
@@ -384,21 +370,12 @@ export default function PaginaRodada() {
 
             <div className="mt-6 flex flex-col gap-2 sm:flex-row">
               {jogoCompleto && passou ? (
-                <>
-                  <Link
-                    href="/jogo/mundo2"
-                    className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
-                  >
-                    Iniciar Mundo 2
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                  <button
-                    onClick={concluirJogo}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-300"
-                  >
-                    Voltar ao início
-                  </button>
-                </>
+                <button
+                  onClick={concluirJogo}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-300"
+                >
+                  Voltar ao início
+                </button>
               ) : passou ? (
                 <button
                   onClick={continuarProximoNivel}
