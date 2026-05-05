@@ -790,52 +790,54 @@ function PainelVitoria({
   const medalha = pct === 100 ? "🥇" : pct >= 60 ? "🥈" : "🥉";
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-sm rounded-3xl border border-indigo-600 bg-slate-800 p-8 text-center shadow-2xl">
-        <div className="mb-1 text-5xl">{medalha}</div>
-        <h3 className="text-2xl font-bold text-indigo-300">Missão Concluída!</h3>
-        <p className="mt-1 text-sm text-slate-400">Mundo 1 — Fake News</p>
+    <div className="absolute inset-0 overflow-y-auto bg-slate-900/90 backdrop-blur-sm">
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div className="w-full max-w-sm rounded-3xl border border-indigo-600 bg-slate-800 p-5 text-center shadow-2xl">
+          <div className="mb-1 text-4xl">{medalha}</div>
+          <h3 className="text-xl font-bold text-indigo-300">Missão Concluída!</h3>
+          <p className="text-xs text-slate-400">Mundo 1 — Fake News</p>
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl bg-slate-700/60 p-3">
-            <Trophy className="mx-auto mb-1 h-5 w-5 text-amber-400" />
-            <p className="text-2xl font-bold text-white">{pontos}</p>
-            <p className="text-xs text-slate-400">pontos</p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="rounded-2xl bg-slate-700/60 p-2.5">
+              <Trophy className="mx-auto mb-1 h-4 w-4 text-amber-400" />
+              <p className="text-xl font-bold text-white">{pontos}</p>
+              <p className="text-xs text-slate-400">pontos</p>
+            </div>
+            <div className="rounded-2xl bg-slate-700/60 p-2.5">
+              <Heart className="mx-auto mb-1 h-4 w-4 text-emerald-400" />
+              <p className="text-xl font-bold text-white">
+                {corretas}/{total}
+              </p>
+              <p className="text-xs text-slate-400">acertos</p>
+            </div>
           </div>
-          <div className="rounded-2xl bg-slate-700/60 p-3">
-            <Heart className="mx-auto mb-1 h-5 w-5 text-emerald-400" />
-            <p className="text-2xl font-bold text-white">
-              {corretas}/{total}
+
+          <div className="mt-3 rounded-xl bg-indigo-900/40 p-2.5">
+            <p className="text-xs text-slate-300">
+              {pct === 100
+                ? "🌟 Perfeito! Você é um expert em detectar fake news."
+                : pct >= 60
+                ? "👍 Bom trabalho! Continue praticando para melhorar."
+                : "💪 Continue treinando! A desinformação é traiçoeira."}
             </p>
-            <p className="text-xs text-slate-400">acertos</p>
           </div>
-        </div>
 
-        <div className="mt-4 rounded-2xl bg-indigo-900/40 p-3">
-          <p className="text-sm text-slate-300">
-            {pct === 100
-              ? "🌟 Perfeito! Você é um expert em detectar fake news."
-              : pct >= 60
-              ? "👍 Bom trabalho! Continue praticando para melhorar."
-              : "💪 Continue treinando! A desinformação é traiçoeira."}
-          </p>
-        </div>
-
-        <div className="mt-5 flex flex-col gap-2">
-          <Link
-            href="/jogo/mundo2"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 py-3 font-semibold text-white shadow-lg transition hover:brightness-110"
-          >
-            Avançar para Mundo 2
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <button
-            onClick={aoReiniciar}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-600 bg-slate-700 py-3 text-sm font-semibold text-slate-300 transition hover:bg-slate-600"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Jogar novamente
-          </button>
+          <div className="mt-3 flex flex-col gap-2">
+            <Link
+              href="/jogo/mundo2"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 py-2.5 font-semibold text-white shadow-lg transition hover:brightness-110"
+            >
+              Avançar para Mundo 2
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <button
+              onClick={aoReiniciar}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-600 bg-slate-700 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-slate-600"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Jogar novamente
+            </button>
+          </div>
         </div>
       </div>
     </div>
