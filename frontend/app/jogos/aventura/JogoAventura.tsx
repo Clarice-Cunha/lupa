@@ -12,6 +12,7 @@
  *   - Comunicação React → Phaser: ref para a cena atual (cenaRef).
  */
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
   ShieldCheck,
@@ -20,6 +21,7 @@ import {
   Trophy,
   Heart,
   Swords,
+  ArrowRight,
 } from "lucide-react";
 import type {
   EstadoOverlay,
@@ -819,13 +821,22 @@ function PainelVitoria({
           </p>
         </div>
 
-        <button
-          onClick={aoReiniciar}
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-500"
-        >
-          <RotateCcw className="h-4 w-4" />
-          Jogar novamente
-        </button>
+        <div className="mt-5 flex flex-col gap-2">
+          <Link
+            href="/jogo/mundo2"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 py-3 font-semibold text-white shadow-lg transition hover:brightness-110"
+          >
+            Avançar para Mundo 2
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <button
+            onClick={aoReiniciar}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-600 bg-slate-700 py-3 text-sm font-semibold text-slate-300 transition hover:bg-slate-600"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Jogar novamente
+          </button>
+        </div>
       </div>
     </div>
   );
