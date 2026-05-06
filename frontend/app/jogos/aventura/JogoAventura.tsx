@@ -49,7 +49,6 @@ export default function JogoAventura() {
 
   const [overlay, setOverlay] = useState<EstadoOverlay>({ tipo: "nenhum" });
   const [vidas, setVidas] = useState(3);
-  const [pontos, setPontos] = useState(0);
   const [iniciado, setIniciado] = useState(false);
   const [erroJogo, setErroJogo] = useState<string | null>(null);
   const [mundoAtual, setMundoAtual] = useState<1 | 2>(1);
@@ -63,7 +62,7 @@ export default function JogoAventura() {
     onVitoria: (p, corretas, total) =>
       setOverlay({ tipo: "vitoria", pontos: p, corretas, total }),
     onAtualizarVidas: setVidas,
-    onAtualizarPontos: setPontos,
+    onAtualizarPontos: () => {},
   };
 
   function aoResponder(correta: boolean, feedback: string) {
@@ -79,7 +78,6 @@ export default function JogoAventura() {
     setOverlay({ tipo: "nenhum" });
     vidasInicialRef.current = 3;
     setVidas(3);
-    setPontos(0);
     cenaRef.current?.scene.restart();
   }
 
@@ -89,7 +87,6 @@ export default function JogoAventura() {
   function avancarMundo() {
     setOverlay({ tipo: "nenhum" });
     vidasInicialRef.current = vidas; // carrega as vidas atuais para o próximo mundo
-    setPontos(0);
     setMundoAtual(2);
   }
 
@@ -152,7 +149,7 @@ export default function JogoAventura() {
 
           create() {
             // Reseta estado — necessário porque Phaser reutiliza a instância no scene.restart()
-            const N = 5;
+            const N = 3;
             this.totalPerguntas = N;
             this.fila = embaralhar([...banco]).slice(0, N);
             this.filaIdx = 0;
@@ -386,7 +383,7 @@ export default function JogoAventura() {
               .setScrollFactor(0);
 
             this.hudProgresso = this.add
-              .text(760, 14, `0 / 5`, {
+              .text(760, 14, `0 / 3`, {
                 fontFamily: "Arial",
                 fontSize: "15px",
                 color: "#94a3b8",
@@ -676,16 +673,6 @@ export default function JogoAventura() {
   // ─── Jogo em andamento ───────────────────────────────────────────────────────
   return (
     <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl">
-      {/* HUD externo: vidas e pontos em React (acima do canvas) */}
-      <div className="flex items-center justify-between bg-slate-900 px-4 py-2">
-        <div className="flex gap-1.5 text-xl">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <span key={i}>{i < vidas ? "❤️" : "🖤"}</span>
-          ))}
-        </div>
-        <span className="text-sm font-bold text-slate-200">{pontos} pts</span>
-      </div>
-
       {/* Canvas do Phaser: style inline garante que o browser calcula a altura
           ANTES do Phaser ler offsetWidth/offsetHeight do container */}
       <div
