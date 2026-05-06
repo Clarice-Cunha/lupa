@@ -78,7 +78,13 @@ export default function JogoAventura() {
     setOverlay({ tipo: "nenhum" });
     vidasInicialRef.current = 3;
     setVidas(3);
-    cenaRef.current?.scene.restart();
+    if (mundoAtual === 1) {
+      // Já no Mundo 1: reinicia a cena Phaser diretamente
+      cenaRef.current?.scene.restart();
+    } else {
+      // Estava no Mundo 2: volta ao Mundo 1 (o useEffect cria um novo jogo)
+      setMundoAtual(1);
+    }
   }
 
   // Chamado ao clicar "Avançar para Mundo 2" no painel de vitória do Mundo 1.
