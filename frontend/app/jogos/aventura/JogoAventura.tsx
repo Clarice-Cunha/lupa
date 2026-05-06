@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Jogo de Aventura 2D — Mundo 1: Fake News
+ * Jogo de Aventura 2D — Agente LUPA (Mundos 1 e 2)
  *
  * Arquitetura:
  *   - Phaser 3 roda dentro de um <div> e cuida de física, animação e input.
@@ -10,6 +10,8 @@
  *   - Comunicação Phaser → React: callbacks em uma ref (não causam re-render
  *     desnecessário e não ficam "velhos" entre renders).
  *   - Comunicação React → Phaser: ref para a cena atual (cenaRef).
+ *   - Ao avançar de mundo, mundoAtual muda → useEffect destrói o jogo antigo
+ *     e cria um novo com a cena do mundo seguinte.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -28,6 +30,7 @@ import type {
   PerguntaAventura,
 } from "@/lib/jogo/aventura/tipos";
 import { PERGUNTAS_MUNDO1 } from "@/lib/jogo/aventura/perguntas";
+import { PERGUNTAS_MUNDO2 } from "@/lib/jogo/aventura/perguntas_m2";
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
@@ -48,6 +51,7 @@ export default function JogoAventura() {
   const [pontos, setPontos] = useState(0);
   const [iniciado, setIniciado] = useState(false);
   const [erroJogo, setErroJogo] = useState<string | null>(null);
+  const [mundoAtual, setMundoAtual] = useState<1 | 2>(1);
 
   // Atualiza os callbacks sempre que o estado do React mudar.
   // Como usamos uma ref, a cena Phaser sempre chama a versão mais recente.
@@ -77,7 +81,16 @@ export default function JogoAventura() {
     cenaRef.current?.scene.restart();
   }
 
-  // Inicia o Phaser só quando o usuário clicar em "Jogar"
+  // Chamado ao clicar "Avançar para Mundo 2" no painel de vitória do Mundo 1.
+  // Mudar mundoAtual dispara o useEffect, que destrói o jogo atual e cria o novo.
+  function avancarMundo() {
+    setOverlay({ tipo: "nenhum" });
+    setVidas(3);
+    setPontos(0);
+    setMundoAtual(2);
+  }
+
+  // Inicia (ou reinicia após avancar de mundo) o Phaser
   useEffect(() => {
     if (!iniciado || !containerRef.current) return;
 
@@ -85,463 +98,505 @@ export default function JogoAventura() {
 
     async function iniciarPhaser() {
       try {
-      // O Phaser 3 exporta via UMD/CJS: em alguns bundlers o módulo em si
-      // é o namespace (sem .default). Este fallback cobre os dois casos.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mod = await import("phaser") as any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const Phaser = (mod.default ?? mod) as typeof import("phaser");
-      // `let` para embaralhar de novo a cada partida dentro do create()
-      let perguntas = embaralhar([...PERGUNTAS_MUNDO1]).slice(0, 3);
+        // O Phaser 3 exporta via UMD/CJS: em alguns bundlers o módulo em si
+        // é o namespace (sem .default). Este fallback cobre os dois casos.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mod = await import("phaser") as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const Phaser = (mod.default ?? mod) as typeof import("phaser");
 
-      // ── Cena principal do Mundo 1 ──────────────────────────────────────────
-      class CenaMundo1 extends Phaser.Scene {
-        // Jogador
-        private jogCorpo!: Phaser.GameObjects.Rectangle;
-        private jogEmoji!: Phaser.GameObjects.Text;
-        private jogSombra!: Phaser.GameObjects.Ellipse;
-        private chaoRect!: Phaser.GameObjects.Rectangle;
-        private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-        private teclasWASD!: {
-          up: Phaser.Input.Keyboard.Key;
-          left: Phaser.Input.Keyboard.Key;
-          right: Phaser.Input.Keyboard.Key;
-        };
+        const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : PERGUNTAS_MUNDO2;
+        // `let` para embaralhar de novo a cada partida dentro do create()
+        let perguntas = embaralhar([...banco]).slice(0, 3);
 
-        // Inimigo atual
-        private iniCorpo: Phaser.GameObjects.Rectangle | null = null;
-        private iniEmoji: Phaser.GameObjects.Text | null = null;
-        private iniSombra: Phaser.GameObjects.Ellipse | null = null;
+        // ── Cena unificada (Mundo 1 ou 2, conforme mundoAtual por closure) ───
+        class CenaMundo extends Phaser.Scene {
+          // Jogador
+          private jogCorpo!: Phaser.GameObjects.Rectangle;
+          private jogEmoji!: Phaser.GameObjects.Text;
+          private jogSombra!: Phaser.GameObjects.Ellipse;
+          private chaoRect!: Phaser.GameObjects.Rectangle;
+          private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+          private teclasWASD!: {
+            up: Phaser.Input.Keyboard.Key;
+            left: Phaser.Input.Keyboard.Key;
+            right: Phaser.Input.Keyboard.Key;
+          };
 
-        // HUD
-        private hudVidas: Phaser.GameObjects.Text[] = [];
-        private hudPontos!: Phaser.GameObjects.Text;
-        private hudProgresso!: Phaser.GameObjects.Text;
+          // Inimigo atual
+          private iniCorpo: Phaser.GameObjects.Rectangle | null = null;
+          private iniEmoji: Phaser.GameObjects.Text | null = null;
+          private iniSombra: Phaser.GameObjects.Ellipse | null = null;
 
-        // Estado
-        private vidas = 3;
-        private pontos = 0;
-        private corretas = 0;
-        private inimigoIdx = 0;
-        private jogoAtivo = true;
-        private respondendo = false;
+          // HUD
+          private hudVidas: Phaser.GameObjects.Text[] = [];
+          private hudPontos!: Phaser.GameObjects.Text;
+          private hudProgresso!: Phaser.GameObjects.Text;
 
-        constructor() {
-          super({ key: "CenaMundo1" });
-          cenaRef.current = this;
-        }
+          // Estado
+          private vidas = 3;
+          private pontos = 0;
+          private corretas = 0;
+          private inimigoIdx = 0;
+          private jogoAtivo = true;
+          private respondendo = false;
 
-        create() {
-          // Reseta estado interno — necessário porque o Phaser reutiliza a
-          // mesma instância da cena no scene.restart(), sem chamar o constructor.
-          perguntas = embaralhar([...PERGUNTAS_MUNDO1]).slice(0, 3);
-          this.jogoAtivo = true;
-          this.respondendo = false;
-          this.vidas = 3;
-          this.pontos = 0;
-          this.corretas = 0;
-          this.inimigoIdx = 0;
-          this.iniCorpo = null;
-          this.iniEmoji = null;
-          this.iniSombra = null;
-          this.hudVidas = [];
-
-          this.physics.world.setBounds(0, 0, 800, 450);
-          this.desenharFundo();
-          this.criarChao();
-          this.criarJogador();
-          this.criarHUD();
-          this.configurarControles();
-          // Primeiro inimigo aparece após 1 s
-          this.time.delayedCall(1000, () => this.proximoInimigo());
-        }
-
-        // ── Fundo: cidade digital noturna ────────────────────────────────────
-        private desenharFundo() {
-          const g = this.add.graphics();
-
-          // Céu gradiente (simulado com retângulos sobrepostos)
-          g.fillStyle(0x0f172a);
-          g.fillRect(0, 0, 800, 450);
-
-          // Estrelas
-          g.fillStyle(0xffffff, 0.7);
-          const pontosBrilho = [
-            [45, 30], [120, 55], [200, 20], [310, 45], [390, 15],
-            [470, 60], [550, 25], [640, 50], [720, 18], [780, 42],
-            [80, 90], [180, 110], [260, 75], [430, 100], [610, 85],
-            [690, 110], [760, 70], [350, 130], [500, 115], [150, 140],
-          ];
-          for (const [x, y] of pontosBrilho) {
-            g.fillCircle(x, y, Math.random() < 0.4 ? 2 : 1);
+          constructor() {
+            super({ key: `CenaMundo${mundoAtual}` });
+            cenaRef.current = this;
           }
 
-          // Partículas de dados (linhas verticais indigo)
-          g.fillStyle(0x6366f1, 0.15);
-          for (let i = 0; i < 18; i++) {
-            const x = 20 + i * 44;
-            const h = 15 + Math.floor(Math.random() * 40);
-            g.fillRect(x, 50 + Math.floor(Math.random() * 200), 2, h);
+          create() {
+            // Reseta estado — necessário porque Phaser reutiliza a instância no scene.restart()
+            perguntas = embaralhar([...banco]).slice(0, 3);
+            this.jogoAtivo = true;
+            this.respondendo = false;
+            this.vidas = 3;
+            this.pontos = 0;
+            this.corretas = 0;
+            this.inimigoIdx = 0;
+            this.iniCorpo = null;
+            this.iniEmoji = null;
+            this.iniSombra = null;
+            this.hudVidas = [];
+
+            this.physics.world.setBounds(0, 0, 800, 450);
+            this.desenharFundo();
+            this.criarChao();
+            this.criarJogador();
+            this.criarHUD();
+            this.configurarControles();
+            // Primeiro inimigo aparece após 1 s
+            this.time.delayedCall(1000, () => this.proximoInimigo());
           }
 
-          // Prédios da cidade (silhueta)
-          const predios = [
-            { x: 0, w: 55, h: 130 }, { x: 65, w: 38, h: 85 },
-            { x: 113, w: 65, h: 155 }, { x: 188, w: 48, h: 100 },
-            { x: 246, w: 75, h: 175 }, { x: 331, w: 42, h: 90 },
-            { x: 383, w: 60, h: 135 }, { x: 453, w: 52, h: 115 },
-            { x: 515, w: 70, h: 160 }, { x: 595, w: 45, h: 95 },
-            { x: 650, w: 58, h: 145 }, { x: 718, w: 42, h: 80 },
-            { x: 770, w: 30, h: 110 },
-          ];
-
-          for (const p of predios) {
-            const base = 400 - p.h;
-            // Corpo do prédio
-            g.fillStyle(0x1e293b);
-            g.fillRect(p.x, base, p.w, p.h);
-            // Janelas amarelas
-            g.fillStyle(0xfbbf24, 0.55);
-            for (let wy = base + 12; wy < 388; wy += 18) {
-              for (let wx = p.x + 7; wx < p.x + p.w - 7; wx += 14) {
-                if (Math.random() > 0.35) g.fillRect(wx, wy, 7, 9);
-              }
+          // ── Fundo: delega para M1 ou M2 ──────────────────────────────────────
+          private desenharFundo() {
+            if (mundoAtual === 1) {
+              this.desenharFundoM1();
+            } else {
+              this.desenharFundoM2();
             }
           }
 
-          // Chão
-          g.fillStyle(0x334155);
-          g.fillRect(0, 400, 800, 50);
-          // Linha de separação do chão
-          g.fillStyle(0x475569);
-          g.fillRect(0, 400, 800, 3);
+          // ── Fundo M1: cidade digital noturna (indigo) ─────────────────────────
+          private desenharFundoM1() {
+            const g = this.add.graphics();
 
-          // Detalhes do chão: calçada
-          g.fillStyle(0x3f4f62, 0.5);
-          for (let cx = 0; cx < 800; cx += 60) {
-            g.fillRect(cx, 402, 40, 3);
+            g.fillStyle(0x0f172a);
+            g.fillRect(0, 0, 800, 450);
+
+            // Estrelas
+            g.fillStyle(0xffffff, 0.7);
+            const estrelas = [
+              [45, 30], [120, 55], [200, 20], [310, 45], [390, 15],
+              [470, 60], [550, 25], [640, 50], [720, 18], [780, 42],
+              [80, 90], [180, 110], [260, 75], [430, 100], [610, 85],
+              [690, 110], [760, 70], [350, 130], [500, 115], [150, 140],
+            ];
+            for (const [x, y] of estrelas) {
+              g.fillCircle(x, y, Math.random() < 0.4 ? 2 : 1);
+            }
+
+            // Partículas de dados (indigo)
+            g.fillStyle(0x6366f1, 0.15);
+            for (let i = 0; i < 18; i++) {
+              const x = 20 + i * 44;
+              const h = 15 + Math.floor(Math.random() * 40);
+              g.fillRect(x, 50 + Math.floor(Math.random() * 200), 2, h);
+            }
+
+            // Prédios (silhueta)
+            const predios = [
+              { x: 0, w: 55, h: 130 }, { x: 65, w: 38, h: 85 },
+              { x: 113, w: 65, h: 155 }, { x: 188, w: 48, h: 100 },
+              { x: 246, w: 75, h: 175 }, { x: 331, w: 42, h: 90 },
+              { x: 383, w: 60, h: 135 }, { x: 453, w: 52, h: 115 },
+              { x: 515, w: 70, h: 160 }, { x: 595, w: 45, h: 95 },
+              { x: 650, w: 58, h: 145 }, { x: 718, w: 42, h: 80 },
+              { x: 770, w: 30, h: 110 },
+            ];
+            for (const p of predios) {
+              const base = 400 - p.h;
+              g.fillStyle(0x1e293b);
+              g.fillRect(p.x, base, p.w, p.h);
+              g.fillStyle(0xfbbf24, 0.55);
+              for (let wy = base + 12; wy < 388; wy += 18) {
+                for (let wx = p.x + 7; wx < p.x + p.w - 7; wx += 14) {
+                  if (Math.random() > 0.35) g.fillRect(wx, wy, 7, 9);
+                }
+              }
+            }
+
+            g.fillStyle(0x334155);
+            g.fillRect(0, 400, 800, 50);
+            g.fillStyle(0x475569);
+            g.fillRect(0, 400, 800, 3);
+            g.fillStyle(0x3f4f62, 0.5);
+            for (let cx = 0; cx < 800; cx += 60) g.fillRect(cx, 402, 40, 3);
+
+            this.add
+              .text(400, 14, "MUNDO 1  —  FAKE NEWS", {
+                fontFamily: "Arial",
+                fontSize: "13px",
+                color: "#64748b",
+                letterSpacing: 3,
+              })
+              .setOrigin(0.5, 0);
           }
 
-          // Texto de título do mundo (canto superior)
-          this.add
-            .text(400, 14, "MUNDO 1  —  FAKE NEWS", {
-              fontFamily: "Arial",
-              fontSize: "13px",
-              color: "#64748b",
-              letterSpacing: 3,
-            })
-            .setOrigin(0.5, 0);
-        }
+          // ── Fundo M2: sala de arquivo / laboratório de evidências (verde) ─────
+          private desenharFundoM2() {
+            const g = this.add.graphics();
 
-        // ── Chão com física estática ──────────────────────────────────────────
-        private criarChao() {
-          this.chaoRect = this.add.rectangle(400, 425, 800, 50, 0x000000, 0);
-          this.physics.add.existing(this.chaoRect, true);
-        }
+            // Céu verde-escuro (ambiente de pesquisa)
+            g.fillStyle(0x0c1a12);
+            g.fillRect(0, 0, 800, 450);
 
-        // ── Jogador ───────────────────────────────────────────────────────────
-        private criarJogador() {
-          // Sombra (criada antes do jogador para ficar atrás)
-          this.jogSombra = this.add
-            .ellipse(80, 402, 28, 8, 0x000000, 0.3)
-            .setDepth(-1);
+            // Grade de fundo (visual de laboratório)
+            g.lineStyle(1, 0x10b981, 0.06);
+            for (let x = 0; x <= 800; x += 50) {
+              g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 400); g.closePath(); g.strokePath();
+            }
+            for (let y = 0; y <= 400; y += 50) {
+              g.beginPath(); g.moveTo(0, y); g.lineTo(800, y); g.closePath(); g.strokePath();
+            }
 
-          // Corpo físico invisível
-          this.jogCorpo = this.add.rectangle(80, 355, 30, 44, 0x000000, 0);
-          this.physics.add.existing(this.jogCorpo);
-          const b = this.jogCorpo.body as Phaser.Physics.Arcade.Body;
-          b.setCollideWorldBounds(true);
-          b.setMaxVelocityX(220);
+            // Partículas de dados (verde)
+            g.fillStyle(0x10b981, 0.12);
+            for (let i = 0; i < 16; i++) {
+              const x = 25 + i * 48;
+              const h = 12 + Math.floor(Math.random() * 35);
+              g.fillRect(x, 40 + Math.floor(Math.random() * 180), 2, h);
+            }
 
-          // Colisão jogador ↔ chão
-          this.physics.add.collider(this.jogCorpo, this.chaoRect);
+            // "Arquivos" ao fundo (em vez de prédios)
+            const arquivos = [
+              { x: 0, w: 60, h: 110 }, { x: 70, w: 40, h: 80 },
+              { x: 120, w: 55, h: 140 }, { x: 185, w: 45, h: 95 },
+              { x: 240, w: 70, h: 160 }, { x: 320, w: 50, h: 100 },
+              { x: 380, w: 55, h: 125 }, { x: 445, w: 48, h: 105 },
+              { x: 503, w: 65, h: 150 }, { x: 578, w: 42, h: 85 },
+              { x: 630, w: 60, h: 135 }, { x: 700, w: 45, h: 75 },
+              { x: 755, w: 45, h: 100 },
+            ];
+            for (const a of arquivos) {
+              const base = 400 - a.h;
+              g.fillStyle(0x0f2d1f);
+              g.fillRect(a.x, base, a.w, a.h);
+              // Divisórias de pasta
+              g.fillStyle(0x10b981, 0.18);
+              for (let fy = base + 15; fy < 388; fy += 20) {
+                g.fillRect(a.x + 4, fy, a.w - 8, 2);
+              }
+              // Abas coloridas
+              g.fillStyle(0x059669, 0.35);
+              for (let fy = base + 10; fy < 388; fy += 20) {
+                g.fillRect(a.x + 6, fy - 2, 18, 6);
+              }
+            }
 
-          // Visual do personagem: emoji de lupa (a mascote do LUPA)
-          this.jogEmoji = this.add
-            .text(80, 355, "🔍", { fontSize: "34px" })
-            .setOrigin(0.5, 0.5);
-        }
+            // Chão verde-escuro
+            g.fillStyle(0x1a3a2a);
+            g.fillRect(0, 400, 800, 50);
+            g.fillStyle(0x2d5a40);
+            g.fillRect(0, 400, 800, 3);
+            g.fillStyle(0x1f4a30, 0.5);
+            for (let cx = 0; cx < 800; cx += 60) g.fillRect(cx, 402, 40, 3);
 
-        // ── HUD (vidas, pontos, progresso) ───────────────────────────────────
-        private criarHUD() {
-          // Fundo semitransparente do HUD
-          const hudBg = this.add.graphics();
-          hudBg.fillStyle(0x0f172a, 0.7);
-          hudBg.fillRoundedRect(6, 6, 788, 40, 8);
+            this.add
+              .text(400, 14, "MUNDO 2  —  FONTES E EVIDÊNCIAS", {
+                fontFamily: "Arial",
+                fontSize: "13px",
+                color: "#4ade80",
+                letterSpacing: 2,
+              })
+              .setOrigin(0.5, 0);
+          }
 
-          // Corações de vida
-          this.hudVidas = [];
-          for (let i = 0; i < 3; i++) {
-            this.hudVidas.push(
-              this.add
-                .text(20 + i * 32, 14, "❤️", { fontSize: "22px" })
-                .setScrollFactor(0)
+          // ── Chão com física estática ──────────────────────────────────────────
+          private criarChao() {
+            this.chaoRect = this.add.rectangle(400, 425, 800, 50, 0x000000, 0);
+            this.physics.add.existing(this.chaoRect, true);
+          }
+
+          // ── Jogador ───────────────────────────────────────────────────────────
+          private criarJogador() {
+            this.jogSombra = this.add
+              .ellipse(80, 402, 28, 8, 0x000000, 0.3)
+              .setDepth(-1);
+
+            this.jogCorpo = this.add.rectangle(80, 355, 30, 44, 0x000000, 0);
+            this.physics.add.existing(this.jogCorpo);
+            const b = this.jogCorpo.body as Phaser.Physics.Arcade.Body;
+            b.setCollideWorldBounds(true);
+            b.setMaxVelocityX(220);
+
+            this.physics.add.collider(this.jogCorpo, this.chaoRect);
+
+            this.jogEmoji = this.add
+              .text(80, 355, "🔍", { fontSize: "34px" })
+              .setOrigin(0.5, 0.5);
+          }
+
+          // ── HUD (vidas, pontos, progresso) ───────────────────────────────────
+          private criarHUD() {
+            const hudBg = this.add.graphics();
+            hudBg.fillStyle(0x0f172a, 0.7);
+            hudBg.fillRoundedRect(6, 6, 788, 40, 8);
+
+            this.hudVidas = [];
+            for (let i = 0; i < 3; i++) {
+              this.hudVidas.push(
+                this.add
+                  .text(20 + i * 32, 14, "❤️", { fontSize: "22px" })
+                  .setScrollFactor(0)
+              );
+            }
+
+            this.hudPontos = this.add
+              .text(400, 14, "0 pts", {
+                fontFamily: "Arial",
+                fontSize: "18px",
+                color: "#e2e8f0",
+                fontStyle: "bold",
+              })
+              .setOrigin(0.5, 0)
+              .setScrollFactor(0);
+
+            this.hudProgresso = this.add
+              .text(760, 14, `1 / ${perguntas.length}`, {
+                fontFamily: "Arial",
+                fontSize: "15px",
+                color: "#94a3b8",
+              })
+              .setOrigin(1, 0)
+              .setScrollFactor(0);
+          }
+
+          private atualizarHUD() {
+            this.hudVidas.forEach((t, i) =>
+              t.setText(i < this.vidas ? "❤️" : "🖤")
+            );
+            this.hudPontos.setText(`${this.pontos} pts`);
+            this.hudProgresso.setText(
+              `${Math.min(this.inimigoIdx + 1, perguntas.length)} / ${perguntas.length}`
             );
           }
 
-          // Pontuação
-          this.hudPontos = this.add
-            .text(400, 14, "0 pts", {
-              fontFamily: "Arial",
-              fontSize: "18px",
-              color: "#e2e8f0",
-              fontStyle: "bold",
-            })
-            .setOrigin(0.5, 0)
-            .setScrollFactor(0);
-
-          // Progresso de inimigos
-          this.hudProgresso = this.add
-            .text(760, 14, "1 / 5", {
-              fontFamily: "Arial",
-              fontSize: "15px",
-              color: "#94a3b8",
-            })
-            .setOrigin(1, 0)
-            .setScrollFactor(0);
-        }
-
-        private atualizarHUD() {
-          this.hudVidas.forEach((t, i) =>
-            t.setText(i < this.vidas ? "❤️" : "🖤")
-          );
-          this.hudPontos.setText(`${this.pontos} pts`);
-          this.hudProgresso.setText(
-            `${Math.min(this.inimigoIdx + 1, perguntas.length)} / ${perguntas.length}`
-          );
-        }
-
-        // ── Controles ─────────────────────────────────────────────────────────
-        private configurarControles() {
-          this.cursors = this.input.keyboard!.createCursorKeys();
-          this.teclasWASD = this.input.keyboard!.addKeys({
-            up: Phaser.Input.Keyboard.KeyCodes.W,
-            left: Phaser.Input.Keyboard.KeyCodes.A,
-            right: Phaser.Input.Keyboard.KeyCodes.D,
-          }) as typeof this.teclasWASD;
-        }
-
-        // ── Spawn de inimigo ──────────────────────────────────────────────────
-        private proximoInimigo() {
-          if (!this.jogoAtivo) return;
-
-          const pergunta = perguntas[this.inimigoIdx];
-          const emoji =
-            pergunta.tipoInimigo === "bot"
-              ? "🤖"
-              : pergunta.tipoInimigo === "manchete"
-              ? "📰"
-              : "🔗";
-
-          // Sombra do inimigo
-          this.iniSombra = this.add.ellipse(820, 402, 32, 10, 0x000000, 0.25);
-
-          // Corpo físico
-          this.iniCorpo = this.add.rectangle(820, 358, 36, 44, 0x000000, 0);
-          this.physics.add.existing(this.iniCorpo);
-          const b = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
-          b.setAllowGravity(false);
-          b.setCollideWorldBounds(false);
-
-          // Visual
-          this.iniEmoji = this.add
-            .text(820, 358, emoji, { fontSize: "36px" })
-            .setOrigin(0.5, 0.5);
-
-          // Animação de entrada (pulso)
-          this.tweens.add({
-            targets: this.iniEmoji,
-            scaleX: 1.15,
-            scaleY: 1.15,
-            yoyo: true,
-            repeat: -1,
-            duration: 600,
-            ease: "Sine.easeInOut",
-          });
-
-          this.atualizarHUD();
-        }
-
-        // ── Loop principal ────────────────────────────────────────────────────
-        update() {
-          if (!this.jogoAtivo || this.respondendo) return;
-
-          this.moverJogador();
-          this.sincronizarVisuais();
-          this.moverInimigo();
-        }
-
-        private moverJogador() {
-          const b = this.jogCorpo.body as Phaser.Physics.Arcade.Body;
-          const esq =
-            this.cursors.left.isDown || this.teclasWASD.left.isDown;
-          const dir =
-            this.cursors.right.isDown || this.teclasWASD.right.isDown;
-          const pular =
-            (this.cursors.up.isDown ||
-              this.cursors.space.isDown ||
-              this.teclasWASD.up.isDown) &&
-            b.blocked.down;
-
-          if (esq) {
-            b.setVelocityX(-200);
-            this.jogEmoji.setScale(-1, 1); // espelha para esquerda
-          } else if (dir) {
-            b.setVelocityX(200);
-            this.jogEmoji.setScale(1, 1);
-          } else {
-            b.setVelocityX(0);
+          // ── Controles ─────────────────────────────────────────────────────────
+          private configurarControles() {
+            this.cursors = this.input.keyboard!.createCursorKeys();
+            this.teclasWASD = this.input.keyboard!.addKeys({
+              up: Phaser.Input.Keyboard.KeyCodes.W,
+              left: Phaser.Input.Keyboard.KeyCodes.A,
+              right: Phaser.Input.Keyboard.KeyCodes.D,
+            }) as typeof this.teclasWASD;
           }
 
-          if (pular) b.setVelocityY(-420);
-        }
+          // ── Emoji do inimigo baseado no tipo de pergunta e no mundo ───────────
+          private getMundoEmoji(tipo: string): string {
+            const mapaM1: Record<string, string> = { bot: "🤖", manchete: "📰", corrente: "🔗" };
+            const mapaM2: Record<string, string> = { conflito: "💰", citacao: "✂️", correlacao: "📊" };
+            return (mundoAtual === 1 ? mapaM1 : mapaM2)[tipo] ?? "❓";
+          }
 
-        private sincronizarVisuais() {
-          // Jogador: centraliza o emoji e a sombra no corpo físico
-          this.jogEmoji.setPosition(this.jogCorpo.x, this.jogCorpo.y - 2);
-          this.jogSombra.setPosition(this.jogCorpo.x, 402);
+          // ── Spawn de inimigo ──────────────────────────────────────────────────
+          private proximoInimigo() {
+            if (!this.jogoAtivo) return;
 
-          // Inimigo
-          if (this.iniCorpo && this.iniEmoji) {
-            this.iniEmoji.setPosition(this.iniCorpo.x, this.iniCorpo.y - 2);
-            if (this.iniSombra) {
-              this.iniSombra.setPosition(this.iniCorpo.x, 402);
+            const pergunta = perguntas[this.inimigoIdx];
+            const emoji = this.getMundoEmoji(pergunta.tipoInimigo);
+
+            this.iniSombra = this.add.ellipse(820, 402, 32, 10, 0x000000, 0.25);
+
+            this.iniCorpo = this.add.rectangle(820, 358, 36, 44, 0x000000, 0);
+            this.physics.add.existing(this.iniCorpo);
+            const b = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
+            b.setAllowGravity(false);
+            b.setCollideWorldBounds(false);
+
+            this.iniEmoji = this.add
+              .text(820, 358, emoji, { fontSize: "36px" })
+              .setOrigin(0.5, 0.5);
+
+            // Animação de entrada (pulso)
+            this.tweens.add({
+              targets: this.iniEmoji,
+              scaleX: 1.15,
+              scaleY: 1.15,
+              yoyo: true,
+              repeat: -1,
+              duration: 600,
+              ease: "Sine.easeInOut",
+            });
+
+            this.atualizarHUD();
+          }
+
+          // ── Loop principal ────────────────────────────────────────────────────
+          update() {
+            if (!this.jogoAtivo || this.respondendo) return;
+            this.moverJogador();
+            this.sincronizarVisuais();
+            this.moverInimigo();
+          }
+
+          private moverJogador() {
+            const b = this.jogCorpo.body as Phaser.Physics.Arcade.Body;
+            const esq = this.cursors.left.isDown || this.teclasWASD.left.isDown;
+            const dir = this.cursors.right.isDown || this.teclasWASD.right.isDown;
+            const pular =
+              (this.cursors.up.isDown ||
+                this.cursors.space.isDown ||
+                this.teclasWASD.up.isDown) &&
+              b.blocked.down;
+
+            if (esq) {
+              b.setVelocityX(-200);
+              this.jogEmoji.setScale(-1, 1);
+            } else if (dir) {
+              b.setVelocityX(200);
+              this.jogEmoji.setScale(1, 1);
+            } else {
+              b.setVelocityX(0);
+            }
+
+            if (pular) b.setVelocityY(-420);
+          }
+
+          private sincronizarVisuais() {
+            this.jogEmoji.setPosition(this.jogCorpo.x, this.jogCorpo.y - 2);
+            this.jogSombra.setPosition(this.jogCorpo.x, 402);
+
+            if (this.iniCorpo && this.iniEmoji) {
+              this.iniEmoji.setPosition(this.iniCorpo.x, this.iniCorpo.y - 2);
+              if (this.iniSombra) this.iniSombra.setPosition(this.iniCorpo.x, 402);
             }
           }
-        }
 
-        private moverInimigo() {
-          if (!this.iniCorpo || !this.iniEmoji) return;
+          private moverInimigo() {
+            if (!this.iniCorpo || !this.iniEmoji) return;
 
-          const b = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
-          const dx = this.jogCorpo.x - this.iniCorpo.x;
-          const dy = this.jogCorpo.y - this.iniCorpo.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+            const b = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
+            const dx = this.jogCorpo.x - this.iniCorpo.x;
+            const dy = this.jogCorpo.y - this.iniCorpo.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
 
-          // Colisão: dispara pergunta
-          if (dist < 55) {
-            this.dispararPergunta();
-            return;
-          }
-
-          // Perseguição: o inimigo flutua em direção ao jogador
-          const vel = 95;
-          b.setVelocityX(dx > 0 ? vel : -vel);
-          // Levitação leve no eixo Y
-          b.setVelocityY(dy > 0 ? vel * 0.4 : -vel * 0.4);
-
-          // Vira o emoji de acordo com a direção
-          this.iniEmoji.setScale(dx > 0 ? -1 : 1, 1);
-        }
-
-        // ── Disparo de pergunta ───────────────────────────────────────────────
-        private dispararPergunta() {
-          if (this.respondendo) return;
-          this.respondendo = true;
-
-          // Pausa a física enquanto a pergunta está aberta
-          this.physics.pause();
-
-          // Faz o inimigo piscar antes do overlay aparecer
-          this.tweens.add({
-            targets: this.iniEmoji,
-            alpha: 0,
-            yoyo: true,
-            repeat: 2,
-            duration: 120,
-            onComplete: () => {
-              callbacksRef.current.onMostrarPergunta(perguntas[this.inimigoIdx]);
-            },
-          });
-        }
-
-        // ── Resultado da pergunta (chamado pelo React) ────────────────────────
-        resolverPergunta(correta: boolean) {
-          if (correta) {
-            this.pontos += 100;
-            this.corretas++;
-            callbacksRef.current.onAtualizarPontos(this.pontos);
-
-            // Inimigo explode e some
-            this.tweens.add({
-              targets: [this.iniEmoji, this.iniCorpo, this.iniSombra],
-              scaleX: 2.5,
-              scaleY: 2.5,
-              alpha: 0,
-              duration: 350,
-              ease: "Power2",
-              onComplete: () => {
-                this.iniEmoji?.destroy();
-                this.iniCorpo?.destroy();
-                this.iniSombra?.destroy();
-                this.iniEmoji = null;
-                this.iniCorpo = null;
-                this.iniSombra = null;
-                this.inimigoIdx++;
-                this.respondendo = false;
-
-                if (this.inimigoIdx >= perguntas.length) {
-                  // Vitória!
-                  this.jogoAtivo = false;
-                  callbacksRef.current.onVitoria(
-                    this.pontos,
-                    this.corretas,
-                    perguntas.length
-                  );
-                } else {
-                  this.physics.resume();
-                  this.time.delayedCall(900, () => this.proximoInimigo());
-                }
-              },
-            });
-          } else {
-            // Resposta errada: perde vida, inimigo recua e volta
-            this.vidas--;
-            callbacksRef.current.onAtualizarVidas(this.vidas);
-            this.atualizarHUD();
-
-            if (this.vidas <= 0) {
-              this.jogoAtivo = false;
-              callbacksRef.current.onGameOver(this.pontos);
+            if (dist < 55) {
+              this.dispararPergunta();
               return;
             }
 
-            // Inimigo recua para a direita e volta a perseguir
-            if (this.iniCorpo) {
-              const b = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
-              b.setVelocityX(300);
-              this.time.delayedCall(1200, () => {
-                if (this.iniCorpo) {
-                  this.iniCorpo.setPosition(820, 358);
-                  const bb = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
-                  bb.setVelocity(0, 0);
-                }
-                this.respondendo = false;
-                this.physics.resume();
+            const vel = 95;
+            b.setVelocityX(dx > 0 ? vel : -vel);
+            b.setVelocityY(dy > 0 ? vel * 0.4 : -vel * 0.4);
+            this.iniEmoji.setScale(dx > 0 ? -1 : 1, 1);
+          }
+
+          // ── Disparo de pergunta ───────────────────────────────────────────────
+          private dispararPergunta() {
+            if (this.respondendo) return;
+            this.respondendo = true;
+            this.physics.pause();
+
+            this.tweens.add({
+              targets: this.iniEmoji,
+              alpha: 0,
+              yoyo: true,
+              repeat: 2,
+              duration: 120,
+              onComplete: () => {
+                callbacksRef.current.onMostrarPergunta(perguntas[this.inimigoIdx]);
+              },
+            });
+          }
+
+          // ── Resultado da pergunta (chamado pelo React) ────────────────────────
+          resolverPergunta(correta: boolean) {
+            if (correta) {
+              this.pontos += 100;
+              this.corretas++;
+              callbacksRef.current.onAtualizarPontos(this.pontos);
+
+              this.tweens.add({
+                targets: [this.iniEmoji, this.iniCorpo, this.iniSombra],
+                scaleX: 2.5,
+                scaleY: 2.5,
+                alpha: 0,
+                duration: 350,
+                ease: "Power2",
+                onComplete: () => {
+                  this.iniEmoji?.destroy();
+                  this.iniCorpo?.destroy();
+                  this.iniSombra?.destroy();
+                  this.iniEmoji = null;
+                  this.iniCorpo = null;
+                  this.iniSombra = null;
+                  this.inimigoIdx++;
+                  this.respondendo = false;
+
+                  if (this.inimigoIdx >= perguntas.length) {
+                    // Vitória!
+                    this.jogoAtivo = false;
+                    callbacksRef.current.onVitoria(
+                      this.pontos,
+                      this.corretas,
+                      perguntas.length
+                    );
+                  } else {
+                    this.physics.resume();
+                    this.time.delayedCall(900, () => this.proximoInimigo());
+                  }
+                },
               });
+            } else {
+              // Resposta errada: perde vida, inimigo recua e volta
+              this.vidas--;
+              callbacksRef.current.onAtualizarVidas(this.vidas);
+              this.atualizarHUD();
+
+              if (this.vidas <= 0) {
+                this.jogoAtivo = false;
+                callbacksRef.current.onGameOver(this.pontos);
+                return;
+              }
+
+              if (this.iniCorpo) {
+                const b = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
+                b.setVelocityX(300);
+                this.time.delayedCall(1200, () => {
+                  if (this.iniCorpo) {
+                    this.iniCorpo.setPosition(820, 358);
+                    const bb = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
+                    bb.setVelocity(0, 0);
+                  }
+                  this.respondendo = false;
+                  this.physics.resume();
+                });
+              }
             }
           }
         }
-      }
 
-      // Cria o jogo Phaser dentro do <div>
-      jogo = new Phaser.Game({
-        type: Phaser.AUTO,
-        width: 800,
-        height: 450,
-        parent: containerRef.current!,
-        backgroundColor: "#0f172a",
-        scale: {
-          mode: Phaser.Scale.FIT,
-          autoCenter: Phaser.Scale.CENTER_BOTH,
-        },
-        physics: {
-          default: "arcade",
-          arcade: { gravity: { x: 0, y: 650 }, debug: false },
-        },
-        scene: [CenaMundo1],
-        banner: false,
-      });
+        // Cria o jogo Phaser dentro do <div>
+        jogo = new Phaser.Game({
+          type: Phaser.AUTO,
+          width: 800,
+          height: 450,
+          parent: containerRef.current!,
+          backgroundColor: mundoAtual === 1 ? "#0f172a" : "#0c1a12",
+          scale: {
+            mode: Phaser.Scale.FIT,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+          },
+          physics: {
+            default: "arcade",
+            arcade: { gravity: { x: 0, y: 650 }, debug: false },
+          },
+          scene: [CenaMundo],
+          banner: false,
+        });
       } catch (err) {
         setErroJogo(`Erro ao iniciar o jogo: ${String(err)}`);
       }
@@ -553,7 +608,7 @@ export default function JogoAventura() {
       jogo?.destroy(true);
       cenaRef.current = null;
     };
-  }, [iniciado]);
+  }, [iniciado, mundoAtual]);
 
   // ─── Tela de início ─────────────────────────────────────────────────────────
   if (!iniciado) {
@@ -606,11 +661,10 @@ export default function JogoAventura() {
         className="w-full"
         style={{ aspectRatio: "800/450" }}
       />
+
       {erroJogo && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90 p-6 text-center">
-          <p className="text-sm text-rose-400">
-            Erro ao iniciar o jogo: {erroJogo}
-          </p>
+          <p className="text-sm text-rose-400">Erro ao iniciar o jogo: {erroJogo}</p>
         </div>
       )}
 
@@ -636,6 +690,8 @@ export default function JogoAventura() {
           corretas={overlay.corretas}
           total={overlay.total}
           aoReiniciar={reiniciar}
+          mundoAtual={mundoAtual}
+          aoAvancarMundo={avancarMundo}
         />
       )}
     </div>
@@ -654,6 +710,16 @@ function embaralhar<T>(lista: T[]): T[] {
 
 // ─── Sub-componentes de overlay ──────────────────────────────────────────────
 
+// Mapa de emojis para todos os tipos de inimigo (Mundos 1 e 2)
+const EMOJI_INIMIGO: Record<string, string> = {
+  bot: "🤖",
+  manchete: "📰",
+  corrente: "🔗",
+  conflito: "💰",
+  citacao: "✂️",
+  correlacao: "📊",
+};
+
 function PainelPergunta({
   pergunta,
   aoResponder,
@@ -661,14 +727,7 @@ function PainelPergunta({
   pergunta: PerguntaAventura;
   aoResponder: (correta: boolean, feedback: string) => void;
 }) {
-  const inimigoEmoji =
-    pergunta.tipoInimigo === "bot"
-      ? "🤖"
-      : pergunta.tipoInimigo === "manchete"
-      ? "📰"
-      : "🔗";
-
-  // Embaralha as opções para o correto não estar sempre no mesmo lugar
+  const emoji = EMOJI_INIMIGO[pergunta.tipoInimigo] ?? "❓";
   const opcoes = embaralhar([...pergunta.opcoes]);
 
   return (
@@ -676,7 +735,7 @@ function PainelPergunta({
       <div className="w-full max-w-lg rounded-3xl border border-slate-700 bg-slate-800 p-6 shadow-2xl">
         {/* Inimigo capturado */}
         <div className="mb-4 flex items-center gap-3">
-          <span className="text-4xl">{inimigoEmoji}</span>
+          <span className="text-4xl">{emoji}</span>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-rose-400">
               Inimigo capturado: {pergunta.nomeInimigo}
@@ -779,15 +838,20 @@ function PainelVitoria({
   corretas,
   total,
   aoReiniciar,
+  mundoAtual,
+  aoAvancarMundo,
 }: {
   pontos: number;
   corretas: number;
   total: number;
   aoReiniciar: () => void;
+  mundoAtual: 1 | 2;
+  aoAvancarMundo: () => void;
 }) {
-  const [emBreve, setEmBreve] = useState(false);
   const pct = Math.round((corretas / total) * 100);
   const medalha = pct === 100 ? "🥇" : pct >= 60 ? "🥈" : "🥉";
+  const subtitulo =
+    mundoAtual === 1 ? "Mundo 1 — Fake News" : "Mundo 2 — Fontes e Evidências";
 
   return (
     <div className="absolute inset-0 overflow-y-auto bg-slate-900/90 backdrop-blur-sm">
@@ -795,7 +859,7 @@ function PainelVitoria({
         <div className="w-full max-w-sm rounded-3xl border border-indigo-600 bg-slate-800 p-5 text-center shadow-2xl">
           <div className="mb-1 text-4xl">{medalha}</div>
           <h3 className="text-xl font-bold text-indigo-300">Missão Concluída!</h3>
-          <p className="text-xs text-slate-400">Mundo 1 — Fake News</p>
+          <p className="text-xs text-slate-400">{subtitulo}</p>
 
           <div className="mt-3 grid grid-cols-2 gap-2">
             <div className="rounded-2xl bg-slate-700/60 p-2.5">
@@ -805,9 +869,7 @@ function PainelVitoria({
             </div>
             <div className="rounded-2xl bg-slate-700/60 p-2.5">
               <Heart className="mx-auto mb-1 h-4 w-4 text-emerald-400" />
-              <p className="text-xl font-bold text-white">
-                {corretas}/{total}
-              </p>
+              <p className="text-xl font-bold text-white">{corretas}/{total}</p>
               <p className="text-xs text-slate-400">acertos</p>
             </div>
           </div>
@@ -815,7 +877,7 @@ function PainelVitoria({
           <div className="mt-3 rounded-xl bg-indigo-900/40 p-2.5">
             <p className="text-xs text-slate-300">
               {pct === 100
-                ? "🌟 Perfeito! Você é um expert em detectar fake news."
+                ? "🌟 Perfeito! Você é um expert em pensamento crítico."
                 : pct >= 60
                 ? "👍 Bom trabalho! Continue praticando para melhorar."
                 : "💪 Continue treinando! A desinformação é traiçoeira."}
@@ -823,21 +885,22 @@ function PainelVitoria({
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
-            {emBreve ? (
-              <div className="rounded-xl border border-emerald-600/40 bg-emerald-900/30 p-3">
-                <p className="text-sm font-semibold text-emerald-300">🚧 Mundo 2 — Em breve!</p>
-                <p className="mt-0.5 text-xs text-slate-400">
-                  A próxima fase está sendo construída. Fique ligado!
-                </p>
-              </div>
-            ) : (
+            {/* Botão de avanço: funcional no Mundo 1 → 2; "em breve" no Mundo 2 */}
+            {mundoAtual === 1 ? (
               <button
-                onClick={() => setEmBreve(true)}
+                onClick={aoAvancarMundo}
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 py-2.5 font-semibold text-white shadow-lg transition hover:brightness-110"
               >
                 Avançar para Mundo 2
                 <ArrowRight className="h-4 w-4" />
               </button>
+            ) : (
+              <div className="rounded-xl border border-emerald-600/40 bg-emerald-900/30 p-3">
+                <p className="text-sm font-semibold text-emerald-300">🚧 Mundo 3 — Em breve!</p>
+                <p className="mt-0.5 text-xs text-slate-400">
+                  A próxima fase está sendo construída. Fique ligado!
+                </p>
+              </div>
             )}
             <button
               onClick={aoReiniciar}
