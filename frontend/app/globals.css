@@ -120,6 +120,12 @@ body {
 .dark .bg-indigo-100 { background-color: rgb(49 46 129 / 0.3); }
 .dark .bg-emerald-50 { background-color: rgb(6 55 40 / 0.5); }
 
+/* Sombras coloridas de botões azuis — removidas no modo escuro */
+.dark .shadow-indigo-200,
+.dark .shadow-indigo-300 {
+  box-shadow: none;
+}
+
 /* Textos coloridos — mantidos para manter legibilidade */
 .dark .text-amber-900 { color: rgb(253 230 138); }
 .dark .text-red-700   { color: rgb(252 165 165); }

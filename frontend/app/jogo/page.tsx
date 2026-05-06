@@ -131,7 +131,7 @@ export default function PaginaJogo() {
             icone={<Target className="h-5 w-5 text-emerald-700" />}
             corFundo="bg-emerald-100"
             titulo="3 níveis"
-            descricao="Fácil, Médio e Difícil. Avance acertando 70%."
+            descricao="Fácil, Médio e Difícil. Avance acertando 75%."
           />
           <CartaoInfo
             icone={<Award className="h-5 w-5 text-rose-600" />}

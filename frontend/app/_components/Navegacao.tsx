@@ -14,7 +14,7 @@ type Filho = { href: string; rotulo: string };
 type Item = { rotulo: string; icone: React.ElementType; href?: string; filhos?: Filho[] };
 
 const MENU: Item[] = [
-  { rotulo: "Início", href: "/", icone: Search },
+  { rotulo: "Analisador", href: "/", icone: Search },
   { rotulo: "Jogos", href: "/jogos", icone: Gamepad2 },
   {
     rotulo: "Aprender",

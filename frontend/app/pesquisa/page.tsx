@@ -414,7 +414,7 @@ export default function PaginaPesquisa() {
           style={{ animationDelay: "0.25s" }}
         >
           <h2 className="mb-5 text-xl font-bold text-slate-900 dark:text-slate-100">
-            O que diferencia o LUPA
+            O que o LUPA faz
           </h2>
           <div className="rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-lg shadow-slate-100/60 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="space-y-4">

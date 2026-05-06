@@ -164,4 +164,70 @@ export const PERGUNTAS_MUNDO2: PerguntaAventura[] = [
       },
     ],
   },
+  {
+    id: "citacao3",
+    tipoInimigo: "citacao",
+    nomeInimigo: "Estatística Enganosa",
+    situacao:
+      '"80% dos médicos concordam que o suplemento X melhora a imunidade." A pesquisa ouviu apenas 5 médicos, todos funcionários da empresa que vende o produto.',
+    enunciado: "O que está errado nessa estatística?",
+    opcoes: [
+      {
+        texto: "A amostra é pequena e enviesada: 5 pessoas com conflito de interesse não representam a categoria médica.",
+        correta: true,
+        feedback:
+          "'80%' de 5 pessoas são apenas 4 indivíduos. Números impressionantes podem esconder pesquisas minúsculas e tendenciosas. Sempre pergunte: quantas pessoas foram ouvidas e quem as escolheu?",
+      },
+      {
+        texto: "80% é uma porcentagem alta — a afirmação deve ser confiável.",
+        correta: false,
+        feedback:
+          "Porcentagem alta não significa amostra representativa. Uma pesquisa com 5 pessoas escolhidas a dedo pela própria empresa não tem valor científico.",
+      },
+    ],
+  },
+  {
+    id: "correlacao3",
+    tipoInimigo: "correlacao",
+    nomeInimigo: "Inversão de Causalidade",
+    situacao:
+      '"Estudos mostram que pessoas deprimidas assistem mais TV. Conclusão: assistir TV causa depressão."',
+    enunciado: "Qual o problema com essa conclusão?",
+    opcoes: [
+      {
+        texto: "A causa pode ser invertida: pessoas deprimidas podem assistir mais TV por causa da depressão, não o contrário.",
+        correta: true,
+        feedback:
+          "Perfeito! Correlação não determina direção da causa. Pode ser que B cause A — ou que uma terceira variável (como isolamento social) cause os dois. Isso se chama inversão causal.",
+      },
+      {
+        texto: "Se o estudo mostra relação entre os dois fatos, a conclusão está correta.",
+        correta: false,
+        feedback:
+          "Correlação não diz quem causa quem. Dois fenômenos podem caminhar juntos por razões completamente diferentes. A depressão pode levar à TV — não o contrário.",
+      },
+    ],
+  },
+  {
+    id: "conflito3",
+    tipoInimigo: "conflito",
+    nomeInimigo: "Instituto Patrocinado",
+    situacao:
+      '"O Instituto Pró-Carne divulgou pesquisa mostrando que carne vermelha não aumenta risco cardiovascular." O instituto é financiado pela indústria frigorífica.',
+    enunciado: "Como você avalia essa pesquisa?",
+    opcoes: [
+      {
+        texto: "Com ceticismo: o financiador tem interesse direto no resultado. Busco meta-análises de universidades independentes.",
+        correta: true,
+        feedback:
+          "Correto! Institutos com nomes neutros frequentemente têm patrocinadores com interesse claro no resultado. Para este tema, busque estudos de universidades públicas ou organismos como a OMS.",
+      },
+      {
+        texto: "O nome 'instituto' dá credibilidade científica à pesquisa.",
+        correta: false,
+        feedback:
+          "Qualquer organização pode se chamar 'instituto'. O nome não garante independência. O que importa é quem financia e se o estudo foi revisado por pesquisadores sem vínculo com o patrocinador.",
+      },
+    ],
+  },
 ];

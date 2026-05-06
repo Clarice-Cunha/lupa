@@ -169,4 +169,70 @@ export const PERGUNTAS_MUNDO1: PerguntaAventura[] = [
       },
     ],
   },
+  {
+    id: "bot3",
+    tipoInimigo: "bot",
+    nomeInimigo: "Perfil Verificado Falso",
+    situacao:
+      'Um perfil com o símbolo de verificação azul posta: "CONFIRMADO: novo vírus já mata em 24h no Brasil." Nenhum veículo jornalístico repercute a notícia.',
+    enunciado: "O símbolo de verificação garante que a informação é verdadeira?",
+    opcoes: [
+      {
+        texto: "Não. Verificação confirma identidade, não veracidade. Busco a notícia em veículos de referência.",
+        correta: true,
+        feedback:
+          "Correto! O símbolo azul prova apenas que o perfil é de quem diz ser — não que o conteúdo é verdadeiro. Até perfis verificados espalham desinformação.",
+      },
+      {
+        texto: "Sim. Perfil verificado significa que o conteúdo foi checado.",
+        correta: false,
+        feedback:
+          "Essa é uma confusão comum. Verificação é sobre identidade, não checagem de fatos. Sempre confirme a informação em outros veículos antes de compartilhar.",
+      },
+    ],
+  },
+  {
+    id: "manchete3",
+    tipoInimigo: "manchete",
+    nomeInimigo: "Notícia sem Data",
+    situacao:
+      'Você recebe uma postagem: "Explosão em refinaria deixa 40 mortos." Sem data, sem veículo identificado.',
+    enunciado: "Qual o primeiro passo antes de compartilhar?",
+    opcoes: [
+      {
+        texto: "Verifico a data e o veículo — notícias antigas são frequentemente recirculadas como se fossem atuais.",
+        correta: true,
+        feedback:
+          "Perfeito! Notícias reais de acidentes são frequentemente reaproveitadas para criar pânico. Sem data e fonte identificada, qualquer notícia dramática é suspeita.",
+      },
+      {
+        texto: "Se a notícia é dramática, merece ser compartilhada imediatamente.",
+        correta: false,
+        feedback:
+          "Urgência e drama são exatamente os gatilhos usados para fazer você agir sem verificar. Sempre confira data e fonte antes de qualquer compartilhamento.",
+      },
+    ],
+  },
+  {
+    id: "corrente2",
+    tipoInimigo: "corrente",
+    nomeInimigo: "Pânico sobre Vacinação",
+    situacao:
+      'Mensagem no WhatsApp: "URGENTE: o governo vai vacinar crianças sem aviso. Leve seu filho ao CRAS para se recusar formalmente. COMPARTILHE!"',
+    enunciado: "O que você faz com essa mensagem?",
+    opcoes: [
+      {
+        texto: "Verifico no site do Ministério da Saúde — mensagens de pânico sobre vacinas são frequentemente falsas.",
+        correta: true,
+        feedback:
+          "Correto! Programas de vacinação reais são divulgados por canais oficiais, não por correntes de WhatsApp. Encaminhar pode fazer famílias deixarem de vacinar filhos com base em informação falsa.",
+      },
+      {
+        texto: "Encaminho para alertar outras mães.",
+        correta: false,
+        feedback:
+          "Ao encaminhar sem verificar, você pode prejudicar a saúde de crianças. Correntes de pânico sobre vacinação têm consequências reais de saúde pública.",
+      },
+    ],
+  },
 ];

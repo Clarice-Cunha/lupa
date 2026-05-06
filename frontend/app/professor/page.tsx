@@ -679,7 +679,7 @@ export default function PaginaProfessor() {
             Área do Professor
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-lg text-slate-600">
-            Planos de aula prontos para usar o LUPA em sala de aula — com objetivos,
+            Planos prontos para usar o LUPA em sala de aula — com objetivos,
             roteiro, relação com a BNCC e fontes em português.
           </p>
         </header>

@@ -38,6 +38,7 @@ export default function JogoAventura() {
   const containerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cenaRef = useRef<any>(null);
+  const vidasInicialRef = useRef(3);
   const callbacksRef = useRef<GameCallbacks>({
     onMostrarPergunta: () => {},
     onGameOver: () => {},
@@ -76,6 +77,7 @@ export default function JogoAventura() {
 
   function reiniciar() {
     setOverlay({ tipo: "nenhum" });
+    vidasInicialRef.current = 3;
     setVidas(3);
     setPontos(0);
     cenaRef.current?.scene.restart();
@@ -83,9 +85,10 @@ export default function JogoAventura() {
 
   // Chamado ao clicar "Avançar para Mundo 2" no painel de vitória do Mundo 1.
   // Mudar mundoAtual dispara o useEffect, que destrói o jogo atual e cria o novo.
+  // As vidas são mantidas (não resetadas) ao avançar de mundo.
   function avancarMundo() {
     setOverlay({ tipo: "nenhum" });
-    setVidas(3);
+    vidasInicialRef.current = vidas; // carrega as vidas atuais para o próximo mundo
     setPontos(0);
     setMundoAtual(2);
   }
@@ -106,8 +109,6 @@ export default function JogoAventura() {
         const Phaser = (mod.default ?? mod) as typeof import("phaser");
 
         const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : PERGUNTAS_MUNDO2;
-        // `let` para embaralhar de novo a cada partida dentro do create()
-        let perguntas = embaralhar([...banco]).slice(0, 3);
 
         // ── Cena unificada (Mundo 1 ou 2, conforme mundoAtual por closure) ───
         class CenaMundo extends Phaser.Scene {
@@ -137,7 +138,10 @@ export default function JogoAventura() {
           private vidas = 3;
           private pontos = 0;
           private corretas = 0;
-          private inimigoIdx = 0;
+          private fila: PerguntaAventura[] = [];
+          private filaIdx = 0;
+          private totalPerguntas = 5;
+          private velInimigo = 95;
           private jogoAtivo = true;
           private respondendo = false;
 
@@ -148,13 +152,16 @@ export default function JogoAventura() {
 
           create() {
             // Reseta estado — necessário porque Phaser reutiliza a instância no scene.restart()
-            perguntas = embaralhar([...banco]).slice(0, 3);
+            const N = 5;
+            this.totalPerguntas = N;
+            this.fila = embaralhar([...banco]).slice(0, N);
+            this.filaIdx = 0;
             this.jogoAtivo = true;
             this.respondendo = false;
-            this.vidas = 3;
+            this.vidas = vidasInicialRef.current;
             this.pontos = 0;
             this.corretas = 0;
-            this.inimigoIdx = 0;
+            this.velInimigo = 95;
             this.iniCorpo = null;
             this.iniEmoji = null;
             this.iniSombra = null;
@@ -166,6 +173,20 @@ export default function JogoAventura() {
             this.criarJogador();
             this.criarHUD();
             this.configurarControles();
+
+            // Inimigo fica 18% mais rápido a cada 8 s (máx 220 px/s)
+            this.time.addEvent({
+              delay: 8000,
+              callback: () => {
+                if (this.jogoAtivo) this.velInimigo = Math.min(Math.round(this.velInimigo * 1.18), 220);
+              },
+              loop: true,
+            });
+
+            // Sincroniza HUDs com o estado inicial (importante ao avançar de mundo)
+            this.atualizarHUD();
+            callbacksRef.current.onAtualizarVidas(this.vidas);
+
             // Primeiro inimigo aparece após 1 s
             this.time.delayedCall(1000, () => this.proximoInimigo());
           }
@@ -365,7 +386,7 @@ export default function JogoAventura() {
               .setScrollFactor(0);
 
             this.hudProgresso = this.add
-              .text(760, 14, `1 / ${perguntas.length}`, {
+              .text(760, 14, `0 / 5`, {
                 fontFamily: "Arial",
                 fontSize: "15px",
                 color: "#94a3b8",
@@ -379,9 +400,7 @@ export default function JogoAventura() {
               t.setText(i < this.vidas ? "❤️" : "🖤")
             );
             this.hudPontos.setText(`${this.pontos} pts`);
-            this.hudProgresso.setText(
-              `${Math.min(this.inimigoIdx + 1, perguntas.length)} / ${perguntas.length}`
-            );
+            this.hudProgresso.setText(`${this.corretas} / ${this.totalPerguntas}`);
           }
 
           // ── Controles ─────────────────────────────────────────────────────────
@@ -405,7 +424,7 @@ export default function JogoAventura() {
           private proximoInimigo() {
             if (!this.jogoAtivo) return;
 
-            const pergunta = perguntas[this.inimigoIdx];
+            const pergunta = this.fila[this.filaIdx];
             const emoji = this.getMundoEmoji(pergunta.tipoInimigo);
 
             this.iniSombra = this.add.ellipse(820, 402, 32, 10, 0x000000, 0.25);
@@ -488,7 +507,7 @@ export default function JogoAventura() {
               return;
             }
 
-            const vel = 95;
+            const vel = this.velInimigo;
             b.setVelocityX(dx > 0 ? vel : -vel);
             b.setVelocityY(dy > 0 ? vel * 0.4 : -vel * 0.4);
             this.iniEmoji.setScale(dx > 0 ? -1 : 1, 1);
@@ -507,7 +526,7 @@ export default function JogoAventura() {
               repeat: 2,
               duration: 120,
               onComplete: () => {
-                callbacksRef.current.onMostrarPergunta(perguntas[this.inimigoIdx]);
+                callbacksRef.current.onMostrarPergunta(this.fila[this.filaIdx]);
               },
             });
           }
@@ -533,16 +552,19 @@ export default function JogoAventura() {
                   this.iniEmoji = null;
                   this.iniCorpo = null;
                   this.iniSombra = null;
-                  this.inimigoIdx++;
+
+                  // Remove a pergunta respondida da fila
+                  this.fila.splice(this.filaIdx, 1);
+                  if (this.filaIdx >= this.fila.length) this.filaIdx = 0;
                   this.respondendo = false;
 
-                  if (this.inimigoIdx >= perguntas.length) {
+                  if (this.corretas >= this.totalPerguntas) {
                     // Vitória!
                     this.jogoAtivo = false;
                     callbacksRef.current.onVitoria(
                       this.pontos,
                       this.corretas,
-                      perguntas.length
+                      this.totalPerguntas
                     );
                   } else {
                     this.physics.resume();
@@ -551,7 +573,7 @@ export default function JogoAventura() {
                 },
               });
             } else {
-              // Resposta errada: perde vida, inimigo recua e volta
+              // Resposta errada: perde vida, rotaciona fila, novo inimigo na sequência
               this.vidas--;
               callbacksRef.current.onAtualizarVidas(this.vidas);
               this.atualizarHUD();
@@ -562,19 +584,30 @@ export default function JogoAventura() {
                 return;
               }
 
-              if (this.iniCorpo) {
-                const b = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
-                b.setVelocityX(300);
-                this.time.delayedCall(1200, () => {
-                  if (this.iniCorpo) {
-                    this.iniCorpo.setPosition(820, 358);
-                    const bb = this.iniCorpo.body as Phaser.Physics.Arcade.Body;
-                    bb.setVelocity(0, 0);
-                  }
+              // Move pergunta errada para o fim da fila (rodízio)
+              const [errada] = this.fila.splice(this.filaIdx, 1);
+              this.fila.push(errada);
+              if (this.filaIdx >= this.fila.length) this.filaIdx = 0;
+
+              // Inimigo recua e desaparece; próximo inimigo aparece com nova pergunta
+              this.tweens.add({
+                targets: [this.iniEmoji, this.iniSombra],
+                x: "+=260",
+                alpha: 0,
+                duration: 380,
+                ease: "Power1",
+                onComplete: () => {
+                  this.iniEmoji?.destroy();
+                  this.iniCorpo?.destroy();
+                  this.iniSombra?.destroy();
+                  this.iniEmoji = null;
+                  this.iniCorpo = null;
+                  this.iniSombra = null;
                   this.respondendo = false;
                   this.physics.resume();
-                });
-              }
+                  this.time.delayedCall(800, () => this.proximoInimigo());
+                },
+              });
             }
           }
         }
