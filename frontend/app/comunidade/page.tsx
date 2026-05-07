@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import {
   MapPin,
   School,
@@ -16,9 +17,23 @@ import {
   Send,
   ChevronDown,
   Info,
+  Map,
+  LocateFixed,
+  X,
 } from "lucide-react";
 import { listarBoatos, enviarBoato } from "@/lib/api";
 import type { Boato, CategoriaBoato } from "@/lib/api";
+import type { MarcadorBoato } from "@/components/MapaBoatos";
+
+// Carrega o mapa apenas no cliente (Leaflet depende de `window`)
+const MapaBoatos = dynamic(() => import("@/components/MapaBoatos"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[360px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
+      <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+    </div>
+  ),
+});
 
 // ============================================================
 // Configurações de exibição
@@ -143,7 +158,7 @@ function CartaoBoato({ boato }: { boato: Boato }) {
 }
 
 // ============================================================
-// Componente de formulário
+// Formulário de reporte
 // ============================================================
 
 function FormularioBoato({
@@ -157,6 +172,9 @@ function FormularioBoato({
   const [localidade, setLocalidade] = useState("");
   const [descricao, setDescricao] = useState("");
   const [contato, setContato] = useState("");
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [mapaAberto, setMapaAberto] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -171,6 +189,8 @@ function FormularioBoato({
         localidade: localidade.trim(),
         descricao: descricao.trim(),
         contato: contato.trim() || undefined,
+        latitude,
+        longitude,
       });
       onSucesso();
     } catch (err) {
@@ -179,6 +199,12 @@ function FormularioBoato({
     } finally {
       setEnviando(false);
     }
+  }
+
+  function limparLocalizacao() {
+    setLatitude(null);
+    setLongitude(null);
+    setMapaAberto(false);
   }
 
   return (
@@ -216,6 +242,71 @@ function FormularioBoato({
           placeholder="Ex: Colégio Contemporâneo — Lagoa Nova, Natal/RN"
           className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
         />
+      </div>
+
+      {/* Marcar no mapa (opcional) */}
+      <div>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-slate-700">
+            Marcar no mapa{" "}
+            <span className="font-normal text-slate-400">(opcional)</span>
+          </label>
+          {latitude != null && longitude != null && (
+            <button
+              type="button"
+              onClick={limparLocalizacao}
+              className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700"
+            >
+              <X className="h-3.5 w-3.5" />
+              Remover pin
+            </button>
+          )}
+        </div>
+
+        {/* Confirmação de pin já definido */}
+        {latitude != null && longitude != null ? (
+          <div className="mt-2 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+            <LocateFixed className="h-4 w-4 flex-shrink-0 text-emerald-600" />
+            <span>
+              Localização marcada: {latitude.toFixed(5)}, {longitude.toFixed(5)}
+            </span>
+            <button
+              type="button"
+              onClick={() => setMapaAberto((v) => !v)}
+              className="ml-auto text-emerald-600 underline hover:text-emerald-800"
+            >
+              {mapaAberto ? "Fechar" : "Mover pin"}
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setMapaAberto((v) => !v)}
+            className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-indigo-300 bg-white/70 py-2.5 text-sm text-indigo-600 transition hover:border-indigo-400 hover:bg-indigo-50"
+          >
+            <Map className="h-4 w-4" />
+            {mapaAberto ? "Fechar mapa" : "Clique aqui para marcar no mapa"}
+          </button>
+        )}
+
+        {/* Mapa seletor */}
+        {mapaAberto && (
+          <div className="mt-2">
+            <p className="mb-1.5 text-xs text-slate-500">
+              Clique no mapa para marcar o local do boato. Clique novamente para
+              mover o pin.
+            </p>
+            <MapaBoatos
+              onSelect={(lat, lng) => {
+                setLatitude(lat);
+                setLongitude(lng);
+              }}
+              latSelecionado={latitude}
+              lngSelecionado={longitude}
+              altura="260px"
+            />
+          </div>
+        )}
       </div>
 
       {/* Descrição */}
@@ -336,6 +427,17 @@ export default function PaginaComunidade() {
     setTimeout(() => setSucessoEnvio(false), 6000);
   }
 
+  // Filtra apenas os boatos que têm coordenadas para exibir no mapa
+  const marcadores: MarcadorBoato[] = boatos
+    .filter((b) => b.latitude != null && b.longitude != null)
+    .map((b) => ({
+      lat: b.latitude!,
+      lng: b.longitude!,
+      localidade: b.localidade,
+      descricao: b.descricao,
+      status: b.status,
+    }));
+
   return (
     <main className="flex-1 px-4 py-10 sm:py-16">
       <div className="mx-auto max-w-2xl space-y-8">
@@ -407,13 +509,38 @@ export default function PaginaComunidade() {
           )}
         </div>
 
+        {/* Mapa de casos */}
+        <div
+          className="animate-fade-in-up"
+          style={{ animationDelay: "0.13s" }}
+        >
+          <div className="mb-3 flex items-center gap-2">
+            <Map className="h-5 w-5 text-slate-500" />
+            <h2 className="text-xl font-bold text-slate-900">Mapa dos casos</h2>
+          </div>
+
+          {!carregando && marcadores.length === 0 ? (
+            <div className="flex h-[200px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-center text-sm text-slate-400">
+              <MapPin className="h-7 w-7 text-slate-300" />
+              <p>Nenhum caso com localização marcada ainda.</p>
+              <p className="text-xs">
+                Ao reportar um boato, você pode marcar o local no mapa.
+              </p>
+            </div>
+          ) : (
+            !carregando && (
+              <MapaBoatos marcadores={marcadores} altura="360px" />
+            )
+          )}
+        </div>
+
         {/* Divisor */}
         <div className="border-t border-slate-200" />
 
         {/* Filtros */}
         <div
           className="animate-fade-in-up flex flex-wrap gap-2"
-          style={{ animationDelay: "0.14s" }}
+          style={{ animationDelay: "0.16s" }}
         >
           {FILTROS.map((f) => (
             <button
@@ -433,7 +560,7 @@ export default function PaginaComunidade() {
         {/* Lista de boatos */}
         <div
           className="animate-fade-in-up space-y-4"
-          style={{ animationDelay: "0.18s" }}
+          style={{ animationDelay: "0.2s" }}
         >
           {carregando ? (
             <div className="flex justify-center py-12">
@@ -456,7 +583,7 @@ export default function PaginaComunidade() {
 
         <p
           className="animate-fade-in-up text-center text-xs text-slate-400"
-          style={{ animationDelay: "0.22s" }}
+          style={{ animationDelay: "0.24s" }}
         >
           Os boatos reportados são verificados pela equipe responsável de cada localidade.
           O LUPA não se responsabiliza pelo conteúdo das denúncias antes da verificação.

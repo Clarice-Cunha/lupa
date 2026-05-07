@@ -111,6 +111,8 @@ export type Boato = {
   fontes: string[];
   criado_em: string;
   atualizado_em: string;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export async function listarBoatos(categoria?: CategoriaBoato): Promise<Boato[]> {
@@ -125,6 +127,8 @@ export async function enviarBoato(dados: {
   localidade: string;
   descricao: string;
   contato?: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }): Promise<Boato> {
   const resposta = await fetch(`${API_URL}/boatos`, {
     method: "POST",

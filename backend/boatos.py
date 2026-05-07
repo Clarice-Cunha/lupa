@@ -40,6 +40,8 @@ class Boato(BaseModel):
     fontes: list[str] = []
     criado_em: str
     atualizado_em: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class BoatoEntrada(BaseModel):
@@ -47,6 +49,8 @@ class BoatoEntrada(BaseModel):
     localidade: str = Field(..., max_length=200)
     descricao: str = Field(..., max_length=1000)
     contato: Optional[str] = Field(None, max_length=200)
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class BoatoAtualizacao(BaseModel):
@@ -80,6 +84,8 @@ def criar_boato(entrada: BoatoEntrada) -> Boato:
         "fontes": [],
         "criado_em": agora,
         "atualizado_em": agora,
+        "latitude": entrada.latitude,
+        "longitude": entrada.longitude,
     }
     resultado = get_db().table("boatos").insert(dados).execute()
     return Boato(**resultado.data[0])
