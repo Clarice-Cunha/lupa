@@ -65,4 +65,6 @@ export type RespostaAnalise = {
   dicas_personalizadas: string[];
   fontes_sugeridas: FonteSugerida[];
   fontes_web: FonteWeb[];
+  /** Quando definido, análise não foi possível — exibir mensagem em vez de pontuação. */
+  erro_analise?: string;
 };

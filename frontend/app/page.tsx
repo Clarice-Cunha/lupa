@@ -726,6 +726,30 @@ function Resultado({ dados, aoReiniciar, modoTexto = false }: ResultadoProps) {
   const faixaAmarela = dados.pontuacao >= 31 && dados.pontuacao <= 70;
   const corTextoCartao = faixaAmarela ? "text-slate-900" : "text-white";
 
+  if (dados.erro_analise) {
+    return (
+      <section
+        aria-live="polite"
+        aria-label="Resultado da análise"
+        className="space-y-5"
+      >
+        <div className="animate-fade-in-up rounded-3xl border border-slate-200/60 bg-white/80 p-8 shadow-xl shadow-slate-100/50 backdrop-blur-sm">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
+            <CircleAlert className="h-7 w-7 text-slate-400" aria-hidden="true" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900">Análise não possível</h2>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">{dados.erro_analise}</p>
+          <button
+            onClick={aoReiniciar}
+            className="mt-6 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
+          >
+            Tentar outro link
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       aria-live="polite"

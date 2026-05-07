@@ -35,6 +35,7 @@ type EstadoSala = "aguardando" | "rodada" | "feedback" | "encerrada";
 type JogadorPublico = {
   id: string;
   nome: string;
+  avatar: string;
   pontos: number;
   respondeu: boolean;
   pontos_esta_rodada: number | null;
@@ -55,6 +56,7 @@ type SalaPublica = {
   total_rodadas: number;
   anfitriao_id: string;
   anfitriao_participa: boolean;
+  nome_sala: string | null;
   jogadores: JogadorPublico[];
   texto_atual: TextoPublico | null;
   rodada_inicio: number | null;
@@ -225,6 +227,11 @@ export default function PaginaSala() {
             <p className="text-4xl font-bold tracking-widest text-indigo-700">
               {sala.codigo}
             </p>
+            {sala.nome_sala && (
+              <p className="mt-1 text-sm font-medium text-slate-600">
+                {sala.nome_sala}
+              </p>
+            )}
           </div>
           <div className="flex items-center gap-2 text-sm text-slate-600">
             <Users className="h-4 w-4" aria-hidden="true" />
@@ -257,6 +264,7 @@ export default function PaginaSala() {
                   key={j.id}
                   className="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-2.5 text-sm"
                 >
+                  <span className="text-base" aria-hidden="true">{j.avatar}</span>
                   {j.id === sala.anfitriao_id && (
                     <Crown className="h-4 w-4 flex-shrink-0 text-amber-500" aria-label="Anfitrião" />
                   )}
@@ -370,6 +378,7 @@ export default function PaginaSala() {
                     ) : (
                       <Clock className="h-4 w-4 text-slate-300" />
                     )}
+                    <span className="text-base" aria-hidden="true">{j.avatar}</span>
                     <span className={j.respondeu ? "text-slate-700" : "text-slate-400"}>
                       {j.nome}
                     </span>
@@ -378,16 +387,7 @@ export default function PaginaSala() {
               </div>
             </div>
 
-            {/* Botão do anfitrião para encerrar a rodada */}
-            {isAnfitriao && (
-              <button
-                onClick={avancar}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-slate-200 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
-              >
-                <ChevronRight className="h-5 w-5" />
-                Encerrar rodada e ver gabarito
-              </button>
-            )}
+            {/* Rodada encerra automaticamente quando todos respondem */}
           </div>
         )}
 
@@ -561,6 +561,7 @@ function Placar({
             {i === 0 && (
               <Trophy className="h-4 w-4 flex-shrink-0 text-amber-500" aria-hidden="true" />
             )}
+            <span className="text-base" aria-hidden="true">{j.avatar}</span>
             <span className="flex-1 text-sm font-medium text-slate-800">
               {j.nome}
             </span>

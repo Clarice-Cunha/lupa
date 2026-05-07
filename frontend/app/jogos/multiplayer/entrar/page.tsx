@@ -2,8 +2,8 @@
 
 /**
  * Página para o jogador entrar em uma sala multiplayer existente.
- * O jogador digita o código de 6 letras e seu nome, e é redirecionado
- * para a sala compartilhada com o anfitrião.
+ * O jogador digita o código de 6 letras, escolhe um apelido e um avatar,
+ * e é redirecionado para a sala compartilhada com o anfitrião.
  */
 
 import { useState } from "react";
@@ -13,10 +13,17 @@ import { LogIn, ArrowLeft, Loader2 } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+const AVATARES = [
+  { emoji: "🔍", rotulo: "Detetive" },
+  { emoji: "🦠", rotulo: "Vírus" },
+  { emoji: "🤖", rotulo: "Bot" },
+];
+
 export default function PaginaEntrarSala() {
   const router = useRouter();
   const [codigo, setCodigo] = useState("");
   const [nome, setNome] = useState("");
+  const [avatar, setAvatar] = useState("🔍");
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -35,7 +42,7 @@ export default function PaginaEntrarSala() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nome: nomeTrimado }),
+          body: JSON.stringify({ nome: nomeTrimado, avatar }),
         },
       );
 
@@ -118,6 +125,32 @@ export default function PaginaEntrarSala() {
                 placeholder="Ex.: Maria"
                 className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
               />
+            </div>
+
+            {/* Seleção de avatar */}
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-700">
+                Seu avatar
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {AVATARES.map((a) => (
+                  <button
+                    key={a.emoji}
+                    type="button"
+                    onClick={() => setAvatar(a.emoji)}
+                    className={`flex flex-col items-center gap-1 rounded-2xl border-2 py-3 text-2xl transition focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 ${
+                      avatar === a.emoji
+                        ? "border-indigo-400 bg-indigo-50"
+                        : "border-slate-200 bg-white hover:border-slate-300"
+                    }`}
+                  >
+                    {a.emoji}
+                    <span className="text-xs font-medium text-slate-600">
+                      {a.rotulo}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {erro && (

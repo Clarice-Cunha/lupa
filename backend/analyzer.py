@@ -82,6 +82,9 @@ class ResultadoAnalise:
     # Artigos encontrados na web durante a análise de texto (Tavily).
     # Cada item: {"titulo": str, "url": str, "descricao": str}
     fontes_web: list[dict] = field(default_factory=list)
+    # Quando definido, a análise não foi possível — frontend exibe mensagem
+    # em vez de pontuação/classificação.
+    erro_analise: str | None = None
 
 
 # ============================================================
@@ -114,31 +117,18 @@ def analisar_url(url: str) -> ResultadoAnalise:
     # Fazemos isso ANTES de qualquer outro critério.
     # Se o domínio não existe, não há nada a analisar — pontuação zero.
     if not _dominio_existe(url):
-        from tips import sugerir_fontes
         return ResultadoAnalise(
             url=url,
             pontuacao=0,
-            classificacao="Suspeito",
-            cor="#B71C1C",
+            classificacao="Indisponível",
+            cor="#9E9E9E",
             titulo_pagina=None,
             resumo=None,
-            justificativas=[
-                Justificativa(
-                    criterio="Domínio inexistente",
-                    resultado=(
-                        "Este endereço não existe na internet. "
-                        "Verifique se digitou a URL corretamente — "
-                        "links com erros ou inventados são comuns em golpes e correntes falsas."
-                    ),
-                    impacto=0,
-                    camada="fonte",
-                )
-            ],
-            dicas_personalizadas=[
-                "Confira se copiou o link completo, sem espaços ou caracteres extras.",
-                "Links inválidos costumam circular em golpes (phishing). Nunca forneça dados pessoais a partir deles.",
-            ],
-            fontes_sugeridas=sugerir_fontes(0),
+            erro_analise=(
+                "Este endereço não existe na internet. "
+                "Verifique se digitou a URL corretamente — "
+                "links com erros ou inventados são comuns em golpes e correntes falsas."
+            ),
         )
 
     justificativas: list[Justificativa] = []
@@ -182,51 +172,33 @@ def analisar_url(url: str) -> ResultadoAnalise:
     html, erro, penalidade_acesso, tipo_erro = _baixar_pagina(url)
 
     if tipo_erro == "dns":
-        # O domínio simplesmente não existe — a URL é inválida.
-        # Ignoramos tudo que foi calculado até aqui (HTTPS, idade) e
-        # retornamos pontuação zero com uma mensagem direta.
-        from tips import sugerir_fontes
         return ResultadoAnalise(
             url=url,
             pontuacao=0,
-            classificacao="Suspeito",
-            cor="#B71C1C",
+            classificacao="Indisponível",
+            cor="#9E9E9E",
             titulo_pagina=None,
             resumo=None,
-            justificativas=[
-                Justificativa(
-                    criterio="Domínio inexistente",
-                    resultado=(
-                        "Este endereço não existe na internet. "
-                        "Verifique se digitou a URL corretamente — "
-                        "links com erros ou inventados são comuns em golpes e correntes falsas."
-                    ),
-                    impacto=0,
-                    camada="fonte",
-                )
-            ],
-            dicas_personalizadas=[
-                "Confira se copiou o link completo, sem espaços ou caracteres extras no início ou no final.",
-                "Links inexistentes costumam circular em golpes (phishing). Nunca forneça dados pessoais a partir deles.",
-            ],
-            fontes_sugeridas=sugerir_fontes(0),
+            erro_analise=(
+                "Este endereço não existe na internet. "
+                "Verifique se digitou a URL corretamente — "
+                "links com erros ou inventados são comuns em golpes e correntes falsas."
+            ),
         )
 
     if erro:
-        # O domínio existe, mas o site está fora do ar ou inacessível.
-        # Mantemos o que foi analisado (HTTPS, idade do domínio) e
-        # adicionamos um aviso claro sobre a limitação da análise.
-        justificativas.append(Justificativa(
-            criterio="Site inacessível",
-            resultado=(
-                f"O domínio existe, mas o site está fora do ar ou inacessível ({erro}). "
-                "Só foi possível verificar o domínio — o conteúdo da página não pôde ser analisado."
+        return ResultadoAnalise(
+            url=url,
+            pontuacao=0,
+            classificacao="Indisponível",
+            cor="#9E9E9E",
+            titulo_pagina=None,
+            resumo=None,
+            erro_analise=(
+                f"Este site está inacessível no momento ({erro}). "
+                "Tente novamente mais tarde ou verifique se o endereço está correto."
             ),
-            impacto=penalidade_acesso,
-            camada="fonte",
-        ))
-        pontuacao += penalidade_acesso
-        return _montar_resultado(url, pontuacao, None, justificativas)
+        )
 
     sopa = BeautifulSoup(html, "lxml")
     titulo = _extrair_titulo(sopa)

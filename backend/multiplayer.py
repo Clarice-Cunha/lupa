@@ -84,9 +84,10 @@ EstadoSala = Literal["aguardando", "rodada", "feedback", "encerrada"]
 
 
 class Jogador:
-    def __init__(self, nome: str) -> None:
+    def __init__(self, nome: str, avatar: str = "🔍") -> None:
         self.id = str(uuid.uuid4())
         self.nome = nome
+        self.avatar = avatar
         self.pontos = 0
         # chave = índice da rodada, valor = lista de IDs de indícios marcados
         self.respostas: dict[int, list[str]] = {}
@@ -95,7 +96,7 @@ class Jogador:
 
 
 class Sala:
-    def __init__(self, nome_anfitriao: str, anfitriao_participa: bool = False) -> None:
+    def __init__(self, nome_anfitriao: str, anfitriao_participa: bool = False, nome_sala: str | None = None, anfitriao_avatar: str = "🔍") -> None:
         self.codigo = _gerar_codigo()
         self.textos = _selecionar_textos()
         self.estado: EstadoSala = "aguardando"
@@ -103,8 +104,9 @@ class Sala:
         self.rodada_inicio: float | None = None
         self.criado_em = time.time()
         self.ultima_atividade = time.time()
+        self.nome_sala = nome_sala
         self.anfitriao_participa = anfitriao_participa
-        anfitriao = Jogador(nome_anfitriao)
+        anfitriao = Jogador(nome_anfitriao, anfitriao_avatar)
         self.anfitriao_id = anfitriao.id
         # Anfitrião só entra na lista de jogadores se for participar
         self.jogadores: dict[str, Jogador] = {anfitriao.id: anfitriao} if anfitriao_participa else {}
@@ -140,10 +142,13 @@ def _obter_sala(codigo: str) -> Sala:
 class PedidoCriar(BaseModel):
     nome_anfitriao: str
     anfitriao_participa: bool = False
+    nome_sala: str | None = None
+    anfitriao_avatar: str = "🔍"
 
 
 class PedidoEntrar(BaseModel):
     nome: str
+    avatar: str = "🔍"
 
 
 class PedidoIniciar(BaseModel):
@@ -162,6 +167,7 @@ class PedidoAvancar(BaseModel):
 class JogadorPublico(BaseModel):
     id: str
     nome: str
+    avatar: str = "🔍"
     pontos: int
     respondeu: bool
     pontos_esta_rodada: int | None = None
@@ -183,6 +189,7 @@ class SalaPublica(BaseModel):
     total_rodadas: int
     anfitriao_id: str
     anfitriao_participa: bool
+    nome_sala: str | None = None
     jogadores: list[JogadorPublico]
     texto_atual: TextoPublico | None = None
     rodada_inicio: float | None = None
@@ -223,10 +230,12 @@ def _sala_para_publico(sala: Sala, jogador_id: str | None = None) -> SalaPublica
         total_rodadas=len(sala.textos),
         anfitriao_id=sala.anfitriao_id,
         anfitriao_participa=sala.anfitriao_participa,
+        nome_sala=sala.nome_sala,
         jogadores=[
             JogadorPublico(
                 id=j.id,
                 nome=j.nome,
+                avatar=j.avatar,
                 pontos=j.pontos,
                 respondeu=sala.rodada_atual in j.respostas,
                 pontos_esta_rodada=j.pontos_por_rodada.get(sala.rodada_atual),
@@ -275,7 +284,8 @@ def criar_sala(pedido: PedidoCriar) -> dict:
     nome = pedido.nome_anfitriao.strip()[:30]
     if not nome:
         raise HTTPException(status_code=400, detail="Nome do anfitrião não pode ser vazio.")
-    sala = Sala(nome, pedido.anfitriao_participa)
+    nome_sala = pedido.nome_sala.strip()[:40] if pedido.nome_sala else None
+    sala = Sala(nome, pedido.anfitriao_participa, nome_sala, pedido.anfitriao_avatar)
     _SALAS[sala.codigo] = sala
     return {
         "codigo": sala.codigo,
@@ -295,7 +305,7 @@ def entrar_sala(codigo: str, pedido: PedidoEntrar) -> dict:
     nome = pedido.nome.strip()[:20]
     if not nome:
         raise HTTPException(status_code=400, detail="Nome não pode ser vazio.")
-    jogador = Jogador(nome)
+    jogador = Jogador(nome, pedido.avatar)
     sala.jogadores[jogador.id] = jogador
     return {
         "jogador_id": jogador.id,
@@ -354,24 +364,15 @@ def responder(codigo: str, pedido: PedidoResponder) -> SalaPublica:
 
 @router.post("/sala/{codigo}/avancar")
 def avancar(codigo: str, pedido: PedidoAvancar) -> SalaPublica:
-    """Anfitrião avança o estado da sala.
+    """Anfitrião avança da fase de feedback para a próxima rodada ou encerramento.
 
-    - rodada → feedback (encerra a rodada antes de todos responderem)
-    - feedback → rodada (próxima) ou encerrada (última rodada)
+    As rodadas encerram automaticamente quando todos os jogadores respondem.
     """
     sala = _obter_sala(codigo)
     if pedido.anfitriao_id != sala.anfitriao_id:
         raise HTTPException(status_code=403, detail="Apenas o anfitrião pode avançar.")
 
-    if sala.estado == "rodada":
-        # Pontua com zero quem não respondeu a tempo
-        for j in sala.jogadores.values():
-            if sala.rodada_atual not in j.respostas:
-                j.respostas[sala.rodada_atual] = []
-                j.pontos_por_rodada[sala.rodada_atual] = 0
-        sala.estado = "feedback"
-
-    elif sala.estado == "feedback":
+    if sala.estado == "feedback":
         proxima = sala.rodada_atual + 1
         if proxima >= len(sala.textos):
             sala.estado = "encerrada"

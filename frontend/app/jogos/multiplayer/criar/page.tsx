@@ -2,9 +2,8 @@
 
 /**
  * Página para o anfitrião criar uma sala multiplayer.
- * Envia o nome, recebe o código de 6 letras e redireciona
- * para /jogos/multiplayer/sala/[codigo] com os dados salvos
- * no sessionStorage.
+ * Envia o nome, avatar (opcional), nome da sala (opcional) e preferência de
+ * participação; recebe o código de 6 letras e redireciona para a sala.
  */
 
 import { useState } from "react";
@@ -14,10 +13,18 @@ import { Users, ArrowLeft, Loader2, User } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+const AVATARES = [
+  { emoji: "🔍", rotulo: "Detetive" },
+  { emoji: "🦠", rotulo: "Vírus" },
+  { emoji: "🤖", rotulo: "Bot" },
+];
+
 export default function PaginaCriarSala() {
   const router = useRouter();
   const [nome, setNome] = useState("");
+  const [nomeSala, setNomeSala] = useState("");
   const [participa, setParticipa] = useState(false);
+  const [avatar, setAvatar] = useState("🔍");
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -36,6 +43,8 @@ export default function PaginaCriarSala() {
         body: JSON.stringify({
           nome_anfitriao: nomeTrimado,
           anfitriao_participa: participa,
+          nome_sala: nomeSala.trim() || null,
+          anfitriao_avatar: avatar,
         }),
       });
 
@@ -46,8 +55,6 @@ export default function PaginaCriarSala() {
 
       const dados = await res.json();
 
-      // Salva o ID do anfitrião no sessionStorage para identificá-lo
-      // nas chamadas seguintes (não enviamos senha — é MVP).
       sessionStorage.setItem("lupa_multi_jogador_id", dados.anfitriao_id);
       sessionStorage.setItem("lupa_multi_anfitriao_id", dados.anfitriao_id);
 
@@ -82,6 +89,7 @@ export default function PaginaCriarSala() {
           </p>
 
           <form onSubmit={criarSala} className="mt-6 space-y-4">
+            {/* Nome do anfitrião */}
             <div>
               <label
                 htmlFor="nome"
@@ -97,6 +105,26 @@ export default function PaginaCriarSala() {
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Ex.: Prof. Ana"
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+              />
+            </div>
+
+            {/* Nome da sala (opcional) */}
+            <div>
+              <label
+                htmlFor="nomeSala"
+                className="mb-1.5 block text-sm font-medium text-slate-700"
+              >
+                Nome da sala{" "}
+                <span className="font-normal text-slate-400">(opcional)</span>
+              </label>
+              <input
+                id="nomeSala"
+                type="text"
+                maxLength={40}
+                value={nomeSala}
+                onChange={(e) => setNomeSala(e.target.value)}
+                placeholder="Ex.: Turma 9A — Aula de Mídia"
                 className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
               />
             </div>
@@ -131,6 +159,34 @@ export default function PaginaCriarSala() {
                 <div className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${participa ? "translate-x-5" : "translate-x-0.5"}`} />
               </div>
             </button>
+
+            {/* Seleção de avatar (só quando participa) */}
+            {participa && (
+              <div>
+                <p className="mb-2 text-sm font-medium text-slate-700">
+                  Seu avatar
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {AVATARES.map((a) => (
+                    <button
+                      key={a.emoji}
+                      type="button"
+                      onClick={() => setAvatar(a.emoji)}
+                      className={`flex flex-col items-center gap-1 rounded-2xl border-2 py-3 text-2xl transition focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 ${
+                        avatar === a.emoji
+                          ? "border-indigo-400 bg-indigo-50"
+                          : "border-slate-200 bg-white hover:border-slate-300"
+                      }`}
+                    >
+                      {a.emoji}
+                      <span className="text-xs font-medium text-slate-600">
+                        {a.rotulo}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {erro && (
               <p className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">
