@@ -30,20 +30,12 @@ const JOGOS_EXTERNOS = [
     cor: "from-rose-500 to-orange-500",
   },
   {
-    nome: "Go Viral!",
-    url: "https://www.goviralgame.com/pt",
+    nome: "Harmony Square",
+    url: "https://harmonysquare.game/en",
     descricao:
-      "Jogue como um criador de conteúdo e descubra quais táticas de manipulação fazem posts viralizarem. Também da Cambridge.",
+      "Gerencie a cidade de Harmony Square enquanto ela é alvo de campanhas de desinformação. Descubra como a manipulação midiática corrói comunidades. Da Universidade de Cambridge.",
     tag: "Simulação",
     cor: "from-indigo-500 to-violet-500",
-  },
-  {
-    nome: "Factitious",
-    url: "https://factitious.augamestudio.com/",
-    descricao:
-      "Estilo Tinder para notícias: deslize para a esquerda (fake) ou direita (real) e veja sua pontuação de checador. Rápido e viciante.",
-    tag: "Quiz",
-    cor: "from-emerald-500 to-teal-500",
   },
 ];
 

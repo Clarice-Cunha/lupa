@@ -40,6 +40,7 @@ export default function PaginaJogo() {
   const [progresso, setProgresso] = useState<ProgressoJogo | null>(null);
   const [config, setConfig] = useState<ConfigJogo>({ comCronometro: true });
   const [mostrarCert, setMostrarCert] = useState(false);
+  const [nomeJogador, setNomeJogador] = useState("");
   const certRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -330,7 +331,17 @@ export default function PaginaJogo() {
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
-            <Certificado certRef={certRef} progresso={progresso} />
+            <div className="mb-3">
+              <input
+                type="text"
+                placeholder="Seu nome no certificado (opcional)"
+                value={nomeJogador}
+                onChange={(e) => setNomeJogador(e.target.value)}
+                maxLength={60}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+              />
+            </div>
+            <Certificado certRef={certRef} progresso={progresso} nome={nomeJogador} />
             <button
               onClick={baixarCertificado}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-indigo-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
@@ -421,9 +432,11 @@ function SecaoEstatisticas({ progresso }: { progresso: ProgressoJogo }) {
 function Certificado({
   certRef,
   progresso,
+  nome,
 }: {
   certRef: React.RefObject<HTMLDivElement | null>;
   progresso: ProgressoJogo;
+  nome: string;
 }) {
   const hoje = new Date().toLocaleDateString("pt-BR");
 
@@ -452,6 +465,9 @@ function Certificado({
           Certificado de Conclusão
         </p>
         <h2 className="text-4xl font-black text-slate-900">Detetive LUPA</h2>
+        {nome && (
+          <p className="mt-3 text-xl font-semibold text-indigo-700">{nome}</p>
+        )}
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-slate-600">
           Este certificado reconhece a conclusão de todos os níveis do jogo
           educativo Detetive LUPA, demonstrando habilidades de pensamento

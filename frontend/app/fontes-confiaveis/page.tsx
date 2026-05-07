@@ -13,6 +13,7 @@ type Fonte = {
   nome: string;
   url: string;
   descricao: string;
+  idioma?: "en";
 };
 
 type Categoria = {
@@ -62,9 +63,10 @@ const CATEGORIAS: Categoria[] = [
         descricao: "Braço de checagem da agência internacional AFP.",
       },
       {
-        nome: "Snopes (inglês)",
+        nome: "Snopes",
         url: "https://www.snopes.com",
         descricao: "Referência mundial em checagem de boatos e lendas urbanas.",
+        idioma: "en",
       },
     ],
   },
@@ -98,7 +100,7 @@ const CATEGORIAS: Categoria[] = [
       },
       {
         nome: "Reuters Brasil",
-        url: "https://www.reuters.com/world/americas",
+        url: "https://br.reuters.com",
         descricao: "Agência internacional com padrão rigoroso de verificação.",
       },
     ],
@@ -132,18 +134,21 @@ const CATEGORIAS: Categoria[] = [
         url: "https://www.poynter.org",
         descricao:
           "Escola de jornalismo nos EUA, referência global em ética e checagem.",
+        idioma: "en",
       },
       {
         nome: "MIT Media Lab",
         url: "https://www.media.mit.edu",
         descricao:
           "Laboratório de pesquisa em tecnologia e mídia, com estudos sobre desinformação.",
+        idioma: "en",
       },
       {
         nome: "First Draft News",
         url: "https://firstdraftnews.org",
         descricao:
           "Recursos e treinamento sobre verificação de mídia digital.",
+        idioma: "en",
       },
     ],
   },
@@ -331,6 +336,11 @@ function Categoria({
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-1.5 font-medium text-slate-900">
                 {fonte.nome}
+                {fonte.idioma === "en" && (
+                  <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-xs font-normal text-slate-500">
+                    🇬🇧 inglês
+                  </span>
+                )}
                 <ExternalLink className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-indigo-500" />
               </p>
               <p className="mt-1 text-xs text-slate-600">{fonte.descricao}</p>
