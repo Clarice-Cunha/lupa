@@ -737,7 +737,7 @@ function Resultado({ dados, aoReiniciar, modoTexto = false }: ResultadoProps) {
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
             <CircleAlert className="h-7 w-7 text-slate-400" aria-hidden="true" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900">Análise não possível</h2>
+          <h2 className="text-xl font-bold text-slate-900">Site indisponível ou inexistente</h2>
           <p className="mt-3 text-sm leading-relaxed text-slate-600">{dados.erro_analise}</p>
           <button
             onClick={aoReiniciar}
