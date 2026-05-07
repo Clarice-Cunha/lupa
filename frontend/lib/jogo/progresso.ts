@@ -150,6 +150,14 @@ export function registrarRodada(
   };
 
   // --- Conquistas da rodada ---
+  if (novoProgresso.rodadasJogadas === 1 && !conquistasAtuais.includes("primeira_pista")) {
+    novasConquistas.push("primeira_pista");
+  }
+
+  if (novoProgresso.rodadasJogadas >= 10 && !conquistasAtuais.includes("persistente") && !novasConquistas.includes("persistente")) {
+    novasConquistas.push("persistente");
+  }
+
   const jaTemOlhoVivo = conquistasAtuais.includes("olho_vivo");
   if (acertouTextoLimpo && !jaTemOlhoVivo) {
     novasConquistas.push("olho_vivo");
@@ -181,11 +189,23 @@ export function registrarRodada(
         novasConquistas.push(badge);
       }
 
+      // Nível perfeito: 100% de acertos no nível inteiro
+      if (taxa === 1.0 && !conquistasAtuais.includes("nivel_perfeito") && !novasConquistas.includes("nivel_perfeito")) {
+        novasConquistas.push("nivel_perfeito");
+      }
+
       if (idx < ORDEM_NIVEIS.length - 1) {
         novoProgresso.nivelAtual = ORDEM_NIVEIS[idx + 1];
         avancouNivel = true;
       }
     }
+  }
+
+  // Mestre Detetive: todas as outras conquistas desbloqueadas
+  const CONQUISTAS_REQUERIDAS = ["primeira_pista", "aprendiz", "olho_vivo", "persistente", "investigador", "analise_perfeita", "nivel_perfeito", "detetive_lupa"];
+  const conquistasFinais = [...conquistasAtuais, ...novasConquistas];
+  if (!conquistasFinais.includes("detetive_mestre") && CONQUISTAS_REQUERIDAS.every(id => conquistasFinais.includes(id))) {
+    novasConquistas.push("detetive_mestre");
   }
 
   novoProgresso.conquistas = [...conquistasAtuais, ...novasConquistas];

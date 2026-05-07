@@ -188,6 +188,11 @@ export default function PaginaJogo() {
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {CONQUISTAS.map((c) => {
                 const desbloqueada = progresso.conquistas?.includes(c.id) ?? false;
+                const textoDescricao = desbloqueada
+                  ? c.descricao
+                  : c.dificuldade === "dificil"
+                  ? "Conquista secreta 🔒"
+                  : c.descricao;
                 return (
                   <div
                     key={c.id}
@@ -205,13 +210,11 @@ export default function PaginaJogo() {
                       {desbloqueada ? "🏅" : "🔒"}
                     </div>
                     <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <p className={`truncate text-sm font-semibold ${desbloqueada ? "text-slate-900" : "text-slate-400"}`}>
-                          {c.nome}
-                        </p>
-                      </div>
+                      <p className={`truncate text-sm font-semibold ${desbloqueada ? "text-slate-900" : "text-slate-400"}`}>
+                        {c.nome}
+                      </p>
                       <p className={`mt-0.5 text-xs leading-tight ${desbloqueada ? "text-slate-600" : "text-slate-400"}`}>
-                        {desbloqueada ? c.descricao : "Ainda não desbloqueada"}
+                        {textoDescricao}
                       </p>
                     </div>
                   </div>
@@ -487,7 +490,7 @@ function Certificado({
         </div>
         <div className="rounded-2xl bg-indigo-50 px-6 py-4 text-center">
           <p className="text-2xl font-black text-indigo-700">
-            {progresso.conquistas.length}/5
+            {progresso.conquistas.length}/{CONQUISTAS.length}
           </p>
           <p className="text-xs text-indigo-500">conquistas</p>
         </div>

@@ -1,18 +1,16 @@
 import {
   BarChart2,
   CheckCircle2,
-  XCircle,
   ExternalLink,
   AlertTriangle,
   Zap,
   BookOpen,
-  MinusCircle,
 } from "lucide-react";
 
 export const metadata = {
   title: "Pesquisa e Dados — LUPA",
   description:
-    "Dados sobre desinformação no Brasil e no mundo, comparativo de ferramentas de checagem e referências científicas.",
+    "Dados sobre desinformação no Brasil e no mundo, ferramentas de combate à desinformação e referências científicas.",
 };
 
 const NUMEROS = [
@@ -27,12 +25,12 @@ const NUMEROS = [
     corDestaque: "text-red-600",
   },
   {
-    destaque: "70%",
-    rotulo: "mais compartilhada",
+    destaque: "82%",
+    rotulo: "veem fake news como problema",
     texto:
-      "Conteúdos falsos têm 70% mais chance de serem recompartilhados do que verdadeiros. A surpresa e a indignação amplificam a viralização.",
-    fonte: "Vosoughi, Roy & Aral — Science, 2018",
-    url: "https://doi.org/10.1126/science.aap9559",
+      "Para 82% dos brasileiros, a disseminação de notícias falsas é o maior problema das redes sociais — acima de outros como discurso de ódio e violações de privacidade.",
+    fonte: "DataSenado — Pesquisa Fake News, jan. 2023",
+    url: "https://www12.senado.leg.br/noticias/materias/2023/01/27/datasenado-82-dos-brasileiros-dizem-que-fake-news-sao-o-maior-problema-das-redes-sociais",
     cor: "border-orange-200 bg-orange-50 text-orange-900",
     corDestaque: "text-orange-600",
   },
@@ -41,8 +39,8 @@ const NUMEROS = [
     rotulo: "primeira agência brasileira",
     texto:
       "A Agência Lupa foi fundada em outubro de 2015 como a primeira agência brasileira dedicada exclusivamente à checagem profissional de fatos.",
-    fonte: "Duke Reporter's Lab — Global Fact-Checking Census, 2024",
-    url: "https://reporterslab.org/fact-checking/",
+    fonte: "Agência Lupa — Sobre a Lupa, 2015",
+    url: "https://lupa.uol.com.br/sobre-a-lupa/",
     cor: "border-blue-200 bg-blue-50 text-blue-900",
     corDestaque: "text-blue-600",
   },
@@ -58,19 +56,11 @@ const NUMEROS = [
   },
 ];
 
-type Nivel = "sim" | "nao" | "parcial";
-
 type Ferramenta = {
   nome: string;
   descricao: string;
-  url: string | null;
-  isLupa: boolean;
-  automatica: Nivel;
-  tempoReal: Nivel;
-  multiformato: Nivel;
-  educacional: Nivel;
-  semCadastro: Nivel;
-  comunidade: Nivel;
+  url: string;
+  pontosFortes: string[];
 };
 
 const FERRAMENTAS: Ferramenta[] = [
@@ -79,100 +69,57 @@ const FERRAMENTAS: Ferramenta[] = [
     descricao:
       "Primeira agência brasileira de fact-checking. Jornalistas especializados analisam declarações de figuras públicas e notícias virais com rigor editorial.",
     url: "https://lupa.uol.com.br",
-    isLupa: false,
-    automatica: "nao",
-    tempoReal: "nao",
-    multiformato: "nao",
-    educacional: "parcial",
-    semCadastro: "sim",
-    comunidade: "nao",
+    pontosFortes: [
+      "Primeira agência certificada pela IFCN no Brasil (desde 2016)",
+      "Foco em declarações de figuras públicas e verificação política",
+      "Kits pedagógicos gratuitos para professores",
+    ],
   },
   {
     nome: "Aos Fatos",
     descricao:
       "Agência independente focada em política e saúde pública. Destaque pelo verificador 'Fátima', que monitora declarações de políticos em tempo real.",
     url: "https://www.aosfatos.org",
-    isLupa: false,
-    automatica: "parcial",
-    tempoReal: "nao",
-    multiformato: "nao",
-    educacional: "parcial",
-    semCadastro: "sim",
-    comunidade: "nao",
+    pontosFortes: [
+      "Verificador 'Fátima': monitora políticos em tempo real",
+      "Chatbot no WhatsApp para consultas rápidas",
+      "Cobertura especializada em saúde pública e eleições",
+    ],
   },
   {
     nome: "Boatos.org",
     descricao:
       "Site comunitário brasileiro com foco em boatos e correntes virais. O conteúdo é enviado por leitores e revisado manualmente pela equipe.",
     url: "https://www.boatos.org",
-    isLupa: false,
-    automatica: "nao",
-    tempoReal: "nao",
-    multiformato: "nao",
-    educacional: "nao",
-    semCadastro: "sim",
-    comunidade: "sim",
+    pontosFortes: [
+      "Maior banco de boatos virais em português",
+      "Foco em correntes de WhatsApp e redes sociais",
+      "Contribuição ativa da comunidade de leitores",
+    ],
   },
   {
     nome: "Google Fact Check Explorer",
     descricao:
       "Ferramenta do Google que agrega checagens publicadas por agências certificadas. Não analisa conteúdo novo — apenas indexa verificações já publicadas.",
     url: "https://toolbox.google.com/factcheck/explorer",
-    isLupa: false,
-    automatica: "nao",
-    tempoReal: "nao",
-    multiformato: "nao",
-    educacional: "nao",
-    semCadastro: "sim",
-    comunidade: "nao",
+    pontosFortes: [
+      "Busca global em centenas de agências certificadas pela IFCN",
+      "Integrado com o Google Search",
+      "Acesso gratuito, sem necessidade de cadastro",
+    ],
   },
   {
     nome: "InVID / WeVerify",
     descricao:
       "Extensão de navegador para verificação de vídeos e imagens. Poderosa, mas voltada a jornalistas com conhecimento técnico.",
     url: "https://weverify.eu/",
-    isLupa: false,
-    automatica: "parcial",
-    tempoReal: "sim",
-    multiformato: "parcial",
-    educacional: "nao",
-    semCadastro: "sim",
-    comunidade: "nao",
-  },
-  {
-    nome: "LUPA (este site)",
-    descricao:
-      "Análise automatizada com IA para links, vídeos do YouTube, arquivos de vídeo, textos e imagens. Foco educacional: explica o porquê de cada critério avaliado.",
-    url: null,
-    isLupa: true,
-    automatica: "sim",
-    tempoReal: "sim",
-    multiformato: "sim",
-    educacional: "sim",
-    semCadastro: "sim",
-    comunidade: "sim",
+    pontosFortes: [
+      "Análise forense de vídeos: data, localização e edição",
+      "Busca reversa de imagens e frames extraídos",
+      "Extensão gratuita para Chrome e Firefox",
+    ],
   },
 ];
-
-const CRITERIOS: {
-  chave: keyof Omit<Ferramenta, "nome" | "descricao" | "url" | "isLupa">;
-  rotulo: string;
-}[] = [
-  { chave: "automatica", rotulo: "Análise automática" },
-  { chave: "tempoReal", rotulo: "Resultado imediato" },
-  { chave: "multiformato", rotulo: "Múltiplos formatos" },
-  { chave: "educacional", rotulo: "Foco educacional" },
-  { chave: "semCadastro", rotulo: "Sem cadastro" },
-  { chave: "comunidade", rotulo: "Portal comunitário" },
-];
-
-function IconeNivel({ nivel }: { nivel: Nivel }) {
-  if (nivel === "sim")
-    return <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />;
-  if (nivel === "nao")
-    return <XCircle className="h-4 w-4 text-red-400 flex-shrink-0" />;
-  return <MinusCircle className="h-4 w-4 text-amber-400 flex-shrink-0" />;
-}
 
 const DIFERENCIAIS = [
   {
@@ -227,13 +174,13 @@ const REFERENCIAS = [
     url: "https://rm.coe.int/information-disorder-toward-an-interdisciplinary-framework-for-researc/168076277c",
   },
   {
-    autores: "Reuters Institute for the Study of Journalism",
-    ano: "2024",
-    titulo: "Digital News Report 2024",
-    veiculo: "Universidade de Oxford",
+    autores: "NIC.br / CETIC.br",
+    ano: "2023",
+    titulo: "TIC Domicílios 2023 — Pesquisa sobre o uso das tecnologias de informação e comunicação nos domicílios brasileiros",
+    veiculo: "Núcleo de Informação e Coordenação do Ponto BR",
     nota:
-      "Pesquisa anual realizada em 47 países, incluindo o Brasil. Mede confiança nas notícias, uso de redes sociais e exposição à desinformação.",
-    url: "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2024",
+      "Maior pesquisa nacional sobre acesso à internet e uso de tecnologia. Mede presença de dispositivos, tipo de conexão e comportamento digital de brasileiros em todas as regiões do país.",
+    url: "https://cetic.br/pesquisa/domicilios/",
   },
   {
     autores: "Organização Mundial da Saúde (OMS)",
@@ -269,8 +216,8 @@ export default function PaginaPesquisa() {
             Pesquisa e Dados
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-lg text-slate-600 dark:text-slate-400">
-            O que a ciência diz sobre desinformação, como as ferramentas existentes
-            se comparam e por que o LUPA foi construído do jeito que foi.
+            O que a ciência diz sobre desinformação, quais ferramentas existem
+            e as referências científicas por trás desta iniciativa.
           </p>
         </header>
 
@@ -282,8 +229,9 @@ export default function PaginaPesquisa() {
           <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" />
           <p className="text-justify">
             Os dados apresentados nesta página são baseados em publicações
-            acadêmicas e relatórios de organizações reconhecidas. O comparativo
-            de ferramentas reflete o estado de cada produto em abril de 2026.
+            acadêmicas e relatórios de organizações reconhecidas. As
+            informações sobre cada ferramenta refletem o estado em abril de
+            2026.
           </p>
         </div>
 
@@ -326,7 +274,7 @@ export default function PaginaPesquisa() {
           </div>
         </section>
 
-        {/* Seção: Comparativo */}
+        {/* Seção: Ferramentas */}
         <section
           className="mb-10 animate-fade-in-up"
           style={{ animationDelay: "0.15s" }}
@@ -335,76 +283,44 @@ export default function PaginaPesquisa() {
             Ferramentas de combate à desinformação
           </h2>
           <p className="mb-5 text-sm text-slate-600 dark:text-slate-400">
-            Cada ferramenta tem um foco diferente. O comparativo abaixo mostra
-            as capacidades de cada uma — não existe &quot;melhor&quot; absoluto, pois cada
-            uma resolve um problema específico.
+            Cada ferramenta tem um foco diferente e resolve um problema
+            específico. Conheça os pontos fortes de cada uma.
           </p>
 
           <div className="space-y-4">
             {FERRAMENTAS.map((f, i) => (
               <div
                 key={f.nome}
-                className={`rounded-2xl border p-5 shadow-sm animate-fade-in-up ${
-                  f.isLupa
-                    ? "border-indigo-200 bg-indigo-50 dark:border-indigo-700/50 dark:bg-indigo-900/20"
-                    : "border-slate-200/60 bg-white/80 dark:border-slate-700 dark:bg-slate-800"
-                }`}
+                className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-sm animate-fade-in-up dark:border-slate-700 dark:bg-slate-800"
                 style={{ animationDelay: `${0.2 + i * 0.04}s` }}
               >
                 <div className="mb-2 flex items-start justify-between gap-3">
-                  <h3
-                    className={`font-bold ${
-                      f.isLupa
-                        ? "text-indigo-800 dark:text-indigo-300"
-                        : "text-slate-900 dark:text-slate-100"
-                    }`}
-                  >
+                  <h3 className="font-bold text-slate-900 dark:text-slate-100">
                     {f.nome}
-                    {f.isLupa && (
-                      <span className="ml-2 rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700 dark:bg-indigo-800 dark:text-indigo-200">
-                        este site
-                      </span>
-                    )}
                   </h3>
-                  {f.url && (
-                    <a
-                      href={f.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex flex-shrink-0 items-center gap-1 text-xs text-indigo-600 hover:underline dark:text-indigo-400"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                      Visitar
-                    </a>
-                  )}
+                  <a
+                    href={f.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-shrink-0 items-center gap-1 text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    Visitar
+                  </a>
                 </div>
                 <p className="mb-3 text-sm leading-relaxed text-justify text-slate-600 dark:text-slate-400">
                   {f.descricao}
                 </p>
-                <div className="flex flex-wrap gap-x-5 gap-y-1.5">
-                  {CRITERIOS.map(({ chave, rotulo }) => (
-                    <div key={chave} className="flex items-center gap-1.5">
-                      <IconeNivel nivel={f[chave]} />
-                      <span className="text-xs text-slate-600 dark:text-slate-400">
-                        {rotulo}
-                      </span>
-                    </div>
+                <ul className="space-y-1.5">
+                  {f.pontosFortes.map((ponto) => (
+                    <li key={ponto} className="flex items-start gap-2 text-xs text-slate-700 dark:text-slate-300">
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-emerald-500" />
+                      {ponto}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             ))}
-          </div>
-
-          <div className="mt-3 flex flex-wrap gap-4 text-xs text-slate-500 dark:text-slate-400">
-            <span className="flex items-center gap-1">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Sim
-            </span>
-            <span className="flex items-center gap-1">
-              <MinusCircle className="h-3.5 w-3.5 text-amber-400" /> Parcial
-            </span>
-            <span className="flex items-center gap-1">
-              <XCircle className="h-3.5 w-3.5 text-red-400" /> Não
-            </span>
           </div>
         </section>
 
