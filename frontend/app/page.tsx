@@ -930,6 +930,13 @@ function Resultado({ dados, aoReiniciar, modoTexto = false }: ResultadoProps) {
           </h3>
         </div>
 
+        {dados.justificativas.length === 0 && (
+          <p className="flex items-center gap-2 text-sm text-slate-500">
+            <CircleAlert className="h-4 w-4 flex-shrink-0 text-slate-400" aria-hidden="true" />
+            Site indisponível ou inexistente — não foi possível realizar a análise de conteúdo.
+          </p>
+        )}
+
         <ul className="space-y-3">
           {dados.justificativas.map((j, i) => {
             const IconeImpacto =
