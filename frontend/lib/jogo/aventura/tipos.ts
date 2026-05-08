@@ -5,11 +5,12 @@
  * do Phaser para garantir que os dados trafeguem com o formato certo.
  */
 
-/** Tipos de inimigos: Mundo 1 (Fake News), Mundo 2 (Fontes) e Mundo 3 (Imagem) */
+/** Tipos de inimigos: Mundos 1 a 4 */
 export type TipoInimigo =
   | "bot" | "manchete" | "corrente"          // Mundo 1
   | "conflito" | "citacao" | "correlacao"    // Mundo 2
-  | "edicao" | "contexto" | "legenda";       // Mundo 3
+  | "edicao" | "contexto" | "legenda"        // Mundo 3
+  | "deepfake" | "videoctx" | "clonevoz";   // Mundo 4
 
 /** Uma opção de resposta dentro de uma pergunta */
 export type OpcaoResposta = {

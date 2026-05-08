@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Jogo de Aventura 2D — Agente LUPA (Mundos 1 e 2)
+ * Jogo de Aventura 2D — Agente LUPA (Mundos 1 a 4)
  *
  * Arquitetura:
  *   - Phaser 3 roda dentro de um <div> e cuida de física, animação e input.
@@ -32,6 +32,7 @@ import type {
 import { PERGUNTAS_MUNDO1 } from "@/lib/jogo/aventura/perguntas";
 import { PERGUNTAS_MUNDO2 } from "@/lib/jogo/aventura/perguntas_m2";
 import { PERGUNTAS_MUNDO3 } from "@/lib/jogo/aventura/perguntas_m3";
+import { PERGUNTAS_MUNDO4 } from "@/lib/jogo/aventura/perguntas_m4";
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
@@ -52,7 +53,7 @@ export default function JogoAventura() {
   const [vidas, setVidas] = useState(3);
   const [iniciado, setIniciado] = useState(false);
   const [erroJogo, setErroJogo] = useState<string | null>(null);
-  const [mundoAtual, setMundoAtual] = useState<1 | 2 | 3>(1);
+  const [mundoAtual, setMundoAtual] = useState<1 | 2 | 3 | 4>(1);
 
   // Atualiza os callbacks sempre que o estado do React mudar.
   // Como usamos uma ref, a cena Phaser sempre chama a versão mais recente.
@@ -96,6 +97,7 @@ export default function JogoAventura() {
     vidasInicialRef.current = vidas; // carrega as vidas atuais para o próximo mundo
     if (mundoAtual === 1) setMundoAtual(2);
     else if (mundoAtual === 2) setMundoAtual(3);
+    else if (mundoAtual === 3) setMundoAtual(4);
   }
 
   // Inicia (ou reinicia após avancar de mundo) o Phaser
@@ -113,7 +115,7 @@ export default function JogoAventura() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const Phaser = (mod.default ?? mod) as typeof import("phaser");
 
-        const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : mundoAtual === 2 ? PERGUNTAS_MUNDO2 : PERGUNTAS_MUNDO3;
+        const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : mundoAtual === 2 ? PERGUNTAS_MUNDO2 : mundoAtual === 3 ? PERGUNTAS_MUNDO3 : PERGUNTAS_MUNDO4;
 
         // ── Cena unificada (Mundo 1 ou 2, conforme mundoAtual por closure) ───
         class CenaMundo extends Phaser.Scene {
@@ -196,14 +198,16 @@ export default function JogoAventura() {
             this.time.delayedCall(1000, () => this.proximoInimigo());
           }
 
-          // ── Fundo: delega para M1, M2 ou M3 ─────────────────────────────────
+          // ── Fundo: delega para M1, M2, M3 ou M4 ──────────────────────────────
           private desenharFundo() {
             if (mundoAtual === 1) {
               this.desenharFundoM1();
             } else if (mundoAtual === 2) {
               this.desenharFundoM2();
-            } else {
+            } else if (mundoAtual === 3) {
               this.desenharFundoM3();
+            } else {
+              this.desenharFundoM4();
             }
           }
 
@@ -412,6 +416,79 @@ export default function JogoAventura() {
               .setOrigin(0.5, 0);
           }
 
+          // ── Fundo M4: estúdio de vigilância / lab de deepfake (violeta) ──────
+          private desenharFundoM4() {
+            const g = this.add.graphics();
+
+            // Fundo violeta muito escuro
+            g.fillStyle(0x0d0416);
+            g.fillRect(0, 0, 800, 450);
+
+            // Grade sutil (mesa de edição de vídeo)
+            g.fillStyle(0xa855f7, 0.05);
+            for (let x = 0; x <= 800; x += 50) g.fillRect(x, 0, 1, 400);
+            for (let y = 0; y <= 400; y += 50) g.fillRect(0, y, 800, 1);
+
+            // Partículas violeta
+            g.fillStyle(0xa855f7, 0.12);
+            for (let i = 0; i < 18; i++) {
+              const x = 20 + i * 44;
+              const h = 12 + Math.floor(Math.random() * 35);
+              g.fillRect(x, 40 + Math.floor(Math.random() * 180), 2, h);
+            }
+
+            // "Monitores de vigilância" (no lugar dos prédios)
+            const monitores = [
+              { x: 0, w: 55, h: 120 }, { x: 65, w: 40, h: 85 },
+              { x: 115, w: 60, h: 145 }, { x: 185, w: 45, h: 95 },
+              { x: 240, w: 70, h: 165 }, { x: 320, w: 48, h: 100 },
+              { x: 378, w: 58, h: 130 }, { x: 446, w: 50, h: 110 },
+              { x: 506, w: 68, h: 155 }, { x: 584, w: 44, h: 90 },
+              { x: 638, w: 62, h: 140 }, { x: 710, w: 44, h: 80 },
+              { x: 764, w: 36, h: 105 },
+            ];
+            for (const m of monitores) {
+              const base = 400 - m.h;
+              // Corpo do monitor (violeta escuro)
+              g.fillStyle(0x1e0835);
+              g.fillRect(m.x, base, m.w, m.h);
+              // Borda violeta (moldura do monitor)
+              g.fillStyle(0xa855f7, 0.3);
+              g.fillRect(m.x, base, m.w, 3);
+              g.fillRect(m.x, 397, m.w, 3);
+              g.fillRect(m.x, base, 3, m.h);
+              g.fillRect(m.x + m.w - 3, base, 3, m.h);
+              // "Tela" interior escura
+              g.fillStyle(0x150328);
+              g.fillRect(m.x + 5, base + 5, m.w - 10, m.h - 10);
+              // Scanlines (linhas horizontais)
+              g.fillStyle(0xa855f7, 0.08);
+              for (let sy = base + 12; sy < 390; sy += 6) {
+                g.fillRect(m.x + 6, sy, m.w - 12, 2);
+              }
+              // Indicador vermelho de gravação
+              g.fillStyle(0xef4444, 0.8);
+              g.fillCircle(m.x + m.w - 8, base + 8, 3);
+            }
+
+            // Chão violeta escuro
+            g.fillStyle(0x1e0835);
+            g.fillRect(0, 400, 800, 50);
+            g.fillStyle(0x6d28d9);
+            g.fillRect(0, 400, 800, 3);
+            g.fillStyle(0x4c1d95, 0.5);
+            for (let cx = 0; cx < 800; cx += 60) g.fillRect(cx, 402, 40, 3);
+
+            this.add
+              .text(400, 14, "MUNDO 4  —  DEEPFAKE E VÍDEO", {
+                fontFamily: "Arial",
+                fontSize: "13px",
+                color: "#a855f7",
+                letterSpacing: 2,
+              })
+              .setOrigin(0.5, 0);
+          }
+
           // ── Chão com física estática ──────────────────────────────────────────
           private criarChao() {
             this.chaoRect = this.add.rectangle(400, 425, 800, 50, 0x000000, 0);
@@ -495,7 +572,8 @@ export default function JogoAventura() {
             const mapaM1: Record<string, string> = { bot: "🤖", manchete: "📰", corrente: "🔗" };
             const mapaM2: Record<string, string> = { conflito: "💰", citacao: "✂️", correlacao: "📊" };
             const mapaM3: Record<string, string> = { edicao: "🖼️", contexto: "📍", legenda: "📝" };
-            const mapa = mundoAtual === 1 ? mapaM1 : mundoAtual === 2 ? mapaM2 : mapaM3;
+            const mapaM4: Record<string, string> = { deepfake: "🎭", videoctx: "📹", clonevoz: "🎙️" };
+            const mapa = mundoAtual === 1 ? mapaM1 : mundoAtual === 2 ? mapaM2 : mundoAtual === 3 ? mapaM3 : mapaM4;
             return mapa[tipo] ?? "❓";
           }
 
@@ -697,7 +775,7 @@ export default function JogoAventura() {
           width: 800,
           height: 450,
           parent: containerRef.current!,
-          backgroundColor: mundoAtual === 1 ? "#0f172a" : mundoAtual === 2 ? "#0c1a12" : "#1a0800",
+          backgroundColor: mundoAtual === 1 ? "#0f172a" : mundoAtual === 2 ? "#0c1a12" : mundoAtual === 3 ? "#1a0800" : "#0d0416",
           scale: {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -823,6 +901,9 @@ const EMOJI_INIMIGO: Record<string, string> = {
   edicao: "🖼️",
   contexto: "📍",
   legenda: "📝",
+  deepfake: "🎭",
+  videoctx: "📹",
+  clonevoz: "🎙️",
 };
 
 function PainelPergunta({
@@ -950,7 +1031,7 @@ function PainelVitoria({
   corretas: number;
   total: number;
   aoReiniciar: () => void;
-  mundoAtual: 1 | 2 | 3;
+  mundoAtual: 1 | 2 | 3 | 4;
   aoAvancarMundo: () => void;
 }) {
   const pct = Math.round((corretas / total) * 100);
@@ -958,7 +1039,8 @@ function PainelVitoria({
   const subtitulo =
     mundoAtual === 1 ? "Mundo 1 — Fake News" :
     mundoAtual === 2 ? "Mundo 2 — Fontes e Evidências" :
-    "Mundo 3 — Manipulação de Imagem";
+    mundoAtual === 3 ? "Mundo 3 — Manipulação de Imagem" :
+    "Mundo 4 — Deepfake e Vídeo";
 
   return (
     <div className="absolute inset-0 overflow-y-auto bg-slate-900/90 backdrop-blur-sm">
@@ -992,7 +1074,7 @@ function PainelVitoria({
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
-            {/* Botão de avanço: funcional nos Mundos 1 e 2; "em breve" no Mundo 3 */}
+            {/* Botão de avanço: funcional nos Mundos 1, 2 e 3; "em breve" no Mundo 4 */}
             {mundoAtual === 1 ? (
               <button
                 onClick={aoAvancarMundo}
@@ -1009,9 +1091,17 @@ function PainelVitoria({
                 Avançar para Mundo 3
                 <ArrowRight className="h-4 w-4" />
               </button>
+            ) : mundoAtual === 3 ? (
+              <button
+                onClick={aoAvancarMundo}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-violet-600 to-purple-700 py-2.5 font-semibold text-white shadow-lg transition hover:brightness-110"
+              >
+                Avançar para Mundo 4
+                <ArrowRight className="h-4 w-4" />
+              </button>
             ) : (
-              <div className="rounded-xl border border-amber-600/40 bg-amber-900/30 p-3">
-                <p className="text-sm font-semibold text-amber-300">🚧 Mundo 4 — Em breve!</p>
+              <div className="rounded-xl border border-violet-600/40 bg-violet-900/30 p-3">
+                <p className="text-sm font-semibold text-violet-300">🚧 Mundo 5 — Em breve!</p>
                 <p className="mt-0.5 text-xs text-slate-400">
                   A próxima fase está sendo construída. Fique ligado!
                 </p>
