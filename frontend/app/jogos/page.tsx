@@ -181,7 +181,7 @@ export default function PaginaMenuJogos() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             {JOGOS_EXTERNOS.map((jogo, i) => (
               <a
                 key={jogo.nome}
