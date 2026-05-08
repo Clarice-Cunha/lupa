@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Jogo de Aventura 2D — Agente LUPA (Mundos 1 a 4)
+ * Jogo de Aventura 2D — Agente LUPA (Mundos 1 a 5)
  *
  * Arquitetura:
  *   - Phaser 3 roda dentro de um <div> e cuida de física, animação e input.
@@ -33,6 +33,7 @@ import { PERGUNTAS_MUNDO1 } from "@/lib/jogo/aventura/perguntas";
 import { PERGUNTAS_MUNDO2 } from "@/lib/jogo/aventura/perguntas_m2";
 import { PERGUNTAS_MUNDO3 } from "@/lib/jogo/aventura/perguntas_m3";
 import { PERGUNTAS_MUNDO4 } from "@/lib/jogo/aventura/perguntas_m4";
+import { PERGUNTAS_MUNDO5 } from "@/lib/jogo/aventura/perguntas_m5";
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
@@ -53,7 +54,7 @@ export default function JogoAventura() {
   const [vidas, setVidas] = useState(3);
   const [iniciado, setIniciado] = useState(false);
   const [erroJogo, setErroJogo] = useState<string | null>(null);
-  const [mundoAtual, setMundoAtual] = useState<1 | 2 | 3 | 4>(1);
+  const [mundoAtual, setMundoAtual] = useState<1 | 2 | 3 | 4 | 5>(1);
 
   // Atualiza os callbacks sempre que o estado do React mudar.
   // Como usamos uma ref, a cena Phaser sempre chama a versão mais recente.
@@ -98,6 +99,7 @@ export default function JogoAventura() {
     if (mundoAtual === 1) setMundoAtual(2);
     else if (mundoAtual === 2) setMundoAtual(3);
     else if (mundoAtual === 3) setMundoAtual(4);
+    else if (mundoAtual === 4) setMundoAtual(5);
   }
 
   // Inicia (ou reinicia após avancar de mundo) o Phaser
@@ -115,7 +117,7 @@ export default function JogoAventura() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const Phaser = (mod.default ?? mod) as typeof import("phaser");
 
-        const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : mundoAtual === 2 ? PERGUNTAS_MUNDO2 : mundoAtual === 3 ? PERGUNTAS_MUNDO3 : PERGUNTAS_MUNDO4;
+        const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : mundoAtual === 2 ? PERGUNTAS_MUNDO2 : mundoAtual === 3 ? PERGUNTAS_MUNDO3 : mundoAtual === 4 ? PERGUNTAS_MUNDO4 : PERGUNTAS_MUNDO5;
 
         // ── Cena unificada (Mundo 1 ou 2, conforme mundoAtual por closure) ───
         class CenaMundo extends Phaser.Scene {
@@ -198,7 +200,7 @@ export default function JogoAventura() {
             this.time.delayedCall(1000, () => this.proximoInimigo());
           }
 
-          // ── Fundo: delega para M1, M2, M3 ou M4 ──────────────────────────────
+          // ── Fundo: delega para M1…M5 ─────────────────────────────────────────
           private desenharFundo() {
             if (mundoAtual === 1) {
               this.desenharFundoM1();
@@ -206,8 +208,10 @@ export default function JogoAventura() {
               this.desenharFundoM2();
             } else if (mundoAtual === 3) {
               this.desenharFundoM3();
-            } else {
+            } else if (mundoAtual === 4) {
               this.desenharFundoM4();
+            } else {
+              this.desenharFundoM5();
             }
           }
 
@@ -489,6 +493,96 @@ export default function JogoAventura() {
               .setOrigin(0.5, 0);
           }
 
+          // ── Fundo M5: sala de guerra / central de operações (vermelho) ────────
+          private desenharFundoM5() {
+            const g = this.add.graphics();
+
+            // Fundo quase preto com toque vermelho (sala de operações)
+            g.fillStyle(0x0f0000);
+            g.fillRect(0, 0, 800, 450);
+
+            // Grade sutil (rede de desinformação)
+            g.fillStyle(0xef4444, 0.05);
+            for (let x = 0; x <= 800; x += 50) g.fillRect(x, 0, 1, 400);
+            for (let y = 0; y <= 400; y += 50) g.fillRect(0, y, 800, 1);
+
+            // Nós de rede conectados (visual de botnet)
+            g.fillStyle(0xef4444, 0.2);
+            const nos = [[120, 80], [280, 60], [420, 100], [580, 70], [700, 90],
+                         [60, 180], [200, 160], [360, 190], [500, 155], [650, 180]];
+            for (const [nx, ny] of nos) {
+              g.fillCircle(nx, ny, 4);
+            }
+            // Linhas conectando nós (rede)
+            g.lineStyle(1, 0xef4444, 0.1);
+            const conexoes = [[0,1],[1,2],[2,3],[3,4],[5,6],[6,7],[7,8],[8,9],[0,5],[1,6],[2,7],[3,8],[4,9]];
+            for (const [a, b] of conexoes) {
+              g.beginPath();
+              g.moveTo(nos[a][0], nos[a][1]);
+              g.lineTo(nos[b][0], nos[b][1]);
+              g.closePath();
+              g.strokePath();
+            }
+
+            // Partículas vermelhas
+            g.fillStyle(0xef4444, 0.15);
+            for (let i = 0; i < 18; i++) {
+              const x = 20 + i * 44;
+              const h = 12 + Math.floor(Math.random() * 35);
+              g.fillRect(x, 40 + Math.floor(Math.random() * 180), 2, h);
+            }
+
+            // "Servidores / racks de dados" (no lugar dos prédios)
+            const racks = [
+              { x: 0, w: 55, h: 120 }, { x: 65, w: 40, h: 85 },
+              { x: 115, w: 60, h: 145 }, { x: 185, w: 45, h: 95 },
+              { x: 240, w: 70, h: 165 }, { x: 320, w: 48, h: 100 },
+              { x: 378, w: 58, h: 130 }, { x: 446, w: 50, h: 110 },
+              { x: 506, w: 68, h: 155 }, { x: 584, w: 44, h: 90 },
+              { x: 638, w: 62, h: 140 }, { x: 710, w: 44, h: 80 },
+              { x: 764, w: 36, h: 105 },
+            ];
+            for (const r of racks) {
+              const base = 400 - r.h;
+              // Corpo do rack (vermelho escuro)
+              g.fillStyle(0x2d0000);
+              g.fillRect(r.x, base, r.w, r.h);
+              // Borda vermelha
+              g.fillStyle(0xef4444, 0.35);
+              g.fillRect(r.x, base, r.w, 3);
+              g.fillRect(r.x, 397, r.w, 3);
+              g.fillRect(r.x, base, 3, r.h);
+              g.fillRect(r.x + r.w - 3, base, 3, r.h);
+              // Slots de servidor (linhas horizontais)
+              g.fillStyle(0x1a0000);
+              for (let sy = base + 8; sy < 393; sy += 14) {
+                g.fillRect(r.x + 4, sy, r.w - 8, 9);
+              }
+              // LEDs de atividade (pontos verdes e vermelhos alternados)
+              for (let sy = base + 12; sy < 390; sy += 14) {
+                g.fillStyle(0x22c55e, 0.7);
+                g.fillCircle(r.x + r.w - 8, sy, 2);
+              }
+            }
+
+            // Chão vermelho escuro
+            g.fillStyle(0x2d0000);
+            g.fillRect(0, 400, 800, 50);
+            g.fillStyle(0xdc2626);
+            g.fillRect(0, 400, 800, 3);
+            g.fillStyle(0x7f1d1d, 0.5);
+            for (let cx = 0; cx < 800; cx += 60) g.fillRect(cx, 402, 40, 3);
+
+            this.add
+              .text(400, 14, "MUNDO 5  —  CHEFE FINAL: CAMPANHA COORDENADA", {
+                fontFamily: "Arial",
+                fontSize: "12px",
+                color: "#ef4444",
+                letterSpacing: 2,
+              })
+              .setOrigin(0.5, 0);
+          }
+
           // ── Chão com física estática ──────────────────────────────────────────
           private criarChao() {
             this.chaoRect = this.add.rectangle(400, 425, 800, 50, 0x000000, 0);
@@ -573,7 +667,8 @@ export default function JogoAventura() {
             const mapaM2: Record<string, string> = { conflito: "💰", citacao: "✂️", correlacao: "📊" };
             const mapaM3: Record<string, string> = { edicao: "🖼️", contexto: "📍", legenda: "📝" };
             const mapaM4: Record<string, string> = { deepfake: "🎭", videoctx: "📹", clonevoz: "🎙️" };
-            const mapa = mundoAtual === 1 ? mapaM1 : mundoAtual === 2 ? mapaM2 : mundoAtual === 3 ? mapaM3 : mapaM4;
+            const mapaM5: Record<string, string> = { botnet: "🕸️", narrativa: "🎯", astroturf: "🌿" };
+            const mapa = mundoAtual === 1 ? mapaM1 : mundoAtual === 2 ? mapaM2 : mundoAtual === 3 ? mapaM3 : mundoAtual === 4 ? mapaM4 : mapaM5;
             return mapa[tipo] ?? "❓";
           }
 
@@ -775,7 +870,7 @@ export default function JogoAventura() {
           width: 800,
           height: 450,
           parent: containerRef.current!,
-          backgroundColor: mundoAtual === 1 ? "#0f172a" : mundoAtual === 2 ? "#0c1a12" : mundoAtual === 3 ? "#1a0800" : "#0d0416",
+          backgroundColor: mundoAtual === 1 ? "#0f172a" : mundoAtual === 2 ? "#0c1a12" : mundoAtual === 3 ? "#1a0800" : mundoAtual === 4 ? "#0d0416" : "#0f0000",
           scale: {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -904,6 +999,9 @@ const EMOJI_INIMIGO: Record<string, string> = {
   deepfake: "🎭",
   videoctx: "📹",
   clonevoz: "🎙️",
+  botnet: "🕸️",
+  narrativa: "🎯",
+  astroturf: "🌿",
 };
 
 function PainelPergunta({
@@ -1031,7 +1129,7 @@ function PainelVitoria({
   corretas: number;
   total: number;
   aoReiniciar: () => void;
-  mundoAtual: 1 | 2 | 3 | 4;
+  mundoAtual: 1 | 2 | 3 | 4 | 5;
   aoAvancarMundo: () => void;
 }) {
   const pct = Math.round((corretas / total) * 100);
@@ -1040,7 +1138,8 @@ function PainelVitoria({
     mundoAtual === 1 ? "Mundo 1 — Fake News" :
     mundoAtual === 2 ? "Mundo 2 — Fontes e Evidências" :
     mundoAtual === 3 ? "Mundo 3 — Manipulação de Imagem" :
-    "Mundo 4 — Deepfake e Vídeo";
+    mundoAtual === 4 ? "Mundo 4 — Deepfake e Vídeo" :
+    "Mundo 5 — Chefe Final";
 
   return (
     <div className="absolute inset-0 overflow-y-auto bg-slate-900/90 backdrop-blur-sm">
@@ -1099,11 +1198,20 @@ function PainelVitoria({
                 Avançar para Mundo 4
                 <ArrowRight className="h-4 w-4" />
               </button>
+            ) : mundoAtual === 4 ? (
+              <button
+                onClick={aoAvancarMundo}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-rose-600 to-red-700 py-2.5 font-semibold text-white shadow-lg transition hover:brightness-110"
+              >
+                Enfrentar o Chefe Final
+                <ArrowRight className="h-4 w-4" />
+              </button>
             ) : (
-              <div className="rounded-xl border border-violet-600/40 bg-violet-900/30 p-3">
-                <p className="text-sm font-semibold text-violet-300">🚧 Mundo 5 — Em breve!</p>
-                <p className="mt-0.5 text-xs text-slate-400">
-                  A próxima fase está sendo construída. Fique ligado!
+              <div className="rounded-xl border border-amber-400/50 bg-gradient-to-br from-amber-900/40 to-yellow-900/30 p-4 text-center">
+                <p className="text-3xl mb-1">🏆</p>
+                <p className="text-sm font-bold text-amber-300">Campanha concluída!</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                  Você completou todos os 5 mundos do Agente LUPA. Parabéns — você é um verdadeiro especialista em combate à desinformação!
                 </p>
               </div>
             )}

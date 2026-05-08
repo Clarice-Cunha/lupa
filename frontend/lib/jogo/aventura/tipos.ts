@@ -10,7 +10,8 @@ export type TipoInimigo =
   | "bot" | "manchete" | "corrente"          // Mundo 1
   | "conflito" | "citacao" | "correlacao"    // Mundo 2
   | "edicao" | "contexto" | "legenda"        // Mundo 3
-  | "deepfake" | "videoctx" | "clonevoz";   // Mundo 4
+  | "deepfake" | "videoctx" | "clonevoz"    // Mundo 4
+  | "botnet" | "narrativa" | "astroturf";  // Mundo 5
 
 /** Uma opção de resposta dentro de uma pergunta */
 export type OpcaoResposta = {
