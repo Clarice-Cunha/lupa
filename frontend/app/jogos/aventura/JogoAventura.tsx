@@ -31,6 +31,7 @@ import type {
 } from "@/lib/jogo/aventura/tipos";
 import { PERGUNTAS_MUNDO1 } from "@/lib/jogo/aventura/perguntas";
 import { PERGUNTAS_MUNDO2 } from "@/lib/jogo/aventura/perguntas_m2";
+import { PERGUNTAS_MUNDO3 } from "@/lib/jogo/aventura/perguntas_m3";
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
@@ -51,7 +52,7 @@ export default function JogoAventura() {
   const [vidas, setVidas] = useState(3);
   const [iniciado, setIniciado] = useState(false);
   const [erroJogo, setErroJogo] = useState<string | null>(null);
-  const [mundoAtual, setMundoAtual] = useState<1 | 2>(1);
+  const [mundoAtual, setMundoAtual] = useState<1 | 2 | 3>(1);
 
   // Atualiza os callbacks sempre que o estado do React mudar.
   // Como usamos uma ref, a cena Phaser sempre chama a versão mais recente.
@@ -82,18 +83,19 @@ export default function JogoAventura() {
       // Já no Mundo 1: reinicia a cena Phaser diretamente
       cenaRef.current?.scene.restart();
     } else {
-      // Estava no Mundo 2: volta ao Mundo 1 (o useEffect cria um novo jogo)
+      // Estava no Mundo 2 ou 3: volta ao Mundo 1 (o useEffect cria um novo jogo)
       setMundoAtual(1);
     }
   }
 
-  // Chamado ao clicar "Avançar para Mundo 2" no painel de vitória do Mundo 1.
+  // Chamado ao clicar "Avançar para o próximo mundo" no painel de vitória.
   // Mudar mundoAtual dispara o useEffect, que destrói o jogo atual e cria o novo.
   // As vidas são mantidas (não resetadas) ao avançar de mundo.
   function avancarMundo() {
     setOverlay({ tipo: "nenhum" });
     vidasInicialRef.current = vidas; // carrega as vidas atuais para o próximo mundo
-    setMundoAtual(2);
+    if (mundoAtual === 1) setMundoAtual(2);
+    else if (mundoAtual === 2) setMundoAtual(3);
   }
 
   // Inicia (ou reinicia após avancar de mundo) o Phaser
@@ -111,7 +113,7 @@ export default function JogoAventura() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const Phaser = (mod.default ?? mod) as typeof import("phaser");
 
-        const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : PERGUNTAS_MUNDO2;
+        const banco = mundoAtual === 1 ? PERGUNTAS_MUNDO1 : mundoAtual === 2 ? PERGUNTAS_MUNDO2 : PERGUNTAS_MUNDO3;
 
         // ── Cena unificada (Mundo 1 ou 2, conforme mundoAtual por closure) ───
         class CenaMundo extends Phaser.Scene {
@@ -194,12 +196,14 @@ export default function JogoAventura() {
             this.time.delayedCall(1000, () => this.proximoInimigo());
           }
 
-          // ── Fundo: delega para M1 ou M2 ──────────────────────────────────────
+          // ── Fundo: delega para M1, M2 ou M3 ─────────────────────────────────
           private desenharFundo() {
             if (mundoAtual === 1) {
               this.desenharFundoM1();
-            } else {
+            } else if (mundoAtual === 2) {
               this.desenharFundoM2();
+            } else {
+              this.desenharFundoM3();
             }
           }
 
@@ -338,6 +342,76 @@ export default function JogoAventura() {
               .setOrigin(0.5, 0);
           }
 
+          // ── Fundo M3: estúdio fotográfico / manipulação de imagem (âmbar) ────
+          private desenharFundoM3() {
+            const g = this.add.graphics();
+
+            // Fundo escuro âmbar
+            g.fillStyle(0x1a0800);
+            g.fillRect(0, 0, 800, 450);
+
+            // Grade sutil (mesa de edição fotográfica)
+            g.fillStyle(0xf59e0b, 0.04);
+            for (let x = 0; x <= 800; x += 50) g.fillRect(x, 0, 1, 400);
+            for (let y = 0; y <= 400; y += 50) g.fillRect(0, y, 800, 1);
+
+            // Partículas âmbar
+            g.fillStyle(0xf59e0b, 0.1);
+            for (let i = 0; i < 18; i++) {
+              const x = 20 + i * 44;
+              const h = 12 + Math.floor(Math.random() * 35);
+              g.fillRect(x, 40 + Math.floor(Math.random() * 180), 2, h);
+            }
+
+            // "Molduras fotográficas" (no lugar dos prédios)
+            const quadros = [
+              { x: 0, w: 55, h: 120 }, { x: 65, w: 40, h: 85 },
+              { x: 115, w: 60, h: 145 }, { x: 185, w: 45, h: 95 },
+              { x: 240, w: 70, h: 165 }, { x: 320, w: 48, h: 100 },
+              { x: 378, w: 58, h: 130 }, { x: 446, w: 50, h: 110 },
+              { x: 506, w: 68, h: 155 }, { x: 584, w: 44, h: 90 },
+              { x: 638, w: 62, h: 140 }, { x: 710, w: 44, h: 80 },
+              { x: 764, w: 36, h: 105 },
+            ];
+            for (const q of quadros) {
+              const base = 400 - q.h;
+              // Moldura exterior (âmbar escuro)
+              g.fillStyle(0x3d1f00);
+              g.fillRect(q.x, base, q.w, q.h);
+              // Borda âmbar (simulando moldura de foto)
+              g.fillStyle(0xf59e0b, 0.25);
+              g.fillRect(q.x, base, q.w, 3);
+              g.fillRect(q.x, 397, q.w, 3);
+              g.fillRect(q.x, base, 3, q.h);
+              g.fillRect(q.x + q.w - 3, base, 3, q.h);
+              // Interior escuro (simulando foto)
+              g.fillStyle(0x2a1200);
+              g.fillRect(q.x + 5, base + 5, q.w - 10, q.h - 10);
+              // Faixas horizontais (como linhas de edição)
+              g.fillStyle(0xf59e0b, 0.1);
+              for (let wy = base + 18; wy < 392; wy += 20) {
+                g.fillRect(q.x + 7, wy, q.w - 14, 2);
+              }
+            }
+
+            // Chão âmbar escuro
+            g.fillStyle(0x2d1500);
+            g.fillRect(0, 400, 800, 50);
+            g.fillStyle(0x5c3010);
+            g.fillRect(0, 400, 800, 3);
+            g.fillStyle(0x3d1f00, 0.5);
+            for (let cx = 0; cx < 800; cx += 60) g.fillRect(cx, 402, 40, 3);
+
+            this.add
+              .text(400, 14, "MUNDO 3  —  MANIPULAÇÃO DE IMAGEM", {
+                fontFamily: "Arial",
+                fontSize: "13px",
+                color: "#f59e0b",
+                letterSpacing: 2,
+              })
+              .setOrigin(0.5, 0);
+          }
+
           // ── Chão com física estática ──────────────────────────────────────────
           private criarChao() {
             this.chaoRect = this.add.rectangle(400, 425, 800, 50, 0x000000, 0);
@@ -420,7 +494,9 @@ export default function JogoAventura() {
           private getMundoEmoji(tipo: string): string {
             const mapaM1: Record<string, string> = { bot: "🤖", manchete: "📰", corrente: "🔗" };
             const mapaM2: Record<string, string> = { conflito: "💰", citacao: "✂️", correlacao: "📊" };
-            return (mundoAtual === 1 ? mapaM1 : mapaM2)[tipo] ?? "❓";
+            const mapaM3: Record<string, string> = { edicao: "🖼️", contexto: "📍", legenda: "📝" };
+            const mapa = mundoAtual === 1 ? mapaM1 : mundoAtual === 2 ? mapaM2 : mapaM3;
+            return mapa[tipo] ?? "❓";
           }
 
           // ── Spawn de inimigo ──────────────────────────────────────────────────
@@ -621,7 +697,7 @@ export default function JogoAventura() {
           width: 800,
           height: 450,
           parent: containerRef.current!,
-          backgroundColor: mundoAtual === 1 ? "#0f172a" : "#0c1a12",
+          backgroundColor: mundoAtual === 1 ? "#0f172a" : mundoAtual === 2 ? "#0c1a12" : "#1a0800",
           scale: {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -736,7 +812,7 @@ function embaralhar<T>(lista: T[]): T[] {
 
 // ─── Sub-componentes de overlay ──────────────────────────────────────────────
 
-// Mapa de emojis para todos os tipos de inimigo (Mundos 1 e 2)
+// Mapa de emojis para todos os tipos de inimigo (Mundos 1, 2 e 3)
 const EMOJI_INIMIGO: Record<string, string> = {
   bot: "🤖",
   manchete: "📰",
@@ -744,6 +820,9 @@ const EMOJI_INIMIGO: Record<string, string> = {
   conflito: "💰",
   citacao: "✂️",
   correlacao: "📊",
+  edicao: "🖼️",
+  contexto: "📍",
+  legenda: "📝",
 };
 
 function PainelPergunta({
@@ -871,13 +950,15 @@ function PainelVitoria({
   corretas: number;
   total: number;
   aoReiniciar: () => void;
-  mundoAtual: 1 | 2;
+  mundoAtual: 1 | 2 | 3;
   aoAvancarMundo: () => void;
 }) {
   const pct = Math.round((corretas / total) * 100);
   const medalha = pct === 100 ? "🥇" : pct >= 60 ? "🥈" : "🥉";
   const subtitulo =
-    mundoAtual === 1 ? "Mundo 1 — Fake News" : "Mundo 2 — Fontes e Evidências";
+    mundoAtual === 1 ? "Mundo 1 — Fake News" :
+    mundoAtual === 2 ? "Mundo 2 — Fontes e Evidências" :
+    "Mundo 3 — Manipulação de Imagem";
 
   return (
     <div className="absolute inset-0 overflow-y-auto bg-slate-900/90 backdrop-blur-sm">
@@ -911,7 +992,7 @@ function PainelVitoria({
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
-            {/* Botão de avanço: funcional no Mundo 1 → 2; "em breve" no Mundo 2 */}
+            {/* Botão de avanço: funcional nos Mundos 1 e 2; "em breve" no Mundo 3 */}
             {mundoAtual === 1 ? (
               <button
                 onClick={aoAvancarMundo}
@@ -920,9 +1001,17 @@ function PainelVitoria({
                 Avançar para Mundo 2
                 <ArrowRight className="h-4 w-4" />
               </button>
+            ) : mundoAtual === 2 ? (
+              <button
+                onClick={aoAvancarMundo}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-amber-600 to-orange-600 py-2.5 font-semibold text-white shadow-lg transition hover:brightness-110"
+              >
+                Avançar para Mundo 3
+                <ArrowRight className="h-4 w-4" />
+              </button>
             ) : (
-              <div className="rounded-xl border border-emerald-600/40 bg-emerald-900/30 p-3">
-                <p className="text-sm font-semibold text-emerald-300">🚧 Mundo 3 — Em breve!</p>
+              <div className="rounded-xl border border-amber-600/40 bg-amber-900/30 p-3">
+                <p className="text-sm font-semibold text-amber-300">🚧 Mundo 4 — Em breve!</p>
                 <p className="mt-0.5 text-xs text-slate-400">
                   A próxima fase está sendo construída. Fique ligado!
                 </p>
