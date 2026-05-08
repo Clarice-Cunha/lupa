@@ -60,6 +60,13 @@ const TERMOS: Termo[] = [
     exemplo: "'Você não vai acreditar no que esse político fez!' — sem especificar nada.",
   },
   {
+    palavra: "Ecossistema",
+    definicao:
+      "Conjunto interdependente de ferramentas, conteúdos e espaços que se complementam para cumprir um objetivo comum. No mundo digital, o termo descreve plataformas que crescem além de uma única função e passam a integrar múltiplos recursos relacionados — como jogos, biblioteca de conteúdo, espaços comunitários e APIs para desenvolvedores. A metáfora vem da biologia, onde um ecossistema é formado por organismos diferentes que dependem uns dos outros para sobreviver.",
+    exemplo:
+      "O Ecossistema LUPA reúne a ferramenta de análise de links e mídias, os jogos educativos (Detetive LUPA, Agente LUPA, Caça ao Phishing), a Biblioteca Virtual, o portal comunitário de boatos e o Modo Professor — todos conectados pelo mesmo propósito: apoiar o letramento midiático.",
+  },
+  {
     palavra: "Deepfake",
     definicao:
       "Vídeo, imagem ou áudio manipulado com inteligência artificial para fazer parecer que uma pessoa disse ou fez algo que nunca aconteceu. O nome vem de 'deep learning' (aprendizado profundo) + 'fake' (falso). São cada vez mais difíceis de detectar.",

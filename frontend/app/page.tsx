@@ -266,7 +266,7 @@ function Cabecalho() {
         <Search className="h-8 w-8 text-white" strokeWidth={2.5} />
       </div>
       <h1 className="text-5xl font-bold tracking-tight text-slate-900">
-        LUPA
+        Ecossistema LUPA
       </h1>
       <p className="mt-3 text-lg text-slate-600">
         Leitor de URLs, Plataformas e Audiovisuais
