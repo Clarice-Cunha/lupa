@@ -34,6 +34,8 @@ import {
   Scale,
   Bot,
   LayoutDashboard,
+  Award,
+  MapPin,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -401,6 +403,110 @@ const MARCOS: Marco[] = [
       "Nova função _analisar_ghost() em image_analyzer.py: salva o JPEG em qualidades [55, 65, 75, 85, 90, 95] e usa ImageStat.Stat para obter média e desvio padrão do mapa de diferenças em cada qualidade. Alerta disparado quando std_min > 22 e media_min > 6 na melhor qualidade. Prompt do Gemini expandido com lista explícita de artefatos de IA/deepfake. Usa apenas Pillow (ImageStat já incluso) — sem dependências novas.",
     status: "concluido",
     icone: ShieldCheck,
+    corFundo: "bg-rose-100",
+    corIcone: "text-rose-600",
+  },
+  {
+    id: 27,
+    data: "Maio de 2026",
+    titulo: "Painel de estatísticas do Detetive LUPA",
+    descricao:
+      "O jogo Detetive LUPA ganhou uma camada analítica: após três rodadas completas, aparece uma seção com barras de progresso mostrando em quais tipos de indício — linguagem sensacionalista, ausência de fonte, apelo emocional, entre outros — o jogador acertou ou errou com mais frequência. O objetivo é ajudar cada pessoa a identificar seus pontos cegos: os tipos de desinformação que ainda passam despercebidos com mais facilidade.",
+    notaTecnica:
+      "Componente React com leitura do localStorage: histórico de respostas agrupado por tipo de indício. Barras de progresso calculadas no cliente, sem envio de dados ao servidor. A seção só é exibida a partir da 3ª rodada concluída, para que haja dados suficientes para análise.",
+    status: "concluido",
+    icone: BarChart2,
+    corFundo: "bg-violet-100",
+    corIcone: "text-violet-600",
+  },
+  {
+    id: 28,
+    data: "Maio de 2026",
+    titulo: "Certificado de conclusão do Detetive LUPA",
+    descricao:
+      "Ao conquistar o distintivo 'Detetive LUPA' — prêmio que aparece quando o jogador conclui o jogo com alto desempenho —, um diploma visual é exibido na tela com nome, data e número de acertos. O certificado pode ser salvo como imagem com um clique no botão de download. É uma forma de tornar o aprendizado concreto e compartilhável — especialmente útil em contexto de sala de aula.",
+    notaTecnica:
+      "Modal com diploma gerado via HTML/CSS e exportado como PNG usando a biblioteca html-to-image. O nome do jogador é lido do localStorage. O download usa URL.createObjectURL() com um elemento <a> criado dinamicamente e acionado por código — sem dependência de servidor.",
+    status: "concluido",
+    icone: Award,
+    corFundo: "bg-yellow-100",
+    corIcone: "text-yellow-600",
+  },
+  {
+    id: 29,
+    data: "Maio de 2026",
+    titulo: "Busca de turmas por nome no painel de moderação",
+    descricao:
+      "A equipe LUPA ganhou uma ferramenta prática: na área de moderação, uma aba 'Turmas' permite recuperar o código de uma turma a partir do nome do professor ou da turma. Antes, se um professor perdia o código, não havia como recuperá-lo sem acesso direto ao banco de dados. Agora a própria equipe LUPA pode fazer essa busca de forma rápida e segura, sem expor dados de outras turmas.",
+    notaTecnica:
+      "Endpoint GET /turmas/buscar?q={termo} no backend, protegido pelo cabeçalho X-Moderacao-Chave. Busca por substring (ILIKE) nos campos nome_professor e nome_turma no Supabase. Frontend: nova aba na página /moderacao com campo de busca e listagem dos resultados com nome, código e data de criação.",
+    status: "concluido",
+    icone: LayoutDashboard,
+    corFundo: "bg-slate-100",
+    corIcone: "text-slate-600",
+  },
+  {
+    id: 30,
+    data: "Maio de 2026",
+    titulo: "Agente LUPA — Mundo 2: Fontes e Evidências",
+    descricao:
+      "O jogo de aventura ganhou seu segundo mundo. Depois de derrotar os vilões de fake news no Mundo 1, o jogador entra em um ambiente de laboratório de pesquisa — com tons de verde e arquivos ao fundo — e enfrenta três novos tipos de inimigo: o Conflito de Interesse (💰), que ensina a identificar quando uma fonte tem interesses escondidos por trás da informação; a Citação Fora de Contexto (✂️), que mostra como frases reais podem ser distorcidas ao serem retiradas do contexto; e a Correlação Falsa (📊), que explica a diferença entre coincidência estatística e causa real. As vidas conquistadas no Mundo 1 são preservadas ao avançar.",
+    notaTecnica:
+      "Banco PERGUNTAS_MUNDO2 com 10 perguntas (3–4 por tipo de inimigo). mundoAtual como estado React (1 | 2) passado por closure ao Phaser. avancarMundo() preserva vidasInicialRef.current para que a nova cena inicie com as vidas acumuladas. Fundo renderizado por desenharFundoM2(): grade verde sutil + silhuetas de arquivos com divisórias e abas coloridas.",
+    status: "concluido",
+    icone: Swords,
+    corFundo: "bg-emerald-100",
+    corIcone: "text-emerald-600",
+  },
+  {
+    id: 31,
+    data: "Maio de 2026",
+    titulo: "Mapa georreferenciado no Portal Comunitário de Boatos",
+    descricao:
+      "O Portal Comunitário ganhou uma dimensão geográfica: ao reportar um boato, o usuário pode indicar o local exato onde a informação circula clicando em um mapa interativo. Todos os boatos com localização são exibidos em um mapa de visão geral com marcadores coloridos por status (pendente, em apuração, verificado como falso). Isso permite visualizar padrões geográficos — bairros ou regiões onde determinados tipos de boato se concentram — informação valiosa para entender como a desinformação se espalha localmente.",
+    notaTecnica:
+      "Componente MapaBoatos.tsx usando Leaflet.js com importação dinâmica (ssr: false) para evitar erros de server-side rendering. Campos lat e lng adicionados à tabela boatos no Supabase. Dois modos de operação: seletor (formulário de envio, com marcador arrastável) e exibição (mapa geral com todos os boatos georreferenciados agrupados por status).",
+    status: "concluido",
+    icone: MapPin,
+    corFundo: "bg-cyan-100",
+    corIcone: "text-cyan-600",
+  },
+  {
+    id: 32,
+    data: "Maio de 2026",
+    titulo: "Agente LUPA — Mundo 3: Manipulação de Imagem",
+    descricao:
+      "O terceiro mundo leva o jogador a um estúdio fotográfico escuro com tons âmbar, onde três tipos de vilão ensinam sobre as formas mais comuns de enganar com imagens: a Imagem Editada por IA (🖼️), que explica como identificar fotos geradas ou manipuladas artificialmente usando ferramentas como pesquisa reversa e análise forense; o Contexto Falso (📍), que mostra como imagens reais são usadas com datas, locais ou situações erradas; e a Legenda Falsa (📝), que ensina a verificar se a descrição de uma foto condiz com o que ela realmente mostra. Molduras fotográficas antigas compõem o cenário de fundo.",
+    notaTecnica:
+      "Banco PERGUNTAS_MUNDO3 com 10 perguntas (4 edicao, 3 contexto, 3 legenda). Fundo em desenharFundoM3(): paleta 0x1a0800 (âmbar profundo) com molduras fotográficas desenhadas via Graphics primitives — bordas âmbar, interior escuro e faixas horizontais simulando linhas de edição. mundoAtual expandido para 1 | 2 | 3; avancarMundo() atualizado com ramo M2→M3.",
+    status: "concluido",
+    icone: Swords,
+    corFundo: "bg-orange-100",
+    corIcone: "text-orange-600",
+  },
+  {
+    id: 33,
+    data: "Maio de 2026",
+    titulo: "Agente LUPA — Mundo 4: Deepfake e Vídeo",
+    descricao:
+      "No quarto mundo, com fundo violeta e monitores de vigilância piscando ao fundo, o jogador enfrenta os vilões do universo audiovisual: o Rosto Sintético (🎭), que ensina a identificar deepfakes por piscadas artificiais, lábios dessincronizados e ausência de micromovimentos naturais; o Vídeo Fora de Contexto (📹), que mostra como filmagens reais são reaproveitadas com datas e locais falsos; e o Clone de Voz (🎙️), que alerta sobre a tecnologia de clonagem de voz por inteligência artificial e como proteger familiares de golpes que imitam vozes conhecidas.",
+    notaTecnica:
+      "Banco PERGUNTAS_MUNDO4 com 10 perguntas (4 deepfake, 3 videoctx, 3 clonevoz). Fundo em desenharFundoM4(): paleta 0x0d0416 (violeta profundo) com monitores de vigilância — corpo escuro, borda violeta, interior com scanlines e indicadores de gravação vermelhos no canto superior. mundoAtual expandido para 1 | 2 | 3 | 4.",
+    status: "concluido",
+    icone: Swords,
+    corFundo: "bg-violet-100",
+    corIcone: "text-violet-600",
+  },
+  {
+    id: 34,
+    data: "Maio de 2026",
+    titulo: "Agente LUPA — Mundo 5: Chefe Final (Campanha Coordenada)",
+    descricao:
+      "O Agente LUPA está completo. O quinto e último mundo — uma sala de operações em vermelho escuro com racks de servidores, LEDs piscando e uma rede de nós conectados visível ao fundo — reúne o tema mais complexo: operações de desinformação em escala industrial. Três vilões finais ensinam sobre Redes de Bots (🕸️), que fabricam trending topics e amplificam conteúdo falso de forma automatizada; Narrativas Coordenadas (🎯), que simulam múltiplas fontes independentes publicando a mesma história falsa para criar aparência de consenso; e Astroturfing (🌿), que cria movimentos de aparência popular financiados por interesses ocultos. Ao completar o Mundo 5, uma tela especial celebra o jogador por ter dominado todos os cinco temas.",
+    notaTecnica:
+      "Banco PERGUNTAS_MUNDO5 com 10 perguntas (4 botnet, 3 narrativa, 3 astroturf). Fundo em desenharFundoM5(): paleta 0x0f0000 (vermelho profundo) com racks de servidores — slots escuros e LEDs verdes alternados —, mais uma rede de 10 nós conectados por 13 arestas desenhada via Graphics. PainelVitoria do Mundo 5 exibe tela especial de conclusão com 🏆 em vez de botão de avanço. mundoAtual: 1 | 2 | 3 | 4 | 5.",
+    status: "concluido",
+    icone: Swords,
     corFundo: "bg-rose-100",
     corIcone: "text-rose-600",
   },

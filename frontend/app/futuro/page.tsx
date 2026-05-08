@@ -24,9 +24,9 @@ const PROXIMOS_PASSOS = [
   {
     icone: Gamepad2,
     cor: "bg-emerald-100 text-emerald-600",
-    titulo: "Mais jogos educativos",
+    titulo: "Novos mini-jogos independentes",
     texto:
-      "Estão planejados novos jogos para a área de atividades: 'Caça ao Phishing' (identificar armadilhas em mensagens falsas), 'Detetive da Engenharia Social' (reconhecer manipulação emocional) e 'Verdadeiro ou Suspeito?' (quiz em tempo real). Cada jogo terá pontuação e um aprendizado específico ao final.",
+      "O Agente LUPA está completo com 5 mundos. A próxima expansão são mini-jogos autônomos: 'Caça ao Phishing' (identificar armadilhas em mensagens falsas), 'Detetive da Engenharia Social' (reconhecer manipulação emocional), 'Verdadeiro ou Suspeito?' (quiz em tempo real) e 'Caça ao Clickbait' (distinguir manchetes legítimas de chamarizes sensacionalistas). Cada jogo terá pontuação e um aprendizado específico ao final.",
   },
   {
     icone: Headphones,
@@ -146,14 +146,19 @@ export default function PaginaFuturo() {
               </h2>
             </div>
             <p className="text-sm leading-relaxed text-justify text-indigo-900 dark:text-indigo-200">
-              Em abril de 2026, o LUPA já analisa <strong>cinco tipos de
+              Em maio de 2026, o LUPA analisa <strong>cinco tipos de
               conteúdo</strong> (links, YouTube, vídeos, textos e imagens),
               tem uma área de <strong>jogos educativos</strong> com modo
-              multiplayer, uma <strong>Biblioteca Virtual</strong> com mais de
-              20 recursos organizados por faixa etária, um{" "}
-              <strong>portal comunitário de boatos</strong> com painel de
-              moderação, e uma <strong>API aberta</strong> para desenvolvedores.
-              Tudo isso em português, gratuito e sem cadastro.
+              multiplayer e o <strong>Agente LUPA</strong> — aventura completa
+              com 5 mundos temáticos (Fake News, Fontes e Evidências,
+              Manipulação de Imagem, Deepfake e Vídeo, e Campanha Coordenada)
+              —, uma <strong>Biblioteca Virtual</strong> com mais de 20 recursos
+              por faixa etária, um{" "}
+              <strong>portal comunitário de boatos</strong> com mapa
+              georreferenciado e painel de moderação, um{" "}
+              <strong>Modo Professor</strong> para acompanhar turmas, e uma{" "}
+              <strong>API aberta</strong> para desenvolvedores.
+              Tudo em português, gratuito e sem cadastro.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-justify text-indigo-900 dark:text-indigo-200">
               Mas há muito mais pela frente.
