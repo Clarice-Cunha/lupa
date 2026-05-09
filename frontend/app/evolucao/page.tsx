@@ -510,6 +510,32 @@ const MARCOS: Marco[] = [
     corFundo: "bg-rose-100",
     corIcone: "text-rose-600",
   },
+  {
+    id: 35,
+    data: "Maio de 2026",
+    titulo: "Mini-jogo: Detetive da Engenharia Social",
+    descricao:
+      "O LUPA ganhou seu primeiro mini-jogo independente voltado à segurança digital. O jogador lê seis cenários do cotidiano — uma ligação de um 'técnico de TI', um e-mail alertando sobre uma 'conta em risco', uma inspeção surpresa de 'fiscais' — e precisa identificar qual tática de manipulação está sendo usada em cada situação. São seis táticas mapeadas: pretexting (criar um pretexto falso para extrair informações), urgência fabricada (pressionar para uma decisão rápida), apelo à autoridade (se passar por uma figura de poder), quid pro quo (oferecer algo em troca de dados), baiting (usar uma isca física ou digital) e rapport (construir confiança artificial ao longo do tempo). Cada cenário exibe uma explicação detalhada ao final, ensinando a reconhecer o mecanismo de manipulação mesmo quando ele aparece disfarçado em situações aparentemente normais.",
+    notaTecnica:
+      "Três arquivos criados: cenarios.ts (dados — TaticaId, Tatica, Cenario), JogoEngenhariaSocial.tsx (componente 'use client'), page.tsx (rota /jogos/engenharia-social). Seis táticas tipadas em TaticaId; seis cenários em CENARIOS[]. Fases: intro (lista das 6 táticas com ícone e descrição curta) → jogando (barra de progresso, card de contexto, 4 botões de opção, revelação com explicação) → fim (medalha em 4 níveis ≥5/≥4/≥3/<3, tabela de resultados com tática correta por cenário). Paleta teal/cyan.",
+    status: "concluido",
+    icone: Brain,
+    corFundo: "bg-teal-100",
+    corIcone: "text-teal-600",
+  },
+  {
+    id: 36,
+    data: "Maio de 2026",
+    titulo: "Mini-jogo: Verdadeiro ou Suspeito?",
+    descricao:
+      "O segundo mini-jogo independente treina o olhar crítico sobre manchetes virais. O jogador analisa 8 afirmações — algumas verdadeiras (como dados oficiais do IBGE e da OMS), outras fabricadas ou distorcidas (como promessas milagrosas e dados fora de contexto) — e realiza dois passos para cada uma: primeiro classifica como Verdadeiro ou Suspeito, depois identifica o principal indício que justifica a classificação, entre sete opções: autoridade vaga, linguagem sensacionalista, teoria conspiratória, promessa milagrosa, dado fora de contexto, ausência de fonte e fonte verificável. Cada passo vale 10 pontos (máximo de 160). A tela final exibe uma tabela com o resultado de cada afirmação usando os códigos ✓✓, ✓✗, ✗✓ e ✗✗ — permitindo ao jogador identificar em qual etapa erra mais.",
+    notaTecnica:
+      "Três arquivos criados: afirmacoes.ts (dados — Classificacao, IndicadorId, Indicador, Afirmacao), JogoVerdadeiroOuSuspeito.tsx (componente 'use client'), page.tsx (rota /jogos/verdadeiro-ou-suspeito). Sete IndicadorId; oito Afirmacao[] (4 verdadeiro, 4 suspeito). Três fases com sub-estado etapa: 'classificar' | 'indicar' | 'revelar'. ResultadoRodada acumula classCorreta e indCorreto por rodada. Medalhas em 4 níveis (≥87,5% / ≥68,75% / ≥50% / abaixo). Paleta violet/purple.",
+    status: "concluido",
+    icone: Scale,
+    corFundo: "bg-violet-100",
+    corIcone: "text-violet-600",
+  },
 ];
 
 export const metadata = {

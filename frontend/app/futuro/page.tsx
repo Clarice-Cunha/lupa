@@ -26,7 +26,7 @@ const PROXIMOS_PASSOS = [
     cor: "bg-emerald-100 text-emerald-600",
     titulo: "Novos mini-jogos independentes",
     texto:
-      "O Agente LUPA está completo com 5 mundos. A próxima expansão são mini-jogos autônomos: 'Caça ao Phishing' (identificar armadilhas em mensagens falsas), 'Detetive da Engenharia Social' (reconhecer manipulação emocional), 'Verdadeiro ou Suspeito?' (quiz em tempo real) e 'Caça ao Clickbait' (distinguir manchetes legítimas de chamarizes sensacionalistas). Cada jogo terá pontuação e um aprendizado específico ao final.",
+      "O Agente LUPA está completo com 5 mundos, e dois novos mini-jogos autônomos foram lançados: 'Detetive da Engenharia Social' (reconhecer táticas de manipulação como pretexting, baiting e rapport) e 'Verdadeiro ou Suspeito?' (analisar manchetes virais em duas etapas). Os próximos na fila são: 'Caça ao Phishing' (identificar armadilhas em mensagens falsas) e 'Caça ao Clickbait' (distinguir manchetes legítimas de chamarizes sensacionalistas). Cada jogo tem pontuação própria e um aprendizado específico ao final.",
   },
   {
     icone: Headphones,
@@ -149,10 +149,13 @@ export default function PaginaFuturo() {
               Em maio de 2026, o LUPA analisa <strong>cinco tipos de
               conteúdo</strong> (links, YouTube, vídeos, textos e imagens),
               tem uma área de <strong>jogos educativos</strong> com modo
-              multiplayer e o <strong>Agente LUPA</strong> — aventura completa
+              multiplayer, o <strong>Agente LUPA</strong> — aventura completa
               com 5 mundos temáticos (Fake News, Fontes e Evidências,
               Manipulação de Imagem, Deepfake e Vídeo, e Campanha Coordenada)
-              —, uma <strong>Biblioteca Virtual</strong> com mais de 20 recursos
+              — e dois mini-jogos autônomos recém-lançados:{" "}
+              <strong>Detetive da Engenharia Social</strong> e{" "}
+              <strong>Verdadeiro ou Suspeito?</strong>. O site também conta com
+              uma <strong>Biblioteca Virtual</strong> com mais de 20 recursos
               por faixa etária, um{" "}
               <strong>portal comunitário de boatos</strong> com mapa
               georreferenciado e painel de moderação, um{" "}
