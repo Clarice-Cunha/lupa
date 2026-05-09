@@ -37,7 +37,7 @@ const CATEGORIAS: Categoria[] = [
       },
       {
         nome: "Agência Lupa",
-        url: "https://lupa.uol.com.br",
+        url: "https://lupa.news/",
         descricao:
           "Primeira agência de fact-checking do Brasil, em parceria com o UOL.",
       },
@@ -175,7 +175,7 @@ const METODOLOGIAS: Metodologia[] = [
   },
   {
     agencia: "Agência Lupa",
-    url: "https://lupa.uol.com.br/sobre-a-lupa/metodologia/",
+    url: "https://lupa.news/",
     descricao:
       "Pioneira no Brasil (2015), classifica afirmações em seis notas: Verdadeiro, Verdadeiro, mas…, Ainda é cedo para dizer, Exagerado, Falso e Insustentável. Foca em declarações de figuras públicas e no contexto político.",
     destaques: [
