@@ -314,6 +314,35 @@ def analisar_url(url: str) -> ResultadoAnalise:
             ))
             pontuacao += impacto_fc
 
+    # --- Checagem 11: VirusTotal ---
+    # Verifica se a URL foi flagrada por mecanismos de segurança como phishing
+    # ou malware. Só executa se a chave de API estiver configurada.
+    if os.getenv("VIRUSTOTAL_API_KEY", "").strip():
+        from virustotal import verificar_virustotal
+        impacto_vt, texto_vt = verificar_virustotal(url)
+        if texto_vt:
+            justificativas.append(Justificativa(
+                criterio="Segurança (VirusTotal)",
+                resultado=texto_vt,
+                impacto=impacto_vt,
+                camada="fonte",
+            ))
+            pontuacao += impacto_vt
+
+    # --- Checagem 12: Histórico no Wayback Machine ---
+    # Consulta o Internet Archive para estimar a antiguidade do domínio de
+    # forma independente do WHOIS (útil quando o WHOIS está oculto).
+    from wayback import verificar_wayback
+    impacto_wb, texto_wb = verificar_wayback(url)
+    if texto_wb:
+        justificativas.append(Justificativa(
+            criterio="Histórico (Wayback Machine)",
+            resultado=texto_wb,
+            impacto=impacto_wb,
+            camada="fonte",
+        ))
+        pontuacao += impacto_wb
+
     # --- Resumo do conteúdo (via IA, se a chave estiver configurada) ---
     from summary import gerar_resumo
     resumo = gerar_resumo(texto_corpo)
