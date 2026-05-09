@@ -283,13 +283,13 @@ export default function DicasDeChecagem() {
 
         {/* Chamada final */}
         <div
-          className="animate-fade-in-up mt-10 rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-rose-50 p-6 text-center shadow-lg shadow-indigo-100/40"
+          className="animate-fade-in-up mt-10 rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-rose-50 p-6 text-center shadow-lg shadow-indigo-100/40 dark:border-indigo-700 dark:from-indigo-950 dark:to-rose-950 dark:shadow-indigo-900/40"
           style={{ animationDelay: "0.8s" }}
         >
-          <h2 className="text-xl font-semibold text-slate-900">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
             Quer praticar agora?
           </h2>
-          <p className="mt-2 text-slate-600">
+          <p className="mt-2 text-slate-600 dark:text-slate-300">
             Cole um link na página inicial e veja o LUPA aplicar várias
             dessas dicas automaticamente.
           </p>
