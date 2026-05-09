@@ -782,6 +782,12 @@ function Resultado({ dados, aoReiniciar, modoTexto = false }: ResultadoProps) {
           <p className="text-lg opacity-80" aria-hidden="true">/ 100</p>
         </div>
 
+        {dados.pontuacao === 100 && (
+          <p className="mt-3 text-sm font-medium opacity-80">
+            Nota máxima não significa confiabilidade absoluta — nenhuma fonte é isenta de erros. Verifique sempre em múltiplas fontes independentes.
+          </p>
+        )}
+
         {/* Fonte analisada e aviso — aparecem na imagem baixada */}
         <div className="mt-6 border-t border-white/20 pt-4">
           {dados.titulo_pagina && (
