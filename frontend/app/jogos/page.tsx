@@ -18,6 +18,7 @@ import {
   Swords,
   ShieldAlert,
   Brain,
+  Scale,
   ExternalLink,
   FlaskConical,
 } from "lucide-react";
@@ -149,6 +150,34 @@ export default function PaginaMenuJogos() {
                 Disponível
               </span>
               <span className="flex items-center gap-1 text-sm font-semibold text-amber-600 transition group-hover:gap-2">
+                Jogar
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
+            </div>
+          </Link>
+
+          {/* Verdadeiro ou Suspeito? */}
+          <Link
+            href="/jogos/verdadeiro-ou-suspeito"
+            className="group animate-fade-in-up flex flex-col rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-xl shadow-violet-100/50 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-violet-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-violet-200"
+            style={{ animationDelay: "0.6s" }}
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-200">
+              <Scale className="h-6 w-6 text-white" strokeWidth={2.5} aria-hidden="true" />
+            </div>
+            <h2 className="text-xl font-semibold text-slate-900">
+              Verdadeiro ou Suspeito?
+            </h2>
+            <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+              Analise 8 manchetes virais: classifique como verdadeiro ou suspeito
+              e identifique o principal indício — fonte vaga, exagero, teoria conspiratória e mais.
+            </p>
+            <div className="mt-5 flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                <Sparkles className="h-3 w-3" aria-hidden="true" />
+                Disponível
+              </span>
+              <span className="flex items-center gap-1 text-sm font-semibold text-violet-600 transition group-hover:gap-2">
                 Jogar
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </span>
