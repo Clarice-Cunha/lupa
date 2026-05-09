@@ -28,6 +28,13 @@ const TERMOS: Termo[] = [
       "Centenas de perfis falsos coordenados para parecer que há revolta popular sobre um tema.",
   },
   {
+    palavra: "Autoridade falsa",
+    definicao:
+      "Técnica de engenharia social em que o atacante finge ser uma figura de autoridade — inspetor governamental, policial, auditor, gerente sênior — para provocar obediência automática na vítima. Baseia-se no princípio psicológico de que as pessoas tendem a obedecer figuras de poder sem questionar.",
+    exemplo:
+      "Pessoa que se apresenta como inspetor da Anvisa na recepção de uma empresa para conseguir acesso a áreas restritas sem passar pelos protocolos de segurança.",
+  },
+  {
     palavra: "Autoridade vaga",
     definicao:
       "Quando uma informação é atribuída a fontes genéricas e não verificáveis, como 'especialistas dizem', 'estudos mostram' ou 'cientistas afirmam', sem citar nomes, instituições ou referências concretas. É um sinal clássico de desinformação.",
@@ -37,6 +44,13 @@ const TERMOS: Termo[] = [
     palavra: "Bolha de filtro",
     definicao:
       "Fenômeno em que algoritmos de redes sociais e mecanismos de busca mostram principalmente conteúdos alinhados com as preferências e opiniões já existentes do usuário, reduzindo a exposição a visões diferentes. Isso pode reforçar crenças errôneas.",
+  },
+  {
+    palavra: "Baiting (Isca)",
+    definicao:
+      "Técnica de engenharia social que explora a curiosidade ou a ganância da vítima por meio de iscas físicas ou digitais. Iscas físicas são dispositivos infectados com malware — como pen-drives — deixados propositalmente em locais estratégicos. Iscas digitais incluem downloads gratuitos, prêmios falsos e links atrativos.",
+    exemplo:
+      "Pen-drive encontrado no estacionamento de uma empresa com a etiqueta 'Salários — Confidencial', deixado intencionalmente por um atacante contando com a curiosidade dos funcionários.",
   },
   {
     palavra: "Bot",
@@ -58,6 +72,13 @@ const TERMOS: Termo[] = [
     definicao:
       "Título ou manchete exagerado, sensacionalista ou enganoso, criado para atrair cliques a qualquer custo, independentemente se o conteúdo entrega o que promete. Muito comum em sites que lucram com publicidade por visualização.",
     exemplo: "'Você não vai acreditar no que esse político fez!' — sem especificar nada.",
+  },
+  {
+    palavra: "Engenharia social",
+    definicao:
+      "Conjunto de técnicas de manipulação psicológica usadas para enganar pessoas e fazê-las revelar informações confidenciais, conceder acessos ou tomar decisões prejudiciais a elas mesmas. Diferente dos ataques técnicos, a engenharia social explora comportamentos humanos — confiança, medo, curiosidade e vontade de ajudar — em vez de vulnerabilidades em sistemas. Inclui táticas como pretexting, baiting, urgência falsa e rapport.",
+    exemplo:
+      "Um golpista que liga fingindo ser do suporte técnico e convence um funcionário a revelar sua senha está praticando engenharia social — sem precisar 'invadir' nenhum sistema.",
   },
   {
     palavra: "Ecossistema",
@@ -123,6 +144,13 @@ const TERMOS: Termo[] = [
       "Compartilhar uma notícia antiga como se fosse atual, sem perceber que o contexto mudou.",
   },
   {
+    palavra: "Pretexting",
+    definicao:
+      "Tática de engenharia social em que o atacante cria uma identidade falsa ou uma história inventada — o pretexto — para ganhar a confiança da vítima e extrair informações ou acesso. Para tornar o pretexto convincente, o golpista costuma pesquisar detalhes reais sobre a vítima: nome, cargo, colegas e rotinas.",
+    exemplo:
+      "Alguém que liga fingindo ser do setor de TI da empresa e afirma ter 'identificado atividade suspeita na sua conta' para obter login e senha.",
+  },
+  {
     palavra: "Phishing",
     definicao:
       "Golpe digital em que criminosos se passam por empresas, bancos, órgãos do governo ou pessoas conhecidas para enganar a vítima e obter dados pessoais, senhas ou dinheiro. O nome vem do inglês 'fishing' (pescar) — a ideia é 'pescar' informações das vítimas com uma isca atraente. O golpe chega geralmente por e-mail, SMS ou link falso compartilhado em aplicativos de mensagens.",
@@ -140,9 +168,30 @@ const TERMOS: Termo[] = [
       "Difusão sistemática e organizada de informações (verdadeiras ou falsas) para promover um ponto de vista, uma ideologia ou um grupo político. Diferente do jornalismo, a propaganda não busca informar com equilíbrio — busca persuadir e mobilizar.",
   },
   {
+    palavra: "Quid pro quo",
+    definicao:
+      "Do latim 'uma coisa por outra'. Tática de engenharia social em que o atacante oferece um favor, serviço ou benefício em troca de informações confidenciais ou acesso a sistemas. A aparência de troca justa e voluntária baixa a guarda da vítima, que sente que está apenas aceitando ajuda.",
+    exemplo:
+      "Colega que se oferece para resolver um problema no computador em troca de usar seu login 'por um segundo' para acessar um sistema.",
+  },
+  {
+    palavra: "Rapport",
+    definicao:
+      "Técnica de engenharia social que consiste em construir um relacionamento afetivo genuíno ao longo do tempo — sendo prestativo, gentil e presente — para depois usar a confiança conquistada como alavanca para obter informações ou acessos. Explora a reciprocidade social: a tendência humana de querer retribuir quem nos tratou bem.",
+    exemplo:
+      "Novo colega que durante semanas age de forma exemplar, ajudando a todos, para depois pedir emprestada a senha de alguém 'só por hoje, numa emergência'.",
+  },
+  {
     palavra: "Teoria da conspiração",
     definicao:
       "Explicação alternativa para eventos que atribui causas a grupos secretos e poderosos agindo de forma coordenada, sem evidências verificáveis. Algumas conspiratações começam como hipóteses legítimas, mas se tornam problemáticas quando resistem a qualquer evidência contrária.",
+  },
+  {
+    palavra: "Urgência falsa",
+    definicao:
+      "Técnica de engenharia social que usa pressão de tempo artificial — prazos curtos, ameaças de consequências graves e imediatas — para impedir que a vítima pense com calma, verifique a legitimidade da mensagem ou consulte outras pessoas antes de agir. O estado de urgência desativa o pensamento crítico e favorece reações impulsivas.",
+    exemplo:
+      "E-mail que afirma 'Sua conta será bloqueada em 2 horas se você não clicar aqui agora' — o prazo curto e a ameaça buscam provocar uma ação imediata sem reflexão.",
   },
   {
     palavra: "Viés de confirmação",
