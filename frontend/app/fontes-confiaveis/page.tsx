@@ -100,7 +100,7 @@ const CATEGORIAS: Categoria[] = [
       },
       {
         nome: "Reuters Brasil",
-        url: "https://br.reuters.com",
+        url: "https://www.reuters.com/pt-br/",
         descricao: "Agência internacional com padrão rigoroso de verificação.",
       },
     ],
