@@ -18,7 +18,7 @@ const NUMEROS = [
     destaque: "6×",
     rotulo: "mais rápido",
     texto:
-      "Uma informação falsa se espalha até 6 vezes mais rápido que uma verdadeira nas redes sociais, chegando a 1.500 pessoas muito antes de qualquer correção.",
+      "Notícias falsas chegam a 1.500 pessoas 6 vezes mais rápido do que notícias verdadeiras — conclusão de um estudo que analisou 126 mil histórias compartilhadas no Twitter entre 2006 e 2017.",
     fonte: "Vosoughi, Roy & Aral — Science, 2018",
     url: "https://doi.org/10.1126/science.aap9559",
     cor: "border-red-200 bg-red-50 text-red-900",
