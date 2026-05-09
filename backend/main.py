@@ -50,8 +50,12 @@ from sugestoes import (  # noqa: E402
 )
 from validacao import (  # noqa: E402
     ValidacaoEntrada,
+    ValidacaoInterna,
+    AprovacaoEntrada,
     ResultadosValidacao,
     criar_validacao,
+    listar_validacoes,
+    aprovar_validacao,
     obter_resultados,
 )
 from turma import (  # noqa: E402
@@ -473,6 +477,42 @@ def endpoint_atualizar_boato(
 def endpoint_listar_feedbacks() -> list[Feedback]:
     """Lista feedbacks recebidos pelo widget (uso interno da equipe)."""
     return listar_feedbacks()
+
+
+@app.get("/validacoes", response_model=list[ValidacaoInterna])
+def endpoint_listar_validacoes(
+    x_moderacao_chave: str = Header(default=""),
+) -> list[ValidacaoInterna]:
+    """Lista todas as avaliações de usuários (uso exclusivo do painel de moderação).
+
+    Requer o cabeçalho 'X-Moderacao-Chave'.
+    """
+    if x_moderacao_chave != _MODERACAO_CHAVE:
+        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    try:
+        return listar_validacoes()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao listar avaliações.") from e
+
+
+@app.patch("/validacoes/{id}", response_model=ValidacaoInterna)
+def endpoint_aprovar_validacao(
+    id: str,
+    dados: AprovacaoEntrada,
+    x_moderacao_chave: str = Header(default=""),
+) -> ValidacaoInterna:
+    """Aprova ou rejeita a exibição pública do depoimento de uma avaliação.
+
+    Requer o cabeçalho 'X-Moderacao-Chave'.
+    """
+    if x_moderacao_chave != _MODERACAO_CHAVE:
+        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    try:
+        return aprovar_validacao(id, dados.aprovado)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao atualizar a avaliação.") from e
 
 
 @app.get("/validacoes/resultados", response_model=ResultadosValidacao)

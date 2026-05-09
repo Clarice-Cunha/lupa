@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ShieldCheck, Lock, Mail, Copy, Check, Search, GraduationCap, Loader2 } from "lucide-react";
+import { ShieldCheck, Lock, Mail, Copy, Check, Search, GraduationCap, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import {
   type Boato,
   type StatusBoato,
@@ -12,6 +12,9 @@ import {
   responderSugestao,
   type TurmaResumida,
   buscarTurmas,
+  type ValidacaoInterna,
+  listarValidacoes,
+  aprovarValidacao,
 } from "@/lib/api";
 
 const ROTULO_CATEGORIA: Record<string, string> = {
@@ -350,6 +353,110 @@ function CartaoSugestao({
 }
 
 // ============================================================
+// Cartão: Avaliação de usuário
+// ============================================================
+
+const PERFIL_ROTULOS: Record<string, string> = {
+  estudante: "Estudante",
+  professor: "Professor(a)",
+  familiar: "Familiar / Responsável",
+  outro: "Outro",
+};
+
+function CartaoAvaliacao({
+  avaliacao,
+  chave,
+  onAtualizado,
+}: {
+  avaliacao: ValidacaoInterna;
+  chave: string;
+  onAtualizado: (a: ValidacaoInterna) => void;
+}) {
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+
+  async function toggleAprovado() {
+    setSalvando(true);
+    setErro(null);
+    try {
+      const atualizado = await aprovarValidacao(avaliacao.id, !avaliacao.aprovado, chave);
+      onAtualizado(atualizado);
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  const sim = "rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300";
+  const nao = "rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-900/40 dark:text-rose-300";
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3 dark:border-slate-700 dark:bg-slate-800">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <span className="font-semibold text-slate-900 dark:text-slate-100">
+            {avaliacao.nome}
+          </span>
+          <p className="mt-0.5 text-xs text-slate-400">
+            {PERFIL_ROTULOS[avaliacao.perfil] ?? avaliacao.perfil}
+          </p>
+        </div>
+        <span className="flex-shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+          {new Date(avaliacao.criado_em).toLocaleDateString("pt-BR")}
+        </span>
+      </div>
+
+      <div className="flex flex-wrap gap-2 text-xs">
+        <span className={avaliacao.aprendeu_algo ? sim : nao}>
+          {avaliacao.aprendeu_algo ? "✓" : "✗"} Aprendeu algo
+        </span>
+        <span className={avaliacao.identificou_sinal ? sim : nao}>
+          {avaliacao.identificou_sinal ? "✓" : "✗"} Identificou sinal
+        </span>
+        <span className={avaliacao.recomendaria ? sim : nao}>
+          {avaliacao.recomendaria ? "✓" : "✗"} Recomendaria
+        </span>
+        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+          Facilidade: {avaliacao.facilidade}/5
+        </span>
+      </div>
+
+      {avaliacao.depoimento && (
+        <p className="text-sm italic leading-relaxed text-slate-600 dark:text-slate-400">
+          &ldquo;{avaliacao.depoimento}&rdquo;
+        </p>
+      )}
+
+      <div className="flex items-center gap-3 pt-1">
+        <button
+          onClick={toggleAprovado}
+          disabled={salvando || !avaliacao.depoimento}
+          className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed ${
+            avaliacao.aprovado
+              ? "bg-emerald-600 text-white hover:bg-emerald-700"
+              : "border border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+          }`}
+        >
+          {salvando ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : avaliacao.aprovado ? (
+            <CheckCircle2 className="h-4 w-4" />
+          ) : (
+            <XCircle className="h-4 w-4" />
+          )}
+          {avaliacao.aprovado ? "Depoimento aprovado" : "Aprovar depoimento"}
+        </button>
+        {!avaliacao.depoimento && (
+          <span className="text-xs text-slate-400">sem depoimento</span>
+        )}
+        {erro && <span className="text-sm text-red-600">{erro}</span>}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
 // Seção: Buscar turmas (recuperação de código)
 // ============================================================
 
@@ -483,7 +590,7 @@ export default function PaginaModeracao() {
   const [chave, setChave] = useState("");
   const [autenticado, setAutenticado] = useState(false);
 
-  const [aba, setAba] = useState<"boatos" | "sugestoes" | "turmas">("boatos");
+  const [aba, setAba] = useState<"boatos" | "sugestoes" | "turmas" | "avaliacoes">("boatos");
 
   const [boatos, setBoatos] = useState<Boato[]>([]);
   const [carregando, setCarregando] = useState(false);
@@ -492,6 +599,10 @@ export default function PaginaModeracao() {
   const [sugestoes, setSugestoes] = useState<SugestaoInterno[]>([]);
   const [carregandoSugestoes, setCarregandoSugestoes] = useState(false);
   const [erroSugestoes, setErroSugestoes] = useState<string | null>(null);
+
+  const [avaliacoes, setAvaliacoes] = useState<ValidacaoInterna[]>([]);
+  const [carregandoAvaliacoes, setCarregandoAvaliacoes] = useState(false);
+  const [erroAvaliacoes, setErroAvaliacoes] = useState<string | null>(null);
 
   const carregar = useCallback(async () => {
     setCarregando(true);
@@ -522,12 +633,27 @@ export default function PaginaModeracao() {
     [],
   );
 
+  const carregarAvaliacoes = useCallback(async (chaveAtual: string) => {
+    setCarregandoAvaliacoes(true);
+    setErroAvaliacoes(null);
+    try {
+      setAvaliacoes(await listarValidacoes(chaveAtual));
+    } catch {
+      setErroAvaliacoes(
+        "Não foi possível carregar as avaliações. Verifique se o servidor está no ar.",
+      );
+    } finally {
+      setCarregandoAvaliacoes(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (autenticado) {
       carregar();
       carregarSugestoes(chave);
+      carregarAvaliacoes(chave);
     }
-  }, [autenticado, carregar, carregarSugestoes, chave]);
+  }, [autenticado, carregar, carregarSugestoes, carregarAvaliacoes, chave]);
 
   function entrar(e: { preventDefault(): void }) {
     e.preventDefault();
@@ -546,6 +672,12 @@ export default function PaginaModeracao() {
   function onAtualizadoSugestao(atualizado: SugestaoInterno) {
     setSugestoes((prev) =>
       prev.map((s) => (s.id === atualizado.id ? atualizado : s)),
+    );
+  }
+
+  function onAtualizadaAvaliacao(atualizada: ValidacaoInterna) {
+    setAvaliacoes((prev) =>
+      prev.map((a) => (a.id === atualizada.id ? atualizada : a)),
     );
   }
 
@@ -630,6 +762,16 @@ export default function PaginaModeracao() {
           >
             Turmas
           </button>
+          <button
+            onClick={() => setAba("avaliacoes")}
+            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              aba === "avaliacoes"
+                ? "bg-indigo-600 text-white"
+                : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            }`}
+          >
+            Avaliações ({avaliacoes.length})
+          </button>
         </div>
 
         {/* Aba: Boatos */}
@@ -667,6 +809,42 @@ export default function PaginaModeracao() {
 
         {/* Aba: Turmas */}
         {aba === "turmas" && <SecaoBuscarTurmas chave={chave} />}
+
+        {/* Aba: Avaliações */}
+        {aba === "avaliacoes" && (
+          <>
+            <p className="mb-4 text-sm text-slate-500">
+              {avaliacoes.length} avaliação{avaliacoes.length !== 1 ? "ões" : ""} recebida
+              {avaliacoes.length !== 1 ? "s" : ""}.{" "}
+              {avaliacoes.filter((a) => a.aprovado).length} depoimento
+              {avaliacoes.filter((a) => a.aprovado).length !== 1 ? "s" : ""} aprovado
+              {avaliacoes.filter((a) => a.aprovado).length !== 1 ? "s" : ""}.
+            </p>
+            {carregandoAvaliacoes && (
+              <p className="text-sm text-slate-500">Carregando avaliações…</p>
+            )}
+            {erroAvaliacoes && (
+              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                {erroAvaliacoes}
+              </div>
+            )}
+            {!carregandoAvaliacoes && !erroAvaliacoes && avaliacoes.length === 0 && (
+              <p className="text-sm text-slate-500">
+                Nenhuma avaliação recebida ainda.
+              </p>
+            )}
+            <div className="space-y-4">
+              {avaliacoes.map((a) => (
+                <CartaoAvaliacao
+                  key={a.id}
+                  avaliacao={a}
+                  chave={chave}
+                  onAtualizado={onAtualizadaAvaliacao}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Aba: Sugestões */}
         {aba === "sugestoes" && (

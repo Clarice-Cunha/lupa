@@ -63,6 +63,23 @@ def _agora() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+class ValidacaoInterna(BaseModel):
+    id: str
+    nome: str
+    perfil: str
+    aprendeu_algo: bool
+    identificou_sinal: bool
+    recomendaria: bool
+    facilidade: int
+    depoimento: str
+    aprovado: bool
+    criado_em: str
+
+
+class AprovacaoEntrada(BaseModel):
+    aprovado: bool
+
+
 def criar_validacao(entrada: ValidacaoEntrada) -> dict:
     dados = {
         "id": str(uuid.uuid4()),
@@ -78,6 +95,30 @@ def criar_validacao(entrada: ValidacaoEntrada) -> dict:
     }
     get_db().table("validacoes").insert(dados).execute()
     return dados
+
+
+def listar_validacoes() -> list[ValidacaoInterna]:
+    resultado = (
+        get_db()
+        .table("validacoes")
+        .select("*")
+        .order("criado_em", desc=True)
+        .execute()
+    )
+    return [ValidacaoInterna(**d) for d in resultado.data]
+
+
+def aprovar_validacao(id: str, aprovado: bool) -> ValidacaoInterna:
+    resultado = (
+        get_db()
+        .table("validacoes")
+        .update({"aprovado": aprovado})
+        .eq("id", id)
+        .execute()
+    )
+    if not resultado.data:
+        raise ValueError(f"Avaliação {id} não encontrada.")
+    return ValidacaoInterna(**resultado.data[0])
 
 
 def obter_resultados() -> ResultadosValidacao:

@@ -464,6 +464,44 @@ export type ResultadosValidacao = {
   depoimentos: DepoimentoPublico[];
 };
 
+export type ValidacaoInterna = {
+  id: string;
+  nome: string;
+  perfil: string;
+  aprendeu_algo: boolean;
+  identificou_sinal: boolean;
+  recomendaria: boolean;
+  facilidade: number;
+  depoimento: string;
+  aprovado: boolean;
+  criado_em: string;
+};
+
+export async function listarValidacoes(chave: string): Promise<ValidacaoInterna[]> {
+  const resposta = await fetch(`${API_URL}/validacoes`, {
+    headers: { "X-Moderacao-Chave": chave },
+  });
+  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+  return (await resposta.json()) as ValidacaoInterna[];
+}
+
+export async function aprovarValidacao(
+  id: string,
+  aprovado: boolean,
+  chave: string,
+): Promise<ValidacaoInterna> {
+  const resposta = await fetch(`${API_URL}/validacoes/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Moderacao-Chave": chave,
+    },
+    body: JSON.stringify({ aprovado }),
+  });
+  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+  return (await resposta.json()) as ValidacaoInterna;
+}
+
 export async function obterResultadosValidacao(): Promise<ResultadosValidacao> {
   const resposta = await fetch(`${API_URL}/validacoes/resultados`);
   if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
