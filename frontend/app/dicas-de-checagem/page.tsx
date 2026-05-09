@@ -312,7 +312,7 @@ function CartaoSinal({
 }) {
   return (
     <div
-      className="animate-fade-in-up rounded-3xl border border-slate-200/60 bg-white/80 p-5 shadow-lg shadow-indigo-100/30 backdrop-blur-sm transition hover:shadow-xl"
+      className="animate-fade-in-up rounded-3xl border border-slate-200/60 bg-white/80 p-5 shadow-xl shadow-indigo-100/50 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-indigo-200"
       style={{ animationDelay: `${ordem * 0.05}s` }}
     >
       <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl ${corFundo}`}>
@@ -332,7 +332,7 @@ function CartaoDica({ dica, ordem }: { dica: Dica; ordem: number }) {
   const Icone = dica.icone;
   return (
     <div
-      className="animate-fade-in-up rounded-3xl border border-slate-200/60 bg-white/80 p-5 shadow-lg shadow-indigo-100/30 backdrop-blur-sm transition hover:shadow-xl hover:shadow-indigo-100/50"
+      className="animate-fade-in-up rounded-3xl border border-slate-200/60 bg-white/80 p-5 shadow-xl shadow-indigo-100/50 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-indigo-200"
       style={{ animationDelay: `${ordem * 0.05}s` }}
     >
       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100">
