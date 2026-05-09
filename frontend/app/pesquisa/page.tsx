@@ -25,11 +25,11 @@ const NUMEROS = [
     corDestaque: "text-red-600",
   },
   {
-    destaque: "82%",
-    rotulo: "veem fake news como problema",
+    destaque: "72%",
+    rotulo: "muito preocupados com fake news",
     texto:
-      "Para 82% dos brasileiros, a disseminação de notícias falsas é o maior problema das redes sociais — acima de outros como discurso de ódio e violações de privacidade.",
-    fonte: "DataSenado — Pesquisa Fake News, jan. 2023",
+      "72% dos brasileiros estão muito preocupados com a quantidade de notícias falsas divulgadas nas redes sociais, segundo pesquisa do DataSenado.",
+    fonte: "DataSenado — Redes Sociais e Notícias Falsas",
     url: "https://www12.senado.leg.br/institucional/datasenado/materias/pesquisas/redes-sociais-e-noticias-falsas",
     cor: "border-orange-200 bg-orange-50 text-orange-900",
     corDestaque: "text-orange-600",
