@@ -90,7 +90,7 @@ export default function PaginaMenuJogos() {
 
           {/* Multiplayer */}
           <div
-            className="animate-fade-in-up flex flex-col rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-xl shadow-rose-100/50 backdrop-blur-sm"
+            className="animate-fade-in-up flex flex-col rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-xl shadow-rose-100/50 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-rose-200"
             style={{ animationDelay: "0.2s" }}
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-indigo-500 shadow-md shadow-rose-200">
