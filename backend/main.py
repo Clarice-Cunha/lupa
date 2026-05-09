@@ -48,6 +48,12 @@ from sugestoes import (  # noqa: E402
     listar_sugestoes_internas,
     responder_sugestao,
 )
+from validacao import (  # noqa: E402
+    ValidacaoEntrada,
+    ResultadosValidacao,
+    criar_validacao,
+    obter_resultados,
+)
 from turma import (  # noqa: E402
     TurmaEntrada,
     TurmaCriada,
@@ -467,6 +473,29 @@ def endpoint_atualizar_boato(
 def endpoint_listar_feedbacks() -> list[Feedback]:
     """Lista feedbacks recebidos pelo widget (uso interno da equipe)."""
     return listar_feedbacks()
+
+
+@app.get("/validacoes/resultados", response_model=ResultadosValidacao)
+def endpoint_resultados_validacao() -> ResultadosValidacao:
+    """Retorna estatísticas agregadas e depoimentos aprovados das avaliações de usuários."""
+    try:
+        return obter_resultados()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao obter resultados.") from e
+
+
+@app.post("/validacoes", status_code=201)
+@limitador.limit("10/hour")
+def endpoint_criar_validacao(request: Request, entrada: ValidacaoEntrada) -> dict:
+    """Registra a avaliação de um usuário que testou o LUPA.
+
+    O campo `aprovado` começa como falso — depoimentos são revisados
+    pela equipe antes de aparecer publicamente. Limite: 10 por IP por hora.
+    """
+    try:
+        return criar_validacao(entrada)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao salvar a avaliação.") from e
 
 
 @app.post("/feedback", response_model=Feedback, status_code=201)

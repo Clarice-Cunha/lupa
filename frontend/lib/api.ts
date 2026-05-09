@@ -443,6 +443,59 @@ export async function obterPainelTurma(
   return (await resposta.json()) as PainelTurma;
 }
 
+// ============================================================
+// Validação com usuários reais
+// ============================================================
+
+export type DepoimentoPublico = {
+  id: string;
+  nome: string;
+  perfil: string;
+  depoimento: string;
+  criado_em: string;
+};
+
+export type ResultadosValidacao = {
+  total: number;
+  percentual_aprendeu: number;
+  percentual_identificou: number;
+  percentual_recomendaria: number;
+  media_facilidade: number;
+  depoimentos: DepoimentoPublico[];
+};
+
+export async function obterResultadosValidacao(): Promise<ResultadosValidacao> {
+  const resposta = await fetch(`${API_URL}/validacoes/resultados`);
+  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+  return (await resposta.json()) as ResultadosValidacao;
+}
+
+export async function enviarValidacao(dados: {
+  nome: string;
+  perfil: string;
+  aprendeu_algo: boolean;
+  identificou_sinal: boolean;
+  recomendaria: boolean;
+  facilidade: number;
+  depoimento: string;
+}): Promise<void> {
+  const resposta = await fetch(`${API_URL}/validacoes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  });
+  if (!resposta.ok) {
+    let mensagem = `Erro ${resposta.status}`;
+    try {
+      const d = await resposta.json();
+      if (d?.detail) mensagem = String(d.detail);
+    } catch {
+      // ignora
+    }
+    throw new Error(mensagem);
+  }
+}
+
 export async function analisarImagem(arquivo: File, contexto = ""): Promise<RespostaImagem> {
   const formData = new FormData();
   formData.append("arquivo", arquivo);

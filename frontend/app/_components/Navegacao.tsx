@@ -43,6 +43,7 @@ const MENU: Item[] = [
       { href: "/colaboracao", rotulo: "Colaboração" },
       { href: "/pesquisa", rotulo: "Pesquisa" },
       { href: "/futuro", rotulo: "Futuro" },
+      { href: "/validacao", rotulo: "Validação" },
       { href: "/tecnico", rotulo: "Técnico" },
     ],
   },
