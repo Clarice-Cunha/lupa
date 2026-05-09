@@ -136,7 +136,7 @@ export const AFIRMACOES: Afirmacao[] = [
       "fonte_verificavel",
     ],
     explicacao:
-      "A promessa de resultado expressivo sem esforço é o principal sinal de alerta. Nenhum alimento isolado promove perda de peso significativa. O hibisco tem propriedades antioxidantes, mas sem os efeitos mágicos prometidos. \"Confirmam nutricionistas\" — quais? — reforça a suspeita de autoridade vaga.",
+      "A promessa de resultado expressivo sem esforço é o principal sinal de alerta: nenhum alimento isolado promove perda de peso significativa. O hibisco tem propriedades antioxidantes, mas sem os efeitos mágicos prometidos. \"Confirmam nutricionistas\" — quais? — é um indício adicional de autoridade vaga, mas o primeiro alerta já está na promessa impossível.",
   },
   {
     id: "a6",
