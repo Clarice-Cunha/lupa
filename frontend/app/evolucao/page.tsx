@@ -21,6 +21,7 @@ import {
   Headphones,
   Users,
   ShieldCheck,
+  ShieldAlert,
   BarChart2,
   Telescope,
   CheckCircle2,
@@ -36,6 +37,8 @@ import {
   LayoutDashboard,
   Award,
   MapPin,
+  Cpu,
+  ClipboardList,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -535,6 +538,58 @@ const MARCOS: Marco[] = [
     icone: Scale,
     corFundo: "bg-violet-100",
     corIcone: "text-violet-600",
+  },
+  {
+    id: 37,
+    data: "Maio de 2026",
+    titulo: "Mini-jogo: Caça ao Phishing",
+    descricao:
+      "O terceiro mini-jogo independente do LUPA ensina a identificar mensagens de phishing — golpes digitais disfarçados de comunicações legítimas de bancos, empresas ou órgãos públicos para roubar dados pessoais. O jogador analisa cinco mensagens falsas (e-mails, WhatsApp e SMS) e deve clicar nas partes suspeitas de cada uma: o domínio incorreto no link, o tom de urgência fabricado, a saudação genérica sem nome do destinatário, os erros de ortografia propositais. A pontuação reflete quantas armadilhas foram identificadas, e uma explicação ao final revela os elementos que denunciam cada golpe — transformando o exercício em uma aula prática de segurança digital.",
+    notaTecnica:
+      "Três arquivos: mensagens.ts (TipoMensagem, ElementoSuspeito, Mensagem), JogoPhishing.tsx ('use client') e page.tsx (/jogos/phishing). Cinco mensagens com tipo email | whatsapp | sms e array ElementoSuspeito[] com posição no texto, descrição e pontuação. Interface com seleção interativa de partes do texto e revelação visual dos elementos suspeitos ao final de cada mensagem. Paleta laranja/vermelho.",
+    status: "concluido",
+    icone: ShieldAlert,
+    corFundo: "bg-orange-100",
+    corIcone: "text-orange-600",
+  },
+  {
+    id: 38,
+    data: "Maio de 2026",
+    titulo: "Verificação de malware e histórico de domínios",
+    descricao:
+      "A análise de URLs ganhou duas novas camadas de segurança. A primeira é a integração com o VirusTotal: ao receber um link, o LUPA agora o submete simultaneamente a mais de 70 motores antivírus e ferramentas de detecção de phishing. Se algum deles marcar o endereço como malicioso, o resultado aparece no relatório com o número de alertas e o tipo de ameaça detectada. A segunda é a integração com o Wayback Machine — o arquivo histórico da internet mantido pelo Internet Archive há mais de 25 anos. Domínios criados há poucos meses são um sinal clássico de site fraudulento; mudanças radicais de conteúdo entre capturas também. O LUPA agora consulta esse histórico automaticamente para identificar esses padrões.",
+    notaTecnica:
+      "Dois novos módulos no backend. virustotal.py: submete a URL à VirusTotal API v3, processa last_analysis_stats e retorna contagem de positivos, total de mecanismos consultados e link para o relatório completo. wayback.py: consulta a CDX API do Internet Archive para obter data da primeira e última captura, total de snapshots e URL do snapshot mais recente. Ambos integrados ao analyzer.py como verificações na análise de URL.",
+    status: "concluido",
+    icone: ShieldCheck,
+    corFundo: "bg-sky-100",
+    corIcone: "text-sky-600",
+  },
+  {
+    id: 39,
+    data: "Maio de 2026",
+    titulo: "Transparência técnica — Página /tecnico",
+    descricao:
+      "Uma nova página trouxe transparência total sobre como o LUPA funciona por dentro: a arquitetura completa do sistema representada em um diagrama visual, a stack tecnológica detalhada por camada (Python e FastAPI no servidor, Next.js e Tailwind na interface, Supabase para dados), o passo a passo do fluxo de uma análise desde o clique do usuário até o retorno da pontuação, os seis módulos do backend com suas responsabilidades, as APIs externas consultadas e os critérios que guiaram as decisões de design. O objetivo é duplo: demonstrar o letramento tecnológico da equipe e permitir que qualquer estudante ou professor entenda o projeto em profundidade.",
+    notaTecnica:
+      "Página estática /tecnico (server component, sem 'use client'). Seis seções: diagrama de arquitetura (Usuário → Vercel → Render → Supabase + APIs externas), tabela da stack por camada, fluxo de análise em 6 etapas numeradas, grade 2×3 com os módulos do backend, tabela de APIs externas com badge 'Chave?' e 5 cartões de decisões técnicas em formato pergunta/resposta.",
+    status: "concluido",
+    icone: Cpu,
+    corFundo: "bg-slate-100",
+    corIcone: "text-slate-600",
+  },
+  {
+    id: 40,
+    data: "Maio de 2026",
+    titulo: "Validação com usuários reais — Página /validacao",
+    descricao:
+      "Para colher evidências concretas de que o LUPA é útil fora do ambiente de desenvolvimento, foi criada uma página dedicada à validação com usuários. Qualquer pessoa que tenha testado o site pode responder a três perguntas objetivas — aprendeu algo novo, conseguiu identificar um sinal de alerta, recomendaria a ferramenta — e avaliar a facilidade de uso numa escala de 1 a 5. Os resultados são exibidos publicamente na mesma página, com barras de percentual calculadas sobre todas as respostas recebidas. Os depoimentos em texto passam por moderação antes de aparecer — a revisão é feita diretamente na aba 'Avaliações' do painel de moderação já existente em /moderacao.",
+    notaTecnica:
+      "Módulo backend validacao.py com quatro funções: criar_validacao() (POST, rate-limit 10/h), listar_validacoes() (GET, protegido), aprovar_validacao() (PATCH, protegido) e obter_resultados() (GET público). Estatísticas calculadas sobre todos os registros; depoimentos exibidos apenas quando aprovado=true. Tabela validacoes no Supabase. Frontend: server component page.tsx + client component ValidacaoCliente.tsx (padrão dois arquivos para exportar metadata em server component). Aba 'Avaliações' adicionada ao painel /moderacao com CartaoAvaliacao e atualização otimista da lista.",
+    status: "concluido",
+    icone: ClipboardList,
+    corFundo: "bg-emerald-100",
+    corIcone: "text-emerald-600",
   },
 ];
 

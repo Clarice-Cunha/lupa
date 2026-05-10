@@ -26,7 +26,7 @@ const PROXIMOS_PASSOS = [
     cor: "bg-emerald-100 text-emerald-600",
     titulo: "Novos mini-jogos independentes",
     texto:
-      "O Agente LUPA está completo com 5 mundos, e dois novos mini-jogos autônomos foram lançados: 'Detetive da Engenharia Social' (reconhecer táticas de manipulação como pretexting, baiting e rapport) e 'Verdadeiro ou Suspeito?' (analisar manchetes virais em duas etapas). Os próximos na fila são: 'Caça ao Phishing' (identificar armadilhas em mensagens falsas) e 'Caça ao Clickbait' (distinguir manchetes legítimas de chamarizes sensacionalistas). Cada jogo tem pontuação própria e um aprendizado específico ao final.",
+      "O LUPA conta agora com três mini-jogos autônomos: 'Detetive da Engenharia Social', 'Verdadeiro ou Suspeito?' e o 'Caça ao Phishing' (identificar armadilhas em e-mails, WhatsApp e SMS falsos). O próximo na fila é o 'Caça ao Clickbait': distinguir manchetes legítimas de chamarizes sensacionalistas, ensinando o leitor a não clicar antes de pensar. Cada jogo tem pontuação própria e um aprendizado específico ao final.",
   },
   {
     icone: Headphones,
@@ -38,16 +38,16 @@ const PROXIMOS_PASSOS = [
   {
     icone: Users,
     cor: "bg-cyan-100 text-cyan-600",
-    titulo: "Testes com a comunidade",
+    titulo: "Validação com usuários reais",
     texto:
-      "O LUPA precisa ser testado por pessoas reais fora do ambiente escolar: pais, avós, professores, moradores do bairro. Esses testes geram dados concretos sobre o que funciona, o que confunde e o que precisa melhorar — e são fundamentais para provar que a ferramenta é útil na prática.",
+      "A infraestrutura de validação já está no ar: qualquer pessoa pode acessar /validacao, responder ao formulário e deixar um depoimento. O próximo passo é levar o LUPA para fora do ambiente escolar — pais, avós, professores, moradores do bairro — e coletar evidências concretas de que a ferramenta é útil na prática.",
   },
   {
     icone: GraduationCap,
     cor: "bg-amber-100 text-amber-600",
     titulo: "Parceria com escolas",
     texto:
-      "O próximo passo natural é levar o LUPA para dentro da sala de aula: atividades estruturadas para professores, materiais de apoio pedagógico e um modo específico para uso em turmas — onde o docente acompanha o desempenho dos alunos nos jogos e na ferramenta de análise.",
+      "O Modo Professor já está disponível: professores criam uma turma, distribuem um código para os alunos e acompanham o desempenho em tempo real. O próximo passo é transformar essa ferramenta em uma proposta pedagógica estruturada — com planos de aula, materiais de apoio e parcerias formais com escolas do Rio Grande do Norte.",
   },
 ];
 
@@ -147,20 +147,26 @@ export default function PaginaFuturo() {
             </div>
             <p className="text-sm leading-relaxed text-justify text-indigo-900 dark:text-indigo-200">
               Em maio de 2026, o LUPA analisa <strong>cinco tipos de
-              conteúdo</strong> (links, YouTube, vídeos, textos e imagens),
-              tem uma área de <strong>jogos educativos</strong> com modo
+              conteúdo</strong> (links, YouTube, vídeos, textos e imagens) —
+              com links verificados por <strong>mais de 70 motores antivírus</strong>{" "}
+              via VirusTotal e pelo <strong>histórico do Wayback Machine</strong>.
+              Tem uma área de <strong>jogos educativos</strong> com modo
               multiplayer, o <strong>Agente LUPA</strong> — aventura completa
               com 5 mundos temáticos (Fake News, Fontes e Evidências,
               Manipulação de Imagem, Deepfake e Vídeo, e Campanha Coordenada)
-              — e dois mini-jogos autônomos recém-lançados:{" "}
-              <strong>Detetive da Engenharia Social</strong> e{" "}
-              <strong>Verdadeiro ou Suspeito?</strong>. O site também conta com
-              uma <strong>Biblioteca Virtual</strong> com mais de 20 recursos
-              por faixa etária, um{" "}
+              — e três mini-jogos autônomos:{" "}
+              <strong>Detetive da Engenharia Social</strong>,{" "}
+              <strong>Verdadeiro ou Suspeito?</strong> e{" "}
+              <strong>Caça ao Phishing</strong>. O site também conta com uma{" "}
+              <strong>Biblioteca Virtual</strong> com mais de 20 recursos por
+              faixa etária, um{" "}
               <strong>portal comunitário de boatos</strong> com mapa
-              georreferenciado e painel de moderação, um{" "}
-              <strong>Modo Professor</strong> para acompanhar turmas, e uma{" "}
-              <strong>API aberta</strong> para desenvolvedores.
+              georreferenciado, um{" "}
+              <strong>Modo Professor</strong> para acompanhar turmas, uma{" "}
+              <strong>API aberta</strong> para desenvolvedores, uma{" "}
+              <strong>página técnica</strong> com a arquitetura completa do
+              sistema e uma <strong>página de validação</strong> para colher
+              avaliações de usuários reais.
               Tudo em português, gratuito e sem cadastro.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-justify text-indigo-900 dark:text-indigo-200">
