@@ -70,6 +70,14 @@ from turma import (  # noqa: E402
     obter_painel,
     buscar_turmas,
 )
+from contatos import (  # noqa: E402
+    Contato,
+    ContatoEntrada,
+    ContatoAtualizacao,
+    criar_contato,
+    listar_contatos,
+    atualizar_contato,
+)
 
 
 # ============================================================
@@ -696,6 +704,59 @@ def endpoint_buscar_turmas(
         return buscar_turmas(nome_professor, nome_turma)
     except Exception as e:
         raise HTTPException(status_code=500, detail="Erro ao buscar turmas.") from e
+
+
+# ============================================================
+# Endpoints de contato
+# ============================================================
+
+@app.get("/contatos", response_model=list[Contato])
+def endpoint_listar_contatos(
+    x_moderacao_chave: str = Header(default=""),
+) -> list[Contato]:
+    """Lista todas as mensagens de contato recebidas.
+
+    Exclusivo para a equipe LUPA (requer X-Moderacao-Chave).
+    """
+    if x_moderacao_chave != _MODERACAO_CHAVE:
+        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    try:
+        return listar_contatos()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao carregar os contatos.") from e
+
+
+@app.post("/contatos", response_model=Contato, status_code=201)
+@limitador.limit("5/hour")
+def endpoint_criar_contato(request: Request, entrada: ContatoEntrada) -> Contato:
+    """Registra uma nova mensagem de contato enviada pelo formulário público.
+
+    Limite: 5 por IP por hora para evitar spam.
+    """
+    try:
+        return criar_contato(entrada)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao salvar a mensagem.") from e
+
+
+@app.patch("/contatos/{id}", response_model=Contato)
+def endpoint_atualizar_contato(
+    id: str,
+    dados: ContatoAtualizacao,
+    x_moderacao_chave: str = Header(default=""),
+) -> Contato:
+    """Atualiza o status de leitura de uma mensagem de contato.
+
+    Requer o cabeçalho 'X-Moderacao-Chave'.
+    """
+    if x_moderacao_chave != _MODERACAO_CHAVE:
+        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    try:
+        return atualizar_contato(id, dados)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Erro ao atualizar o contato.") from e
 
 
 def _converter_resposta(resultado: ResultadoAnalise) -> RespostaAnalise:

@@ -508,6 +508,67 @@ export async function obterResultadosValidacao(): Promise<ResultadosValidacao> {
   return (await resposta.json()) as ResultadosValidacao;
 }
 
+// ============================================================
+// Contato
+// ============================================================
+
+export type Contato = {
+  id: string;
+  nome: string;
+  email: string;
+  telefone: string | null;
+  mensagem: string;
+  lido: boolean;
+  criado_em: string;
+};
+
+export async function criarContato(dados: {
+  nome: string;
+  email: string;
+  telefone?: string;
+  mensagem: string;
+}): Promise<Contato> {
+  const resposta = await fetch(`${API_URL}/contatos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  });
+  if (!resposta.ok) {
+    let mensagem = `Erro ${resposta.status}`;
+    try {
+      const d = await resposta.json();
+      if (d?.detail) mensagem = String(d.detail);
+    } catch { /* ignora */ }
+    throw new Error(mensagem);
+  }
+  return (await resposta.json()) as Contato;
+}
+
+export async function listarContatos(chave: string): Promise<Contato[]> {
+  const resposta = await fetch(`${API_URL}/contatos`, {
+    headers: { "X-Moderacao-Chave": chave },
+  });
+  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+  return (await resposta.json()) as Contato[];
+}
+
+export async function marcarContatoLido(
+  id: string,
+  lido: boolean,
+  chave: string,
+): Promise<Contato> {
+  const resposta = await fetch(`${API_URL}/contatos/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Moderacao-Chave": chave,
+    },
+    body: JSON.stringify({ lido }),
+  });
+  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+  return (await resposta.json()) as Contato;
+}
+
 export async function enviarValidacao(dados: {
   nome: string;
   perfil: string;

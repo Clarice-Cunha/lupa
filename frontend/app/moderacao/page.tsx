@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ShieldCheck, Lock, Mail, Copy, Check, Search, GraduationCap, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { ShieldCheck, Lock, Mail, Copy, Check, Search, GraduationCap, Loader2, CheckCircle2, XCircle, MessageCircle, Phone } from "lucide-react";
 import {
   type Boato,
   type StatusBoato,
@@ -15,6 +15,9 @@ import {
   type ValidacaoInterna,
   listarValidacoes,
   aprovarValidacao,
+  type Contato,
+  listarContatos,
+  marcarContatoLido,
 } from "@/lib/api";
 
 const ROTULO_CATEGORIA: Record<string, string> = {
@@ -585,12 +588,111 @@ function SecaoBuscarTurmas({ chave }: { chave: string }) {
   );
 }
 
+// ============================================================
+// Cartão: Mensagem de contato
+// ============================================================
+
+function CartaoContato({
+  contato,
+  chave,
+  onAtualizado,
+}: {
+  contato: Contato;
+  chave: string;
+  onAtualizado: (c: Contato) => void;
+}) {
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+
+  async function toggleLido() {
+    setSalvando(true);
+    setErro(null);
+    try {
+      const atualizado = await marcarContatoLido(contato.id, !contato.lido, chave);
+      onAtualizado(atualizado);
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  return (
+    <div className={`rounded-2xl border bg-white p-5 shadow-sm space-y-3 dark:bg-slate-800 ${
+      contato.lido
+        ? "border-slate-200 dark:border-slate-700"
+        : "border-indigo-300 dark:border-indigo-600"
+    }`}>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-slate-900 dark:text-slate-100">
+              {contato.nome}
+            </span>
+            {!contato.lido && (
+              <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                Novo
+              </span>
+            )}
+          </div>
+          <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
+            <Mail className="h-3 w-3" />
+            {contato.email}
+          </p>
+          {contato.telefone && (
+            <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
+              <Phone className="h-3 w-3" />
+              {contato.telefone}
+            </p>
+          )}
+        </div>
+        <span className="flex-shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+          {new Date(contato.criado_em).toLocaleDateString("pt-BR")}
+        </span>
+      </div>
+
+      <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+        {contato.mensagem}
+      </p>
+
+      <div className="flex items-center gap-3 pt-1">
+        <button
+          onClick={toggleLido}
+          disabled={salvando}
+          className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed ${
+            contato.lido
+              ? "border border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+              : "bg-indigo-600 text-white hover:bg-indigo-700"
+          }`}
+        >
+          {salvando ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : contato.lido ? (
+            <XCircle className="h-4 w-4" />
+          ) : (
+            <CheckCircle2 className="h-4 w-4" />
+          )}
+          {contato.lido ? "Marcar como não lido" : "Marcar como lido"}
+        </button>
+        <a
+          href={`mailto:${contato.email}?subject=Re: Contato via LUPA`}
+          className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300"
+        >
+          <Mail className="h-4 w-4" />
+          Responder por e-mail
+        </a>
+        {erro && <span className="text-sm text-red-600">{erro}</span>}
+      </div>
+    </div>
+  );
+}
+
 export default function PaginaModeracao() {
   const [chaveDigitada, setChaveDigitada] = useState("");
   const [chave, setChave] = useState("");
   const [autenticado, setAutenticado] = useState(false);
 
-  const [aba, setAba] = useState<"boatos" | "sugestoes" | "turmas" | "avaliacoes">("boatos");
+  const [aba, setAba] = useState<"boatos" | "sugestoes" | "turmas" | "avaliacoes" | "contatos">("boatos");
 
   const [boatos, setBoatos] = useState<Boato[]>([]);
   const [carregando, setCarregando] = useState(false);
@@ -603,6 +705,10 @@ export default function PaginaModeracao() {
   const [avaliacoes, setAvaliacoes] = useState<ValidacaoInterna[]>([]);
   const [carregandoAvaliacoes, setCarregandoAvaliacoes] = useState(false);
   const [erroAvaliacoes, setErroAvaliacoes] = useState<string | null>(null);
+
+  const [contatos, setContatos] = useState<Contato[]>([]);
+  const [carregandoContatos, setCarregandoContatos] = useState(false);
+  const [erroContatos, setErroContatos] = useState<string | null>(null);
 
   const carregar = useCallback(async () => {
     setCarregando(true);
@@ -647,13 +753,28 @@ export default function PaginaModeracao() {
     }
   }, []);
 
+  const carregarContatos = useCallback(async (chaveAtual: string) => {
+    setCarregandoContatos(true);
+    setErroContatos(null);
+    try {
+      setContatos(await listarContatos(chaveAtual));
+    } catch {
+      setErroContatos(
+        "Não foi possível carregar os contatos. Verifique se o servidor está no ar.",
+      );
+    } finally {
+      setCarregandoContatos(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (autenticado) {
       carregar();
       carregarSugestoes(chave);
       carregarAvaliacoes(chave);
+      carregarContatos(chave);
     }
-  }, [autenticado, carregar, carregarSugestoes, carregarAvaliacoes, chave]);
+  }, [autenticado, carregar, carregarSugestoes, carregarAvaliacoes, carregarContatos, chave]);
 
   function entrar(e: { preventDefault(): void }) {
     e.preventDefault();
@@ -678,6 +799,12 @@ export default function PaginaModeracao() {
   function onAtualizadaAvaliacao(atualizada: ValidacaoInterna) {
     setAvaliacoes((prev) =>
       prev.map((a) => (a.id === atualizada.id ? atualizada : a)),
+    );
+  }
+
+  function onAtualizadoContato(atualizado: Contato) {
+    setContatos((prev) =>
+      prev.map((c) => (c.id === atualizado.id ? atualizado : c)),
     );
   }
 
@@ -771,6 +898,24 @@ export default function PaginaModeracao() {
             }`}
           >
             Avaliações ({avaliacoes.length})
+          </button>
+          <button
+            onClick={() => setAba("contatos")}
+            className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              aba === "contatos"
+                ? "bg-indigo-600 text-white"
+                : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            }`}
+          >
+            <MessageCircle className="h-3.5 w-3.5" />
+            Contatos
+            {contatos.filter((c) => !c.lido).length > 0 && (
+              <span className={`rounded-full px-1.5 py-0.5 text-xs font-bold ${
+                aba === "contatos" ? "bg-white/20 text-white" : "bg-rose-500 text-white"
+              }`}>
+                {contatos.filter((c) => !c.lido).length}
+              </span>
+            )}
           </button>
         </div>
 
@@ -873,6 +1018,45 @@ export default function PaginaModeracao() {
                   sugestao={s}
                   chave={chave}
                   onAtualizado={onAtualizadoSugestao}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Aba: Contatos */}
+        {aba === "contatos" && (
+          <>
+            <p className="mb-4 text-sm text-slate-500">
+              {contatos.length} mensagem{contatos.length !== 1 ? "s" : ""} recebida
+              {contatos.length !== 1 ? "s" : ""}.{" "}
+              {contatos.filter((c) => !c.lido).length > 0 && (
+                <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                  {contatos.filter((c) => !c.lido).length} não lida
+                  {contatos.filter((c) => !c.lido).length !== 1 ? "s" : ""}.
+                </span>
+              )}
+            </p>
+            {carregandoContatos && (
+              <p className="text-sm text-slate-500">Carregando contatos…</p>
+            )}
+            {erroContatos && (
+              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                {erroContatos}
+              </div>
+            )}
+            {!carregandoContatos && !erroContatos && contatos.length === 0 && (
+              <p className="text-sm text-slate-500">
+                Nenhuma mensagem de contato recebida ainda.
+              </p>
+            )}
+            <div className="space-y-4">
+              {contatos.map((c) => (
+                <CartaoContato
+                  key={c.id}
+                  contato={c}
+                  chave={chave}
+                  onAtualizado={onAtualizadoContato}
                 />
               ))}
             </div>

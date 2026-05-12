@@ -50,6 +50,9 @@ export default function Rodape() {
           <Link href="/futuro" className="text-xs text-slate-500 hover:text-slate-800 transition dark:hover:text-slate-300">
             Para onde o LUPA vai
           </Link>
+          <Link href="/contato" className="text-xs text-slate-500 hover:text-slate-800 transition dark:hover:text-slate-300">
+            Contato
+          </Link>
         </nav>
 
         {/* Copyright */}
