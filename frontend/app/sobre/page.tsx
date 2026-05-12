@@ -24,11 +24,13 @@ const SECOES: Secao[] = [
       <p className="leading-relaxed text-slate-700 text-justify">
         O <strong>LUPA — Leitor de URLs, Plataformas e Audiovisuais</strong> é
         uma ferramenta educativa de apoio à checagem de conteúdos digitais.
-        Ele analisa links de sites, vídeos do YouTube e arquivos enviados pelo
-        usuário, devolvendo uma pontuação de confiabilidade acompanhada de
-        justificativas detalhadas. O objetivo não é afirmar que um conteúdo é
-        verdadeiro ou falso — é ajudar o leitor a identificar sinais de alerta
-        e desenvolver o pensamento crítico antes de compartilhar.
+        Ele analisa <strong>links de sites</strong>, <strong>vídeos do YouTube</strong>,{" "}
+        <strong>arquivos de vídeo e imagem</strong> enviados pelo usuário e{" "}
+        <strong>textos</strong> colados diretamente, devolvendo uma pontuação
+        de confiabilidade acompanhada de justificativas detalhadas. O objetivo
+        não é afirmar que um conteúdo é verdadeiro ou falso — é ajudar o
+        leitor a identificar sinais de alerta e desenvolver o pensamento
+        crítico antes de compartilhar.
       </p>
     ),
   },
@@ -84,7 +86,7 @@ const SECOES: Secao[] = [
             {
               titulo: "Inteligência Artificial — Gemini (Google)",
               texto:
-                "O texto da página, a transcrição do vídeo ou o conteúdo extraído do site é enviado ao Gemini, modelo de linguagem do Google. Ele identifica padrões de sensacionalismo, inconsistências lógicas, apelos emocionais excessivos e sinais de manipulação. É a camada com maior peso na pontuação final.",
+                "O texto da página, a transcrição do vídeo ou o conteúdo extraído do site é enviado ao Gemini, modelo de linguagem do Google. Ele identifica padrões de sensacionalismo, inconsistências lógicas, apelos emocionais excessivos e sinais de manipulação — incluindo indícios de deepfake e imagens geradas por IA. É a camada com maior peso na pontuação final.",
             },
             {
               titulo: "Verificações automáticas",
@@ -92,14 +94,29 @@ const SECOES: Secao[] = [
                 "Checagens objetivas que não dependem de IA: o site usa conexão segura (HTTPS)? O domínio foi criado há menos de 6 meses? O texto usa caixa alta excessiva ou muitos pontos de exclamação? Cada item contribui com um peso fixo na nota.",
             },
             {
+              titulo: "VirusTotal — 70+ mecanismos antivírus",
+              texto:
+                "Para links, o LUPA consulta o VirusTotal, serviço que cruza a URL com mais de 70 mecanismos antivírus e bases de dados de phishing. Se o endereço for detectado como malicioso por qualquer um deles, isso impacta diretamente a pontuação.",
+            },
+            {
+              titulo: "Wayback Machine — histórico do domínio",
+              texto:
+                "O Internet Archive registra snapshots de sites ao longo do tempo. O LUPA consulta esse histórico para verificar há quanto tempo um domínio está no ar e se seu conteúdo mudou de forma suspeita — um sinal clássico de site criado para enganar.",
+            },
+            {
+              titulo: "Google Fact Check Tools — banco de checagens profissionais",
+              texto:
+                "O LUPA cruza o conteúdo analisado com o banco de dados da rede IFCN (International Fact-Checking Network) via Google Fact Check Tools API. Se o assunto já foi verificado por agências como Aos Fatos, Agência Lupa ou AFP Checamos, o resultado aparece como referência complementar.",
+            },
+            {
               titulo: "Metadados",
               texto:
                 "Em imagens, extraímos dados invisíveis embutidos no arquivo: câmera usada, software de edição, data e até localização GPS. Em vídeos do YouTube, analisamos o histórico do canal, a data de publicação e o padrão de crescimento das visualizações.",
             },
             {
-              titulo: "O que o LUPA não faz",
+              titulo: "Limites do LUPA",
               texto:
-                "O LUPA não consulta um banco de dados de notícias falsas já catalogadas — ele identifica sinais de risco no próprio conteúdo. Isso significa que pode errar. Por isso a nota sempre vem com justificativas: para você julgar se concorda com o raciocínio.",
+                "Nenhuma camada é infalível. A IA pode errar em conteúdos ambíguos, o VirusTotal pode não ter registrado uma URL nova, e a base de checagens só cobre temas já investigados por agências. Por isso a nota sempre vem com justificativas: para você avaliar se concorda com o raciocínio e aprofundar a verificação por conta própria.",
             },
           ].map((item) => (
             <li key={item.titulo} className="flex gap-3 text-sm text-slate-700">
