@@ -1,0 +1,34 @@
+name: Ping Supabase (anti-pausa)
+
+# Roda automaticamente toda segunda-feira as 09:00 UTC (06:00 de Natal/RN)
+# e tambem pode ser disparado manualmente pela aba "Actions" do GitHub.
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fazer uma requisicao simples ao banco
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "ERRO: Secrets SUPABASE_URL ou SUPABASE_KEY nao configurados."
+            exit 1
+          fi
+          echo "Consultando tabela 'boatos' para gerar atividade no banco..."
+          STATUS=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            "${SUPABASE_URL%/}/rest/v1/boatos?select=id&limit=1")
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "Falha na requisicao. Resposta:"
+            cat /tmp/resp.json
+            exit 1
+          fi
+          echo "OK - atividade registrada no Supabase."
