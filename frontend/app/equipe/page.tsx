@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Users, Crown, MapPin, BookOpen, Trophy, Star, Dumbbell } from "lucide-react";
+import { Users, Crown, MapPin, BookOpen, Trophy, Star, Dumbbell, Palette } from "lucide-react";
 
 export const metadata = {
   title: "Nossa Equipe — LUPA",
@@ -63,6 +63,24 @@ const MEMBROS: Membro[] = [
     corBorda: "border-teal-200",
     corPapel: "bg-teal-100",
     corPapelTexto: "text-teal-700",
+  },
+  {
+    iniciais: "PB",
+    nome: "Pedro Moreno de Lima Bessa",
+    papel: "Integrante",
+    lider: false,
+    anoTurma: "8º ano — Turma A",
+    escola: "Colégio Contemporâneo",
+    cidade: "Lagoa Nova, Natal/RN",
+    destaques: [
+      { icone: <BookOpen className="h-3.5 w-3.5" />, texto: "Matemática e Física" },
+      { icone: <Dumbbell className="h-3.5 w-3.5" />, texto: "Judô" },
+      { icone: <Palette className="h-3.5 w-3.5" />, texto: "Desenho" },
+    ],
+    corFundo: "from-amber-500 to-orange-600",
+    corBorda: "border-amber-200",
+    corPapel: "bg-amber-100",
+    corPapelTexto: "text-amber-700",
   },
 ];
 
@@ -150,7 +168,7 @@ export default function PaginaEquipe() {
 
         {/* Cards da equipe */}
         <div
-          className="grid gap-6 sm:grid-cols-2"
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           style={{ animationDelay: "0.12s" }}
         >
           {MEMBROS.map((membro) => (
