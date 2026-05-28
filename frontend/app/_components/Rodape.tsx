@@ -5,7 +5,7 @@ export default function Rodape() {
   const ano = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-t border-slate-200/60 bg-white/70 backdrop-blur-md dark:bg-slate-900/80 dark:border-slate-700/60">
+    <footer className="mt-auto">
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 py-6 sm:flex-row sm:justify-between">
         {/* Logo */}
         <Link
