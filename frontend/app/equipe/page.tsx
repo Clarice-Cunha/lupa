@@ -65,7 +65,7 @@ const MEMBROS: Membro[] = [
     corPapelTexto: "text-teal-700",
   },
   {
-    iniciais: "PB",
+    iniciais: "PM",
     nome: "Pedro Moreno de Lima Bessa",
     papel: "Integrante",
     lider: false,
