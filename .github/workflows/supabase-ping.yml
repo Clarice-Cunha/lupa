@@ -1,10 +1,16 @@
 name: Ping Supabase (anti-pausa)
 
-# Roda automaticamente toda segunda-feira as 09:00 UTC (06:00 de Natal/RN)
+# Roda automaticamente TODOS OS DIAS as 09:37 UTC (06:37 de Natal/RN)
 # e tambem pode ser disparado manualmente pela aba "Actions" do GitHub.
+#
+# Por que diario e nao semanal? O Supabase pausa o projeto apos 7 dias sem
+# atividade. O GitHub nao garante a hora exata dos agendamentos (pode atrasar
+# ou pular execucoes em horarios de pico). Um ping diario garante margem: mesmo
+# que varios dias falhem, nunca chegamos perto do limite de 7 dias.
+# O minuto 37 (em vez de 00) evita o horario de pico do GitHub, reduzindo atrasos.
 on:
   schedule:
-    - cron: "0 9 * * 1"
+    - cron: "37 9 * * *"
   workflow_dispatch:
 
 jobs:
