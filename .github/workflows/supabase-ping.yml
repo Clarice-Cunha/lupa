@@ -17,7 +17,7 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Fazer uma requisicao simples ao banco
+      - name: Gravar batimento (heartbeat) no banco
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
@@ -26,15 +26,29 @@ jobs:
             echo "ERRO: Secrets SUPABASE_URL ou SUPABASE_KEY nao configurados."
             exit 1
           fi
-          echo "Consultando tabela 'boatos' para gerar atividade no banco..."
+          # ESCREVEMOS (em vez de apenas ler), porque o Supabase nao conta
+          # leituras leves como atividade suficiente para evitar a pausa.
+          # Atualizamos sempre a MESMA linha (id=1) da tabela 'ping_heartbeat',
+          # entao ela nunca cresce. O cabecalho "Prefer: resolution=merge-duplicates"
+          # diz ao Supabase para inserir a linha se ela nao existir ou atualizar
+          # se ja existir (upsert).
+          AGORA=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "Gravando heartbeat em ping_heartbeat (last_ping = $AGORA)..."
           STATUS=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
+            -X POST \
             -H "apikey: $SUPABASE_KEY" \
             -H "Authorization: Bearer $SUPABASE_KEY" \
-            "${SUPABASE_URL%/}/rest/v1/boatos?select=id&limit=1")
+            -H "Content-Type: application/json" \
+            -H "Prefer: resolution=merge-duplicates" \
+            -d "{\"id\":1,\"last_ping\":\"$AGORA\"}" \
+            "${SUPABASE_URL%/}/rest/v1/ping_heartbeat")
           echo "HTTP status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
-            echo "Falha na requisicao. Resposta:"
+          # Aceita qualquer codigo de sucesso (2xx). Upsert costuma retornar 201.
+          if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 300 ]; then
+            echo "Falha na gravacao. Resposta do Supabase:"
             cat /tmp/resp.json
+            echo ""
+            echo "DICA: confira se a tabela 'ping_heartbeat' foi criada no Supabase."
             exit 1
           fi
-          echo "OK - atividade registrada no Supabase."
+          echo "OK - heartbeat gravado. Atividade de ESCRITA registrada no Supabase."
