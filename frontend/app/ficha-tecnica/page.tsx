@@ -368,13 +368,14 @@ export default function PaginaFichaTecnica() {
                 </div>
                 <p className="text-sm text-slate-700 dark:text-slate-300 text-justify">
                   Familiares, vizinhos e professores testaram o LUPA e deram
-                  retorno que gerou mudanças reais na ferramenta. Os
-                  depoimentos estão reunidos na página{" "}
+                  retorno que gerou mudanças reais na ferramenta. Quem quiser
+                  contribuir com sugestões, correções ou ideias pode fazer
+                  isso pela página{" "}
                   <a
-                    href="/validacao"
+                    href="/colaboracao"
                     className="font-medium text-indigo-600 underline decoration-indigo-200 underline-offset-2 dark:text-indigo-400 dark:decoration-indigo-700"
                   >
-                    Validação
+                    Colabore com o LUPA
                   </a>
                   .
                 </p>
