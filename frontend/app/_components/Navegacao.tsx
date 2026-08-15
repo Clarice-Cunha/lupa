@@ -40,9 +40,8 @@ const MENU: Item[] = [
     rotulo: "Comunidade",
     icone: Users,
     filhos: [
-      { href: "/comunidade", rotulo: "Comunidade" },
+      { href: "/comunidade", rotulo: "Portal Comunitário" },
       { href: "/colaboracao", rotulo: "Colaboração" },
-      { href: "/pesquisa", rotulo: "Pesquisa" },
       { href: "/futuro", rotulo: "Futuro" },
       { href: "/validacao", rotulo: "Validação" },
       { href: "/tecnico", rotulo: "Técnico" },
