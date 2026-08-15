@@ -30,6 +30,7 @@ const MENU: Item[] = [
     icone: Library,
     filhos: [
       { href: "/fontes-confiaveis", rotulo: "Fontes Confiáveis" },
+      { href: "/pesquisa", rotulo: "Pesquisa e Dados" },
       { href: "/glossario", rotulo: "Glossário" },
       { href: "/biblioteca", rotulo: "Biblioteca" },
       { href: "/legislacao", rotulo: "Legislação" },
