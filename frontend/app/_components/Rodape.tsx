@@ -26,6 +26,9 @@ export default function Rodape() {
           <Link href="/equipe" className="text-xs text-slate-500 hover:text-slate-800 transition dark:hover:text-slate-300">
             Nossa Equipe
           </Link>
+          <Link href="/ficha-tecnica" className="text-xs text-slate-500 hover:text-slate-800 transition dark:hover:text-slate-300">
+            Ficha Técnica
+          </Link>
           <Link href="/comunidade" className="text-xs text-slate-500 hover:text-slate-800 transition dark:hover:text-slate-300">
             Comunidade
           </Link>
