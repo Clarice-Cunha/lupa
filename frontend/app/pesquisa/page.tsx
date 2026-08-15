@@ -154,51 +154,165 @@ const DIFERENCIAIS = [
   },
 ];
 
-const REFERENCIAS = [
+// ============================================================
+// Referências bibliográficas — normas ABNT (NBR 6023)
+// ============================================================
+//
+// Cada referência é dividida em três partes porque a ABNT destaca
+// um elemento diferente conforme o tipo de obra:
+//   - em ARTIGO de periódico, destaca-se o nome da revista;
+//   - em LIVRO ou RELATÓRIO, destaca-se o título da obra.
+// Por isso os campos `antes`, `destaque` e `depois`.
+//
+// ⚠️ ANTES DA ENTREGA: confirmar o link direto e a data de acesso das
+// referências marcadas com `conferirLink: true`. Abrir o documento,
+// copiar a URL exata e atualizar DATA_ACESSO para o dia da conferência.
+
+const DATA_ACESSO = "15 ago. 2026";
+
+type TipoFonte =
+  | "Artigo científico"
+  | "Relatório institucional"
+  | "Manual técnico"
+  | "Vídeo"
+  | "Material educativo";
+
+type Referencia = {
+  tipo: TipoFonte;
+  antes: string;
+  destaque: string;
+  depois: string;
+  url: string;
+  nota: string;
+  conferirLink?: boolean;
+};
+
+const REFERENCIAS: Referencia[] = [
+  // ----- Artigos científicos -----
   {
-    autores: "Vosoughi, S., Roy, D., & Aral, S.",
-    ano: "2018",
-    titulo: "The spread of true and false news online",
-    veiculo: "Science, 359(6380), 1146–1151",
-    nota:
-      "Estudo mais citado sobre velocidade de propagação de desinformação. Analisou 126.000 histórias compartilhadas no Twitter entre 2006 e 2017.",
+    tipo: "Artigo científico",
+    antes: "VOSOUGHI, Soroush; ROY, Deb; ARAL, Sinan. The spread of true and false news online. ",
+    destaque: "Science",
+    depois: ", v. 359, n. 6380, p. 1146-1151, 2018. DOI: 10.1126/science.aap9559.",
     url: "https://doi.org/10.1126/science.aap9559",
+    nota: "Embasa o dado de que notícias falsas se espalham mais rápido, usado na seção 'Em números' desta página.",
   },
   {
-    autores: "Wardle, C., & Derakhshan, H.",
-    ano: "2017",
-    titulo: "Information Disorder: Toward an interdisciplinary framework",
-    veiculo: "Conselho da Europa",
-    nota:
-      "Criou a taxonomia mais usada para distinguir desinformação (falsa + intencional), mesinformação (falsa + sem intenção) e malinformação (verdadeira + usada para prejudicar).",
+    tipo: "Artigo científico",
+    antes: "ROOZENBEEK, Jon; VAN DER LINDEN, Sander. Fake news game confers psychological resistance against online misinformation. ",
+    destaque: "Humanities and Social Sciences Communications",
+    depois: ", v. 5, art. 65, 2019. DOI: 10.1057/s41599-019-0279-9.",
+    url: "https://doi.org/10.1057/s41599-019-0279-9",
+    nota: "Base científica dos jogos do LUPA: demonstra que jogar com desinformação cria resistência psicológica a ela. Fundamenta o Agente LUPA e a página 'Acelerador e Freio'.",
+  },
+  {
+    tipo: "Artigo científico",
+    antes: "PENNYCOOK, Gordon; MCPHETRES, Jonathon; ZHANG, Yunhao; LU, Jackson G.; RAND, David G. Fighting COVID-19 misinformation on social media: experimental evidence for a scalable accuracy-nudge intervention. ",
+    destaque: "Psychological Science",
+    depois: ", v. 31, n. 7, p. 770-780, 2020. DOI: 10.1177/0956797620939054.",
+    url: "https://doi.org/10.1177/0956797620939054",
+    nota: "Mostra que simplesmente lembrar a pessoa de pensar na precisão antes de compartilhar já reduz a propagação. Inspirou o formato das dicas exibidas junto de cada análise.",
+  },
+  {
+    tipo: "Artigo científico",
+    antes: "PENNYCOOK, Gordon; RAND, David G. Accuracy prompts are a replicable and generalizable approach for reducing the spread of misinformation. ",
+    destaque: "Nature Communications",
+    depois: ", v. 13, art. 2333, 2022. DOI: 10.1038/s41467-022-30073-5.",
+    url: "https://doi.org/10.1038/s41467-022-30073-5",
+    nota: "Confirma em escala o resultado anterior. Sustenta a decisão de o LUPA sempre explicar o porquê da nota, em vez de apenas exibir um veredito.",
+  },
+
+  // ----- Relatórios e documentos institucionais -----
+  {
+    tipo: "Relatório institucional",
+    antes: "WARDLE, Claire; DERAKHSHAN, Hossein. ",
+    destaque: "Information disorder: toward an interdisciplinary framework for research and policy making",
+    depois: ". Strasbourg: Council of Europe, 2017.",
     url: "https://rm.coe.int/information-disorder-toward-an-interdisciplinary-framework-for-researc/168076277c",
+    nota: "Origem da distinção entre desinformação (falsa e intencional), mesinformação (falsa sem intenção) e malinformação. Sustenta a escolha do LUPA por linguagem neutra, sem acusar intenção.",
   },
   {
-    autores: "NIC.br / CETIC.br",
-    ano: "2023",
-    titulo: "TIC Domicílios 2023 — Pesquisa sobre o uso das tecnologias de informação e comunicação nos domicílios brasileiros",
-    veiculo: "Núcleo de Informação e Coordenação do Ponto BR",
-    nota:
-      "Maior pesquisa nacional sobre acesso à internet e uso de tecnologia. Mede presença de dispositivos, tipo de conexão e comportamento digital de brasileiros em todas as regiões do país.",
-    url: "https://cetic.br/pesquisa/domicilios/",
-  },
-  {
-    autores: "Organização Mundial da Saúde (OMS)",
-    ano: "2020",
-    titulo: "Infodemic Management: A key component of the COVID-19 Global Response",
-    veiculo: "WHO — Pan American Health Organization",
-    nota:
-      "Documento que cunhou formalmente o termo 'infodemia' e definiu estratégias de resposta à desinformação em emergências de saúde pública.",
-    url: "https://www.who.int/health-topics/infodemic",
-  },
-  {
-    autores: "UNESCO",
-    ano: "2023",
-    titulo: "Media and Information Literacy — Global Framework",
-    veiculo: "United Nations Educational, Scientific and Cultural Organization",
-    nota:
-      "Estrutura curricular usada por educadores em todo o mundo para ensinar letramento midiático. Base teórica do enfoque educacional do LUPA.",
+    tipo: "Relatório institucional",
+    antes: "UNESCO. ",
+    destaque: "Media and information literate citizens: think critically, click wisely!",
+    depois: " 2. ed. Paris: UNESCO, 2021.",
     url: "https://www.unesco.org/en/media-information-literacy",
+    nota: "Currículo internacional de letramento midiático. Referência para a organização do conteúdo educativo do site.",
+    conferirLink: true,
+  },
+  {
+    tipo: "Relatório institucional",
+    antes: "UNESCO. ",
+    destaque: "Media and information literacy curriculum for teachers",
+    depois: ". Paris: UNESCO, 2011.",
+    url: "https://www.unesco.org/en/media-information-literacy",
+    nota: "Base da área do Professor: como transformar letramento midiático em atividade de sala de aula.",
+    conferirLink: true,
+  },
+  {
+    tipo: "Relatório institucional",
+    antes: "BRASIL. Senado Federal. Instituto de Pesquisa DataSenado. ",
+    destaque: "Panorama Político 2024: notícias falsas e democracia",
+    depois: ". Brasília, DF: Senado Federal, 2024.",
+    url: "https://www12.senado.leg.br/institucional/datasenado",
+    nota: "Dados sobre a preocupação da população brasileira com notícias falsas — dimensiona o problema no país.",
+    conferirLink: true,
+  },
+  {
+    tipo: "Relatório institucional",
+    antes: "COMITÊ GESTOR DA INTERNET NO BRASIL. ",
+    destaque: "TIC Kids Online Brasil 2024: crianças e adolescentes",
+    depois: ". São Paulo: CGI.br, 2024.",
+    url: "https://cetic.br/pesquisa/kids-online/",
+    nota: "Retrato de como crianças e adolescentes brasileiros usam a internet. Justifica o público-alvo do LUPA e a linguagem adotada.",
+    conferirLink: true,
+  },
+  {
+    tipo: "Relatório institucional",
+    antes: "NÚCLEO DE INFORMAÇÃO E COORDENAÇÃO DO PONTO BR. ",
+    destaque: "TIC Domicílios 2023",
+    depois: ": pesquisa sobre o uso das tecnologias de informação e comunicação nos domicílios brasileiros. São Paulo: NIC.br, 2023.",
+    url: "https://cetic.br/pesquisa/domicilios/",
+    nota: "Dados de acesso à internet no Brasil, usados para dimensionar o alcance possível de uma ferramenta como o LUPA.",
+    conferirLink: true,
+  },
+  {
+    tipo: "Relatório institucional",
+    antes: "ORGANIZAÇÃO MUNDIAL DA SAÚDE. ",
+    destaque: "Infodemic",
+    depois: ". Genebra: OMS, [s. d.].",
+    url: "https://www.who.int/health-topics/infodemic",
+    nota: "Origem do conceito de 'infodemia', citado na seção 'Em números' desta página.",
+  },
+
+  // ----- Manual técnico -----
+  {
+    tipo: "Manual técnico",
+    antes: "GOOGLE. ",
+    destaque: "Fact Check Tools API",
+    depois: ": documentação para desenvolvedores. [S. l.]: Google Developers, [s. d.].",
+    url: "https://developers.google.com/fact-check/tools/api",
+    nota: "Documentação técnica usada para integrar o LUPA ao banco global de checagens da rede IFCN — e para corrigir os falsos positivos encontrados nos testes.",
+  },
+
+  // ----- Vídeo e material educativo -----
+  {
+    tipo: "Vídeo",
+    antes: "EDUCAMÍDIA. ",
+    destaque: "Educação midiática",
+    depois: ": playlist do canal no YouTube. [S. l.]: YouTube, [s. d.].",
+    url: "https://www.youtube.com/playlist?list=PLXSpBL0lECkVL35XerdUJHisgS8vNOFmg",
+    nota: "Formação audiovisual em educação midiática, referência nacional para educadores e famílias.",
+    conferirLink: true,
+  },
+  {
+    tipo: "Material educativo",
+    antes: "EDUCAMÍDIA. ",
+    destaque: "Recursos para educadores",
+    depois: ". São Paulo: Instituto Palavra Aberta, [s. d.].",
+    url: "https://educamidia.org.br/educadores/",
+    nota: "Planos de aula e materiais abertos de educação midiática, indicados como complemento na área do Professor.",
+    conferirLink: true,
   },
 ];
 
@@ -357,42 +471,57 @@ export default function PaginaPesquisa() {
           className="animate-fade-in-up"
           style={{ animationDelay: "0.3s" }}
         >
-          <div className="mb-5 flex items-center gap-2">
+          <div className="mb-2 flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-slate-500" />
             <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-              Referências e fontes
+              Referências bibliográficas
             </h2>
           </div>
-          <div className="space-y-3">
-            {REFERENCIAS.map((ref, i) => (
-              <div
-                key={i}
+          <p className="mb-5 text-sm text-slate-600 dark:text-slate-400 text-justify">
+            Fontes que embasaram a compreensão do problema e o desenvolvimento
+            da solução, citadas segundo as normas da ABNT (NBR 6023). A lista
+            reúne artigos científicos, relatórios institucionais, documentação
+            técnica e material audiovisual.
+          </p>
+          <ol className="space-y-3">
+            {REFERENCIAS.map((ref) => (
+              <li
+                key={ref.destaque + ref.antes}
                 className="rounded-2xl border border-slate-200/60 bg-white/80 px-5 py-4 shadow-sm dark:border-slate-700 dark:bg-slate-800"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                    {ref.autores} ({ref.ano}).{" "}
-                    <em>{ref.titulo}</em>.
-                  </p>
-                  <a
-                    href={ref.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-shrink-0 items-center gap-1 text-xs text-indigo-600 hover:underline dark:text-indigo-400"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                    Acessar
-                  </a>
-                </div>
-                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                  {ref.veiculo}
+                <span className="mb-2 inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+                  {ref.tipo}
+                </span>
+
+                {/* Citação no formato ABNT */}
+                <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-200">
+                  {ref.antes}
+                  <span className="font-bold">{ref.destaque}</span>
+                  {ref.depois}{" "}
+                  <span className="text-slate-600 dark:text-slate-400">
+                    Disponível em:{" "}
+                    <a
+                      href={ref.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="break-all text-indigo-600 underline decoration-indigo-200 underline-offset-2 hover:text-indigo-800 dark:text-indigo-400 dark:decoration-indigo-700"
+                    >
+                      {ref.url}
+                    </a>
+                    . Acesso em: {DATA_ACESSO}.
+                  </span>
                 </p>
-                <p className="mt-2 text-xs leading-relaxed text-justify text-slate-600 dark:text-slate-400">
+
+                {/* Para que serviu no projeto */}
+                <p className="mt-2 border-l-2 border-slate-200 pl-3 text-xs leading-relaxed text-justify text-slate-600 dark:border-slate-600 dark:text-slate-400">
+                  <strong className="text-slate-700 dark:text-slate-300">
+                    Como foi usada:
+                  </strong>{" "}
                   {ref.nota}
                 </p>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </section>
 
       </div>
