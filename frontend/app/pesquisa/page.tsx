@@ -174,6 +174,7 @@ type TipoFonte =
   | "Artigo científico"
   | "Relatório institucional"
   | "Manual técnico"
+  | "E-book"
   | "Vídeo"
   | "Material educativo";
 
@@ -254,7 +255,7 @@ const REFERENCIAS: Referencia[] = [
     antes: "BRASIL. Senado Federal. Instituto de Pesquisa DataSenado. ",
     destaque: "Panorama Político 2024: notícias falsas e democracia",
     depois: ". Brasília, DF: Senado Federal, 2024.",
-    url: "https://www12.senado.leg.br/institucional/datasenado",
+    url: "https://www.senado.leg.br/institucional/datasenado/relatorio_online/pesquisa_fake_news/2024/interativo.html#acesso-a-not%C3%ADcias-falsas-e-seus-impactos",
     nota: "Dados sobre a preocupação da população brasileira com notícias falsas — dimensiona o problema no país.",
     conferirLink: true,
   },
@@ -295,7 +296,16 @@ const REFERENCIAS: Referencia[] = [
     nota: "Documentação técnica usada para integrar o LUPA ao banco global de checagens da rede IFCN — e para corrigir os falsos positivos encontrados nos testes.",
   },
 
-  // ----- Vídeo e material educativo -----
+  // ----- E-book, vídeo e material educativo -----
+  {
+    tipo: "E-book",
+    antes: "BEMTV. ",
+    destaque: "Muito mais que fake news",
+    depois: ". [S. l.]: Bemtv, 2022. E-book.",
+    url: "https://bemtv.org.br/wp-content/uploads/2022/06/ebook-fake-news.pdf",
+    nota: "Material introdutório sobre fake news voltado a adolescentes e educadores. Indicado na Biblioteca do LUPA e usado como referência de linguagem acessível para o público jovem.",
+    conferirLink: true,
+  },
   {
     tipo: "Vídeo",
     antes: "EDUCAMÍDIA. ",
