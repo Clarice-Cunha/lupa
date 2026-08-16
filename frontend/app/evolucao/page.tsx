@@ -371,6 +371,19 @@ const MARCOS: Marco[] = [
     corIcone: "text-blue-600",
   },
   {
+    id: 41,
+    data: "Maio de 2026",
+    titulo: "O falso positivo do banco de checagens — um erro e o que ele ensinou",
+    descricao:
+      "Este marco não registra uma funcionalidade nova. Registra um erro que a equipe cometeu, descobriu e corrigiu. Ao testar o LUPA com sites conhecidos, a capitã da equipe percebeu algo estranho: portais de notícia grandes e legítimos, como globo.com e uol.com, estavam recebendo notas baixas. A causa apareceu na investigação: ao analisar a página inicial de um portal, o LUPA pesquisava no banco de checagens pelo nome do portal — e recebia de volta checagens que apenas mencionavam aquele nome, muitas vezes desmentindo boatos que usavam o nome do jornal indevidamente. O LUPA lia isso como 'esse site foi desmentido' e punia justamente quem tinha sido vítima da desinformação. A primeira reação foi de frustração, porque a consulta às agências de checagem era o recurso mais interessante do analisador, e a equipe chegou a considerar abandoná-la. Houve inclusive a sugestão de remover essa análise do sistema, mas a equipe discordou e preferiu procurar uma saída que preservasse o recurso. O professor orientador apoiou a busca. A solução veio em duas partes, no mesmo dia: o LUPA deixou de consultar o banco de checagens para páginas iniciais de portais, passando a fazê-lo apenas para páginas internas — onde existe um conteúdo específico a ser checado; e foi criado um filtro de relevância, que descarta checagens sem relação real com o conteúdo analisado. Oito dias depois veio o desdobramento menos óbvio: a equipe percebeu que o erro não estava só no código, estava no raciocínio. O LUPA tinha tratado um sinal de alerta como se fosse uma prova — que é exatamente o erro que a desinformação explora nas pessoas. Foi por isso que uma análise com nota 100 passou a exibir um aviso lembrando que nota máxima não significa certeza absoluta. O projeto passou a aplicar em si mesmo o que ensina.",
+    notaTecnica:
+      "Módulo fact_check.py. A função avaliar_impacto() aplicava −30 pontos a uma checagem negativa, sobre uma pontuação que começa em 50 (PONTUACAO_INICIAL, em analyzer.py) — o suficiente para levar um portal legítimo à faixa 'Suspeito'. Correções nos commits 8f8af76 e 23f109d, ambos de 01/05/2026: o primeiro restringe a consulta a páginas internas (path vazio após urlparse indica homepage); o segundo acrescenta filtrar_relevantes(), que exige interseção mínima de duas palavras com 5+ caracteres entre a checagem e o conteúdo. O aviso de nota máxima veio no commit ccfe7a7, de 09/05/2026. O comentário que explica a decisão está preservado em analyzer.py, junto ao trecho da consulta.",
+    status: "concluido",
+    icone: ShieldAlert,
+    corFundo: "bg-amber-100",
+    corIcone: "text-amber-600",
+  },
+  {
     id: 24,
     data: "Maio de 2026",
     titulo: "Modo Professor — Painel de turmas",
