@@ -192,6 +192,9 @@ ESTRUTURA: dict[str, tuple[list[str], str, str]] = {
             "imagens/site/P2-04-pesquisa-e-dados.png",
             "imagens/site/P2-05-evolucao.png",
             "imagens/site/P2-06-biblioteca.png",
+            # Ainda não está em docs/. Enquanto não estiver, o script avisa no
+            # fim da execução — é o lembrete de que falta buscar o arquivo.
+            "PRD-original.pdf",
         ],
         "O caminho do projeto desde o primeiro protótipo até o site atual: o "
         "diário datado, os fluxogramas do funcionamento e as capturas de tela "
@@ -202,7 +205,10 @@ ESTRUTURA: dict[str, tuple[list[str], str, str]] = {
     análise no ar — é a tela que prova que o protótipo funciona.
 
 [ ] PRD-original.pdf
-    O documento de requisitos escrito antes de qualquer código.""",
+    O documento de requisitos escrito antes de qualquer código, de
+    07/04/2026. Não está neste computador — pedir à Clarice ou buscar
+    no Drive da equipe. Salvar em docs/PRD-original.pdf e rodar o
+    script de novo; a cópia é automática.""",
     ),
     "05-REFERENCIAS": (
         ["REFERENCIAS_ABNT.pdf"],
