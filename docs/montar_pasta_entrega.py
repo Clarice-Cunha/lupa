@@ -23,21 +23,22 @@ REPOSITORIO = "https://github.com/Clarice-Cunha/lupa"
 # subpasta -> (o que copiar de docs/, texto do LEIA-ME)
 ESTRUTURA: dict[str, tuple[list[str], str]] = {
     "01-CODIGO-FONTE": (
-        ["COMO_LER_O_CODIGO.pdf"],
+        ["COMO_LER_O_CODIGO.pdf", "CODIGO_BACKEND.pdf", "CODIGO_FRONTEND.pdf"],
         """JÁ ESTÁ AQUI
   COMO_LER_O_CODIGO.pdf ...... guia de leitura do código, em linguagem
-                               para quem não programa
+                               para quem não programa. Comece por ele.
+  CODIGO_BACKEND.pdf ......... os 10 módulos de análise em Python,
+                               com sumário e destaque de sintaxe
+  CODIGO_FRONTEND.pdf ........ estrutura das páginas do site e três
+                               arquivos representativos da interface
   link-repositorio-github.txt  endereço do repositório
 
-AINDA FALTA
-  [ ] backend-modulos-principais.pdf
-      Imprimir em PDF os arquivos analyzer.py, fact_check.py,
-      youtube_analyzer.py, image_analyzer.py e text_analyzer.py.
-      O regulamento exige converter para PDF o que não é PDF, DOCX,
-      TXT, JPG ou PNG — arquivo .py solto pode não abrir para o jurado.
+NADA FALTA AQUI
 
-  [ ] frontend-estrutura.pdf
-      Árvore de páginas do Next.js e um componente comentado.
+POR QUE EM PDF
+  O regulamento exige converter para PDF o que não é PDF, DOCX, TXT,
+  JPG ou PNG. Arquivo .py ou .tsx solto pode simplesmente não abrir
+  para o jurado.
 
 ATENÇÃO — O REPOSITÓRIO ESTÁ PRIVADO
   Hoje o link do GitHub não abre para quem está de fora. É o mesmo
@@ -147,17 +148,22 @@ O MESMO CONTEÚDO VAI EM TRÊS LUGARES
 """,
     ),
     "06-DOCUMENTOS": (
-        ["DOCUMENTO_TECNICO.pdf", "guia_tecnico_LUPA.docx"],
+        ["FICHA_TECNICA.pdf", "DOCUMENTO_TECNICO.pdf", "guia_tecnico_LUPA.docx"],
         """JÁ ESTÁ AQUI
+  FICHA_TECNICA.pdf .......... a página /ficha-tecnica do site, tal
+                               como ela aparece no ar: papéis de cada
+                               integrante, que IA o LUPA usa, serviços
+                               externos consultados, de onde vem o
+                               conteúdo educativo, política de dados,
+                               termos de uso e limites assumidos
   DOCUMENTO_TECNICO.pdf ...... documentação técnica do projeto
   guia_tecnico_LUPA.docx ..... guia técnico
 
-AINDA FALTA
-  [ ] ficha-tecnica.pdf
-      Imprimir a página /ficha-tecnica do site em PDF. Traz os papéis
-      de cada integrante, que IA o LUPA usa, os serviços externos
-      consultados, a política de dados e os limites assumidos.
-      Foi pedido nominal de um dos avaliadores na fase anterior.
+NADA FALTA AQUI
+
+A ficha técnica atende a um pedido nominal de um dos avaliadores da
+fase anterior, que perguntou quem fez o quê, que inteligência
+artificial é usada e de onde vem o conteúdo educativo.
 """,
     ),
     "07-APRESENTACAO": (

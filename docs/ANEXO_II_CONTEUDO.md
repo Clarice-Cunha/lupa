@@ -29,12 +29,12 @@ precisam de confirmação com o professor orientador.
 | Nome do professor | Hector Gabriel Ribeiro Liberalino |
 | Tema escolhido | Soluções para o Combate à Desinformação Digital |
 | Escola | Contemporâneo Lagoa Nova |
-| Cidade | Natal `[CONFERIR]` |
+| Cidade | Natal |
 | Estado | RN |
 
 Nome da equipe no Portal: **CB**. Região: **Nordeste**. Nota da fase anterior:
-**1760**. Todos conferidos no relatório oficial de avaliação. A cidade não
-aparece no relatório, mas a unidade Lagoa Nova fica em Natal.
+**1760**. Conferidos no relatório oficial de avaliação; a cidade está declarada
+na própria página `/ficha-tecnica` do site.
 
 **Atenção ao nome do terceiro integrante.** O relatório oficial da fase
 anterior registra *Miguel Cavalcanti Filgueira*, mas o integrante real é
