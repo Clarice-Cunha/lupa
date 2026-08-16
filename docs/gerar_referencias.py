@@ -102,7 +102,7 @@ def gerar_markdown() -> str:
 
     linhas = [
         "---\n",
-        'title: "Referências bibliográficas do LUPA"\n',
+        'title: "Referências do LUPA"\n',
         'subtitle: "Fundamentação teórica do projeto — HackaNAV 2026, Etapa Regional"\n',
         f'date: "Acesso em {data_acesso}"\n',
         "lang: pt-BR\n",

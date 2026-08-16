@@ -81,9 +81,9 @@ de introdução, vale abrir com ela:
 > acompanhada de uma nota indicando a que parte concreta do LUPA ela deu
 > origem.
 
-Antes de copiar, confirmar os **7 links** marcados com “A conferir” e atualizar
-a constante `DATA_ACESSO` em `frontend/app/pesquisa/page.tsx` para o dia da
-conferência. Depois, rodar novamente:
+Os 15 links foram conferidos um a um em **16/08/2026**, e a data de acesso das
+referências reflete essa conferência. Se alguma referência for acrescentada ou
+alterada depois disso, rodar novamente:
 
 ```
 powershell -ExecutionPolicy Bypass -File docs/gerar_pdfs.ps1
@@ -112,8 +112,7 @@ positivo do banco de checagens, registrado como marco 25 do diário de bordo.
 
 # Antes de enviar
 
-- [ ] Os 7 links das referências foram conferidos e a data de acesso atualizada
-- [ ] Os PDFs foram regerados depois dessa conferência
+- [x] Os 15 links das referências foram conferidos (16/08/2026)
 - [ ] A pasta do Drive abre em janela anônima
 - [ ] A pasta foi compartilhada com projetos@naveavela.com.br
 - [ ] A senha do site foi liberada

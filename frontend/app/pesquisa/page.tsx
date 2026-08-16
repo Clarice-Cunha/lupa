@@ -155,8 +155,12 @@ const DIFERENCIAIS = [
 ];
 
 // ============================================================
-// Referências bibliográficas — normas ABNT (NBR 6023)
+// Referências — normas ABNT (NBR 6023)
 // ============================================================
+//
+// A seção se chama apenas "Referências", e não "referências
+// bibliográficas", porque a lista inclui vídeo e material educativo
+// além de obras escritas. É como a própria NBR 6023 nomeia a seção.
 //
 // Cada referência é dividida em três partes porque a ABNT destaca
 // um elemento diferente conforme o tipo de obra:
@@ -164,11 +168,12 @@ const DIFERENCIAIS = [
 //   - em LIVRO ou RELATÓRIO, destaca-se o título da obra.
 // Por isso os campos `antes`, `destaque` e `depois`.
 //
-// ⚠️ ANTES DA ENTREGA: confirmar o link direto e a data de acesso das
-// referências marcadas com `conferirLink: true`. Abrir o documento,
-// copiar a URL exata e atualizar DATA_ACESSO para o dia da conferência.
+// Os 15 links foram conferidos um a um em 16/08/2026, antes do envio da
+// Etapa Regional. Ao acrescentar uma referência nova, marque-a com
+// `conferirLink: true` até abrir o documento e confirmar o endereço; o
+// gerador do PDF conta quantas ainda faltam.
 
-const DATA_ACESSO = "15 ago. 2026";
+const DATA_ACESSO = "16 ago. 2026";
 
 type TipoFonte =
   | "Artigo científico"
@@ -237,18 +242,16 @@ const REFERENCIAS: Referencia[] = [
     antes: "UNESCO. ",
     destaque: "Media and information literate citizens: think critically, click wisely!",
     depois: " 2. ed. Paris: UNESCO, 2021.",
-    url: "https://www.unesco.org/en/media-information-literacy",
+    url: "https://www.unesco.org/en/articles/media-and-information-literate-citizens-think-critically-click-wisely",
     nota: "Currículo internacional de letramento midiático. Referência para a organização do conteúdo educativo do site.",
-    conferirLink: true,
   },
   {
     tipo: "Relatório institucional",
     antes: "UNESCO. ",
     destaque: "Media and information literacy curriculum for teachers",
     depois: ". Paris: UNESCO, 2011.",
-    url: "https://www.unesco.org/en/media-information-literacy",
+    url: "https://www.unesco.org/en/articles/media-and-information-literacy-curriculum-teachers",
     nota: "Base da área do Professor: como transformar letramento midiático em atividade de sala de aula.",
-    conferirLink: true,
   },
   {
     tipo: "Relatório institucional",
@@ -265,7 +268,6 @@ const REFERENCIAS: Referencia[] = [
     depois: ". São Paulo: CGI.br, 2024.",
     url: "https://cetic.br/pesquisa/kids-online/",
     nota: "Retrato de como crianças e adolescentes brasileiros usam a internet. Justifica o público-alvo do LUPA e a linguagem adotada.",
-    conferirLink: true,
   },
   {
     tipo: "Relatório institucional",
@@ -274,7 +276,6 @@ const REFERENCIAS: Referencia[] = [
     depois: ": pesquisa sobre o uso das tecnologias de informação e comunicação nos domicílios brasileiros. São Paulo: NIC.br, 2023.",
     url: "https://cetic.br/pesquisa/domicilios/",
     nota: "Dados de acesso à internet no Brasil, usados para dimensionar o alcance possível de uma ferramenta como o LUPA.",
-    conferirLink: true,
   },
   {
     tipo: "Relatório institucional",
@@ -303,7 +304,6 @@ const REFERENCIAS: Referencia[] = [
     depois: ". Niterói, RJ: Bemtv, 2022. E-book.",
     url: "https://bemtv.org.br/wp-content/uploads/2022/06/ebook-fake-news.pdf",
     nota: "Material introdutório sobre fake news voltado a adolescentes e educadores. Indicado na Biblioteca do LUPA e usado como referência de linguagem acessível para o público jovem.",
-    conferirLink: true,
   },
   {
     tipo: "Vídeo",
@@ -312,7 +312,6 @@ const REFERENCIAS: Referencia[] = [
     depois: ": playlist do canal no YouTube. [S. l.]: YouTube, [s. d.].",
     url: "https://www.youtube.com/playlist?list=PLXSpBL0lECkVL35XerdUJHisgS8vNOFmg",
     nota: "Formação audiovisual em educação midiática, referência nacional para educadores e famílias.",
-    conferirLink: true,
   },
   {
     tipo: "Material educativo",
@@ -321,7 +320,6 @@ const REFERENCIAS: Referencia[] = [
     depois: ". São Paulo: Instituto Palavra Aberta, [s. d.].",
     url: "https://educamidia.org.br/educadores/",
     nota: "Planos de aula e materiais abertos de educação midiática, indicados como complemento na área do Professor.",
-    conferirLink: true,
   },
 ];
 
@@ -483,7 +481,7 @@ export default function PaginaPesquisa() {
           <div className="mb-2 flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-slate-500" />
             <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-              Referências bibliográficas
+              Referências
             </h2>
           </div>
           <p className="mb-5 text-sm text-slate-600 dark:text-slate-400 text-justify">
