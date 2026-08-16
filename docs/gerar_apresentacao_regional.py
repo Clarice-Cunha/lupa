@@ -20,6 +20,7 @@ from pptx.util import Inches
 RAIZ = Path(__file__).resolve().parent.parent
 MODELO = Path.home() / "Downloads" / "Hacka2026 - Template Apresentação Etapa Regional.pptx"
 DESTINO = RAIZ / "docs" / "APRESENTACAO_REGIONAL_LUPA.pptx"
+PASTA_IMAGENS = RAIZ / "docs" / "imagens"
 
 # ---------------------------------------------------------------- dados fixos
 
@@ -39,20 +40,18 @@ ALUNOS = [
 ]
 
 # Cada item é (texto, negrito). Texto vazio vira linha em branco.
+#
+# O texto do slide 7 é curto de propósito: quem conta o erro é o fluxograma
+# logo abaixo, e ele precisa de espaço para continuar legível na transmissão.
+# A explicação completa fica na fala, não na tela.
 ERRO = [
     ("O desafio: dar mais certeza à nota", True),
     ("A pontuação vinha de sinais indiretos — conexão segura, idade do "
      "domínio, linguagem sensacionalista. Nenhum deles diz se o conteúdo "
      "é verdadeiro.", False),
     ("", False),
-    ("A decisão: consultar quem checa profissionalmente", True),
-    ("1º de maio, 14h23 — integramos o banco de checagens do IFCN, a rede "
-     "internacional de agências de checagem de fatos.", False),
-    ("", False),
-    ("O erro: o LUPA passou a reprovar jornais legítimos", True),
-    ("Em páginas iniciais de portais, ele pesquisava pelo nome do portal e "
-     "recebia checagens que apenas o mencionavam. Globo e UOL: nota de site "
-     "suspeito.", False),
+    ("A decisão: em 1º de maio, às 14h23, integramos o banco de checagens "
+     "do IFCN.", True),
 ]
 
 # A coluna da esquerda do slide 8 é estreita e o logo do HackaNAV ocupa o
@@ -159,13 +158,51 @@ def main() -> None:
     caixa_aprendizado.top = Inches(1.50)
     escrever(caixa_aprendizado.text_frame, APRENDIZADO)
 
+    inserir_imagens(slides)
+
     pr.save(str(DESTINO))
     print(f"Gerado: {DESTINO.relative_to(RAIZ)}")
     print()
     print("Falta fazer a mao:")
     print("  - slide 6: inserir o video da etapa anterior (Inserir > Video)")
-    print("  - slides 7 e 8: acrescentar os fluxogramas como imagem")
     print("  - conferir o nome do 3o integrante no Portal (Miguel x Pedro)")
+
+
+def inserir_imagens(slides) -> None:
+    """Coloca os fluxogramas nos dois slides da narrativa do erro.
+
+    As medidas foram tiradas das formas decorativas do template: no slide 7
+    sobra uma faixa larga abaixo do texto, e no slide 8 há um quadro vazio
+    do lado direito. Em ambos os casos a imagem é encaixada sem cobrir o
+    logo do HackaNAV nem a moldura.
+    """
+    faixa_slide7 = PASTA_IMAGENS / "falso-positivo.png"
+    quadro_slide8 = PASTA_IMAGENS / "cinco-camadas.png"
+
+    for caminho in (faixa_slide7, quadro_slide8):
+        if not caminho.exists():
+            raise SystemExit(
+                f"Falta {caminho.name}. Rode antes: "
+                "python docs/gerar_imagens_fluxogramas.py"
+            )
+
+    # Slide 7 — faixa livre entre o fim do texto e o rodapé da moldura
+    largura = 5.70
+    slides[6].shapes.add_picture(
+        str(faixa_slide7),
+        Inches(4.965 - largura / 2), Inches(2.55),
+        width=Inches(largura),
+    )
+
+    # Slide 8 — quadro vazio da direita (x 5.04 a 9.53, y 0.70 a 5.19)
+    largura = 4.00
+    altura = largura * 1120 / 1560
+    slides[7].shapes.add_picture(
+        str(quadro_slide8),
+        Inches(5.04 + (4.49 - largura) / 2),
+        Inches(0.70 + (4.49 - altura) / 2),
+        width=Inches(largura),
+    )
 
 
 if __name__ == "__main__":
