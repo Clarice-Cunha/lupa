@@ -1,7 +1,7 @@
 # Evolução do Protótipo LUPA
 
 > Diário de bordo do desenvolvimento. Atualizado a cada nova etapa concluída.
-> **Última atualização:** Abril de 2026
+> **Última atualização:** Agosto de 2026
 
 ---
 
@@ -162,6 +162,63 @@ O primeiro passo foi escrever um PRD — um "Documento de Requisitos do Produto"
 **O que foi feito:** Um terceiro modo de jogo foi lançado: o Agente LUPA, uma aventura no estilo plataforma 2D. O jogador controla uma lupa que percorre uma cidade digital noturna e é perseguida por inimigos que representam tipos de desinformação — bots espalhadores, manchetes falsas e correntes virais. Quando um inimigo alcança o jogador, aparece uma pergunta educativa: responder certo derrota o inimigo; responder errado custa uma vida. São 3 inimigos por fase e 3 vidas disponíveis. O jogo é construído de forma que, ao "jogar novamente", as perguntas são sorteadas em ordem diferente a cada partida.
 
 **Detalhe técnico:** Motor gráfico Phaser 3.90 rodando dentro de um `<div>` gerenciado pelo Next.js. O Phaser cuida de física, animação e controles; o React cuida dos overlays (pergunta, feedback, game over, vitória). Comunicação entre os dois usando `ref` de callbacks — evita re-renders desnecessários. Importação dinâmica com `ssr: false` para não executar o Phaser no servidor. Banco com 5 perguntas por mundo; 3 são sorteadas aleatoriamente a cada partida.
+
+---
+
+### ✅ Marco 14 — O falso positivo do banco de checagens
+**Data:** Maio de 2026
+**Status:** Concluído
+
+**O que foi feito:** Este marco não registra uma funcionalidade nova. Registra um erro
+que a equipe cometeu, descobriu e corrigiu — e que mudou a forma como o LUPA passou a
+tratar suas próprias conclusões.
+
+Desde o Marco 2, o LUPA consultava o banco de checagens do IFCN (a rede internacional de
+agências de checagem de fatos) para saber se o conteúdo analisado já tinha sido
+desmentido por algum verificador profissional. Quando encontrava uma checagem negativa,
+descontava 30 pontos da nota. Parecia o sinal mais confiável de todos: não era o LUPA
+julgando, era uma agência especializada.
+
+Ao testar o sistema com sites conhecidos, a capitã da equipe percebeu algo estranho:
+portais de notícia grandes e legítimos, como globo.com e uol.com, estavam recebendo
+notas baixas. Levou o caso aos outros integrantes. A causa apareceu na investigação: ao
+analisar a **página inicial** de um portal, o LUPA pesquisava no banco de checagens pelo
+nome do portal — e recebia de volta checagens que apenas *mencionavam* aquele portal,
+muitas vezes desmentindo boatos que usavam o nome dele indevidamente. O LUPA lia isso
+como "esse site foi desmentido" e punia justamente quem tinha sido vítima da
+desinformação.
+
+A primeira reação foi de frustração. A consulta ao IFCN era o recurso mais interessante
+do analisador, e a equipe chegou a considerar abandoná-la. O pai da capitã, que
+acompanhava os testes, sugeriu remover essa análise do escopo do sistema. A equipe
+discordou: preferiu procurar uma solução que preservasse o recurso. O professor
+orientador apoiou a busca e disse que, se não desse certo, não haveria problema, porque
+o site já estava bom.
+
+A solução veio em duas partes, no mesmo dia. Primeiro, o LUPA deixou de consultar o banco
+de checagens para páginas iniciais de portais, passando a fazê-lo apenas para páginas
+internas — onde existe um conteúdo específico a ser checado. Depois, foi criado um filtro
+de relevância: uma checagem só passa a valer se o texto dela tiver pelo menos duas
+palavras de cinco ou mais letras em comum com o conteúdo analisado. Sem isso, é
+descartada.
+
+Oito dias depois veio o desdobramento menos óbvio. A equipe percebeu que o erro não
+estava só no código — estava no raciocínio. O LUPA tinha tratado um **sinal de alerta**
+como se fosse uma **prova**, que é exatamente o erro que a desinformação explora nas
+pessoas. Isso levou a uma mudança que não tem relação técnica com o problema original:
+quando uma análise resulta em nota 100, o LUPA passou a exibir um aviso lembrando que
+nota máxima não significa certeza absoluta. O projeto passou a aplicar em si mesmo o que
+ensina.
+
+**Detalhe técnico:** Módulo `fact_check.py`. A função `avaliar_impacto()` aplicava −30
+pontos a uma checagem negativa, sobre uma pontuação que começa em 50
+(`PONTUACAO_INICIAL`, em `analyzer.py`) — o suficiente para levar um portal legítimo à
+faixa "Suspeito". Correções nos commits `8f8af76` e `23f109d`, ambos de 01/05/2026: o
+primeiro restringe a consulta a páginas internas; o segundo acrescenta a função
+`filtrar_relevantes()`, que exige interseção mínima de duas palavras com 5+ caracteres
+entre a checagem e o conteúdo. O aviso de nota máxima veio no commit `ccfe7a7`, de
+09/05/2026. O comentário que explica a decisão está preservado em `analyzer.py`, junto ao
+trecho da consulta.
 
 ---
 
