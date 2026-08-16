@@ -1,6 +1,6 @@
 ---
 title: "Como ler o código do LUPA"
-subtitle: "Guia de leitura para a banca avaliadora — HackaNAV 2026, Etapa Regional"
+subtitle: "Guia de leitura do código-fonte — HackaNAV 2026, Etapa Regional"
 date: "Agosto de 2026"
 lang: pt-BR
 ---
@@ -9,8 +9,8 @@ lang: pt-BR
 
 Este guia acompanha os arquivos de código-fonte enviados na pasta do projeto. Ele
 existe para que a leitura do código não dependa de saber programar: cada seção explica
-**o que aquele arquivo faz**, **por que ele existe** e **onde olhar** se a banca quiser
-conferir alguma afirmação feita no vídeo ou na apresentação.
+**o que aquele arquivo faz**, **por que ele existe** e **onde conferir** cada afirmação
+feita no vídeo e na apresentação.
 
 O LUPA é um site que analisa links, textos, vídeos e imagens e devolve uma pontuação de
 confiabilidade de 0 a 100, sempre acompanhada das justificativas que produziram aquela
@@ -139,7 +139,7 @@ Os componentes reaproveitados em várias páginas ficam em `frontend/app/_compon
 
 ---
 
-# Três decisões que a banca pode querer conferir
+# Três decisões e onde conferi-las no código
 
 **1. Nenhum dado de usuário é guardado.** As análises não são associadas a ninguém, não
 há login e não há histórico no servidor. O histórico que aparece no site fica salvo no
