@@ -186,6 +186,7 @@ function Secao({
   titulo,
   children,
   atraso,
+  id,
 }: {
   icone: ReactNode;
   cor: string;
@@ -193,10 +194,14 @@ function Secao({
   titulo: string;
   children: ReactNode;
   atraso: number;
+  /** Âncora opcional, para que outras páginas possam apontar direto para a seção. */
+  id?: string;
 }) {
   return (
     <section
-      className="animate-fade-in-up rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-lg shadow-slate-100/60 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800 dark:shadow-slate-900/40 sm:p-8"
+      id={id}
+      // scroll-mt-20 impede que o menu fixo do topo cubra o título ao chegar pela âncora
+      className="animate-fade-in-up scroll-mt-20 rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-lg shadow-slate-100/60 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800 dark:shadow-slate-900/40 sm:p-8"
       style={{ animationDelay: `${atraso}s` }}
     >
       <div className="mb-4 flex items-center gap-3">
@@ -543,6 +548,7 @@ export default function PaginaFichaTecnica() {
             corFundo="bg-slate-100 dark:bg-slate-700"
             titulo="Termos de uso"
             atraso={0.59}
+            id="termos-de-uso"
           >
             <ul className="space-y-2.5 text-sm text-slate-700 dark:text-slate-300">
               {[
