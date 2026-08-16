@@ -10,7 +10,7 @@ Uso (a partir da raiz do projeto):
     python docs/gerar_diario_bordo.py
 
 Depois, para gerar o PDF:
-    powershell -ExecutionPolicy Bypass -File docs/gerar_diario.ps1
+    powershell -ExecutionPolicy Bypass -File docs/gerar_pdfs.ps1
 """
 
 import re
@@ -67,7 +67,7 @@ def gerar_markdown() -> str:
     codigo = ORIGEM.read_text(encoding="utf-8")
     bloco_marcos = extrair_bloco_dos_marcos(codigo)
 
-    # Cada marco começa com "id:" — usamos isso para separar os objetos
+    # Cada marco é um objeto do array — usamos a abertura de chaves para separá-los
     partes = re.split(r"\n  \{\n", bloco_marcos)[1:]
 
     linhas: list[str] = [CABECALHO, "---\n"]

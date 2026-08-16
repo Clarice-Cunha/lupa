@@ -1,0 +1,910 @@
+<title>Da Ideia ao Ecossistema</title>
+
+<style>
+  :root {
+    --ground: #EDF0F6;
+    --surface: #FFFFFF;
+    --surface-2: #F6F8FC;
+    --ink: #12203C;
+    --ink-soft: #43567A;
+    --muted: #74869F;
+    --rule: #D2DAE8;
+    --accent: #1B4FA8;
+    --accent-soft: #E2EAF9;
+    --suspeito: #B71C1C;
+    --atencao: #B07800;
+    --atencao-fill: #FFC107;
+    --confiavel: #2E7D32;
+    --confiavel-fill: #4CAF50;
+
+    --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-body: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0C1320;
+      --surface: #141E30;
+      --surface-2: #1A2538;
+      --ink: #E7EDF7;
+      --ink-soft: #AFBFD6;
+      --muted: #8395AE;
+      --rule: #2A3A56;
+      --accent: #7FA9F5;
+      --accent-soft: #1B2B47;
+      --suspeito: #EF5350;
+      --atencao: #FFC107;
+      --atencao-fill: #E0A800;
+      --confiavel: #66BB6A;
+      --confiavel-fill: #43A047;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0C1320;
+    --surface: #141E30;
+    --surface-2: #1A2538;
+    --ink: #E7EDF7;
+    --ink-soft: #AFBFD6;
+    --muted: #8395AE;
+    --rule: #2A3A56;
+    --accent: #7FA9F5;
+    --accent-soft: #1B2B47;
+    --suspeito: #EF5350;
+    --atencao: #FFC107;
+    --atencao-fill: #E0A800;
+    --confiavel: #66BB6A;
+    --confiavel-fill: #43A047;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  .prose { max-width: 68ch; }
+
+  /* ---------- cabeçalho ---------- */
+
+  header.page {
+    padding: 72px 0 40px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 48px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 5vw, 3.1rem);
+    font-weight: 800;
+    letter-spacing: -0.028em;
+    line-height: 1.06;
+    text-wrap: balance;
+    margin: 0 0 18px;
+  }
+
+  header.page p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+  }
+
+  /* ---------- seções ---------- */
+
+  section { margin-bottom: 72px; }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.42rem;
+    font-weight: 750;
+    letter-spacing: -0.018em;
+    line-height: 1.2;
+    text-wrap: balance;
+    margin: 0 0 10px;
+  }
+
+  .lead {
+    color: var(--ink-soft);
+    margin: 0 0 26px;
+  }
+
+  p { margin: 0 0 16px; }
+
+  /* ---------- figuras ---------- */
+
+  figure {
+    margin: 0 0 20px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 26px 22px 18px;
+  }
+
+  .scroller { overflow-x: auto; }
+
+  svg {
+    display: block;
+    width: 100%;
+    min-width: 620px;
+    max-width: 100%;
+    height: auto;
+    color: var(--ink-soft);
+  }
+
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ---------- nota de uso ---------- */
+
+  .uso {
+    background: var(--surface-2);
+    border-left: 2px solid var(--accent);
+    padding: 14px 18px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .uso strong { color: var(--ink); font-weight: 700; }
+
+  .uso .rot {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* ---------- svg helpers ---------- */
+
+  .bx { fill: var(--surface-2); stroke: currentColor; stroke-width: 1.2; }
+  .bx-a { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.4; }
+  .bx-t { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-dasharray: 5 4; opacity: 0.75; }
+  .ln { stroke: currentColor; stroke-width: 1.3; fill: none; }
+  .ln-d { stroke: currentColor; stroke-width: 1.3; fill: none; stroke-dasharray: 5 4; }
+  .tt { fill: var(--ink); font-family: var(--font-display); font-size: 12.5px; font-weight: 650; }
+  .tx { fill: var(--ink-soft); font-family: var(--font-display); font-size: 11.5px; }
+  .mo { fill: var(--muted); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.07em; }
+  .mo-a { fill: var(--accent); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.07em; }
+  .lb { fill: var(--muted); font-family: var(--font-mono); font-size: 9.8px; }
+
+  footer.page {
+    border-top: 1px solid var(--rule);
+    padding-top: 28px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  a { color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="page">
+    <p class="eyebrow">HackaNAV 2026 · Etapa Regional</p>
+    <h1>Da ideia ao ecossistema</h1>
+    <p class="prose">
+      Sete fluxogramas para ilustrar o desenvolvimento do LUPA. O terceiro
+      avaliador pediu nominalmente que as etapas P1 e P2 fossem mostradas com
+      imagens — estes desenhos servem como ponto de partida: usem como estão,
+      redesenhem à mão ou refaçam no Canva com a identidade de vocês.
+    </p>
+  </header>
+
+  <!-- ============ 1 ============ -->
+  <section>
+    <h2>A jornada dos protótipos</h2>
+    <p class="lead prose">
+      O que a banca quer ver: que a solução evoluiu da ideia inicial até o
+      protótipo de alta fidelidade, e o que provocou cada passagem.
+    </p>
+
+    <figure>
+      <div class="scroller">
+        <svg viewBox="0 0 950 250" role="img"
+             aria-label="Linha do desenvolvimento do LUPA em quatro etapas: origem com o PRD em março de 2026, P1 de baixa fidelidade no Lovable, P2 de média fidelidade com a análise de links funcionando em FastAPI e Next.js, e P3 de alta fidelidade com o ecossistema completo.">
+          <defs>
+            <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- datas -->
+          <text class="mo" x="20"  y="30">MARÇO 2026</text>
+          <text class="mo" x="265" y="30">MARÇO 2026</text>
+          <text class="mo" x="510" y="30">ABRIL 2026</text>
+          <text class="mo" x="755" y="30">ABRIL — JUNHO 2026</text>
+
+          <!-- caixa 1 -->
+          <rect class="bx" x="20" y="44" width="175" height="150" rx="3"/>
+          <text class="tt" x="36" y="70">Origem</text>
+          <text class="tx" x="36" y="94">Tema: desinformação</text>
+          <text class="tx" x="36" y="112">digital. Problema:</text>
+          <text class="tx" x="36" y="130">ferramentas difíceis</text>
+          <text class="tx" x="36" y="148">para famílias e idosos</text>
+          <text class="mo-a" x="36" y="177">PRD — requisitos</text>
+
+          <!-- caixa 2 -->
+          <rect class="bx" x="265" y="44" width="175" height="150" rx="3"/>
+          <text class="tt" x="281" y="70">P1 · baixa fidelidade</text>
+          <text class="tx" x="281" y="94">Uma tela: 3 entradas,</text>
+          <text class="tx" x="281" y="112">“como funciona” em 3</text>
+          <text class="tx" x="281" y="130">passos e o rodapé já</text>
+          <text class="tx" x="281" y="148">com os princípios</text>
+          <text class="mo-a" x="281" y="177">Lovable</text>
+
+          <!-- caixa 3 -->
+          <rect class="bx" x="510" y="44" width="175" height="150" rx="3"/>
+          <text class="tt" x="526" y="70">P2 · média fidelidade</text>
+          <text class="tx" x="526" y="94">Análise de link</text>
+          <text class="tx" x="526" y="112">funcionando de ponta</text>
+          <text class="tx" x="526" y="130">a ponta: nota real com</text>
+          <text class="tx" x="526" y="148">justificativas</text>
+          <text class="mo-a" x="526" y="177">FastAPI + Next.js</text>
+
+          <!-- caixa 4 -->
+          <rect class="bx-a" x="755" y="44" width="175" height="150" rx="3"/>
+          <text class="tt" x="771" y="70">P3 · alta fidelidade</text>
+          <text class="tx" x="771" y="94">Ecossistema: análises,</text>
+          <text class="tx" x="771" y="112">jogos, biblioteca,</text>
+          <text class="tx" x="771" y="130">comunidade e painel</text>
+          <text class="tx" x="771" y="148">do professor</text>
+          <text class="mo-a" x="771" y="170">+ Gemini, VirusTotal,</text>
+          <text class="mo-a" x="771" y="184">IFCN</text>
+
+          <!-- setas -->
+          <line class="ln" x1="195" y1="119" x2="258" y2="119" marker-end="url(#a1)"/>
+          <text class="lb" x="226" y="97" text-anchor="middle">requisitos</text>
+          <text class="lb" x="226" y="109" text-anchor="middle">no papel</text>
+
+          <line class="ln" x1="440" y1="119" x2="503" y2="119" marker-end="url(#a1)"/>
+          <text class="lb" x="471" y="97" text-anchor="middle">a ideia se</text>
+          <text class="lb" x="471" y="109" text-anchor="middle">provou útil</text>
+
+          <line class="ln" x1="685" y1="119" x2="748" y2="119" marker-end="url(#a1)"/>
+          <text class="lb" x="716" y="97" text-anchor="middle">testes com</text>
+          <text class="lb" x="716" y="109" text-anchor="middle">usuários reais</text>
+
+          <!-- rodapé -->
+          <line class="ln" x1="20" y1="218" x2="930" y2="218" opacity="0.35"/>
+          <text class="mo" x="20" y="238">CADA PASSAGEM FOI PROVOCADA POR UMA DESCOBERTA, NÃO PELO CALENDÁRIO</text>
+        </svg>
+      </div>
+      <figcaption>
+        As três passagens do desenvolvimento e o que provocou cada uma.
+        A vitória na feira escolar (20/05) e a classificação regional (03/08)
+        vieram depois do P3 e ficam fora deste desenho de propósito — são
+        eventos da competição, não etapas de prototipagem.
+      </figcaption>
+    </figure>
+
+    <div class="uso">
+      <span class="rot">Como usar</span>
+      Este é o fluxograma que responde diretamente ao avaliador 3.
+      <strong>O print da tela feita no Lovable existe</strong> — encaixem
+      embaixo da caixa P1, e guardem também uma versão sem recorte, com a
+      barra do Lovable visível: ela prova qual ferramenta foi usada.
+    </div>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section>
+    <h2>O que permaneceu e o que mudou</h2>
+    <p class="lead prose">
+      A comparação entre o primeiro protótipo e o site de hoje. O lado
+      surpreendente não é o que mudou — é o que já estava certo na primeira
+      tela e sobreviveu a todas as versões.
+    </p>
+
+    <figure>
+      <div class="scroller">
+        <svg viewBox="0 0 950 500" role="img"
+             aria-label="Comparação entre o protótipo P1 de março de 2026, chamado Lupa Digital e feito no Lovable, e o site atual. Permaneceram os três princípios — resultado explicável, sem verdades absolutas e ferramenta educativa — e as quatro áreas da navegação original. Mudaram o nome, o número de entradas, o papel da inteligência artificial, o armazenamento do histórico e a extensão do site.">
+          <defs>
+            <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- cabeçalhos -->
+          <text class="mo" x="20" y="24">P1 · MARÇO 2026 — “LUPA DIGITAL”, FEITO NO LOVABLE</text>
+          <text class="mo-a" x="530" y="24">P3 · HOJE — LUPA, O SITE NO AR</text>
+          <line class="ln" x1="20" y1="34" x2="930" y2="34" opacity="0.3"/>
+
+          <!-- permaneceu -->
+          <text class="mo-a" x="20" y="62">O QUE PERMANECEU DESDE A PRIMEIRA TELA</text>
+
+          <rect class="bx-a" x="20" y="72" width="910" height="38" rx="3"/>
+          <text class="tt" x="36" y="96">“Resultado explicável”</text>
+          <text class="tx" x="260" y="96">virou princípio: toda nota sai com as justificativas que a geraram</text>
+
+          <rect class="bx-a" x="20" y="118" width="910" height="38" rx="3"/>
+          <text class="tt" x="36" y="142">“Não garante verdades absolutas”</text>
+          <text class="tx" x="260" y="142">virou regra: o LUPA aponta sinais, nunca dá veredito</text>
+
+          <rect class="bx-a" x="20" y="164" width="910" height="38" rx="3"/>
+          <text class="tt" x="36" y="188">“Ferramenta educativa de apoio”</text>
+          <text class="tx" x="260" y="188">virou o eixo do projeto: ensinar a checar, não checar pela pessoa</text>
+
+          <rect class="bx-a" x="20" y="210" width="910" height="38" rx="3"/>
+          <text class="tt" x="36" y="234">As 4 áreas da barra original</text>
+          <text class="tx" x="260" y="234">Início, Dicas de Checagem, Fontes Confiáveis e Histórico — todas existem hoje</text>
+
+          <!-- mudou -->
+          <text class="mo" x="20" y="290">O QUE MUDOU</text>
+
+          <rect class="bx" x="20" y="300" width="370" height="32" rx="3"/>
+          <text class="tx" x="34" y="321" font-size="11">Nome: “Lupa Digital”</text>
+          <line class="ln" x1="392" y1="316" x2="428" y2="316" marker-end="url(#a6)"/>
+          <rect class="bx" x="435" y="300" width="495" height="32" rx="3"/>
+          <text class="tx" x="449" y="321" font-size="11">LUPA — Leitor de URLs, Plataformas e Audiovisuais</text>
+
+          <rect class="bx" x="20" y="340" width="370" height="32" rx="3"/>
+          <text class="tx" x="34" y="361" font-size="11">3 entradas: site, vídeo, upload</text>
+          <line class="ln" x1="392" y1="356" x2="428" y2="356" marker-end="url(#a6)"/>
+          <rect class="bx" x="435" y="340" width="495" height="32" rx="3"/>
+          <text class="tx" x="449" y="361" font-size="11">5 entradas: + imagem e + texto colado direto</text>
+
+          <rect class="bx" x="20" y="380" width="370" height="32" rx="3"/>
+          <text class="tx" x="34" y="401" font-size="11">“Análise inteligente com IA”</text>
+          <line class="ln" x1="392" y1="396" x2="428" y2="396" marker-end="url(#a6)"/>
+          <rect class="bx" x="435" y="380" width="495" height="32" rx="3"/>
+          <text class="tx" x="449" y="401" font-size="11">A IA é 1 de 5 camadas — e o site declara onde ela erra</text>
+
+          <rect class="bx" x="20" y="420" width="370" height="32" rx="3"/>
+          <text class="tx" x="34" y="441" font-size="11">Histórico das análises</text>
+          <line class="ln" x1="392" y1="436" x2="428" y2="436" marker-end="url(#a6)"/>
+          <rect class="bx" x="435" y="420" width="495" height="32" rx="3"/>
+          <text class="tx" x="449" y="441" font-size="11">Continua — mas só no navegador, nada é enviado ao servidor</text>
+
+          <rect class="bx" x="20" y="460" width="370" height="32" rx="3"/>
+          <text class="tx" x="34" y="481" font-size="11">Um analisador com 4 páginas</text>
+          <line class="ln" x1="392" y1="476" x2="428" y2="476" marker-end="url(#a6)"/>
+          <rect class="bx-a" x="435" y="460" width="495" height="32" rx="3"/>
+          <text class="tx" x="449" y="481" font-size="11">Ecossistema: + jogos, biblioteca, comunidade e modo professor</text>
+        </svg>
+      </div>
+      <figcaption>
+        Comparação entre a primeira tela e o site atual. As faixas destacadas
+        no topo são as decisões que não mudaram em cinco meses de
+        desenvolvimento.
+      </figcaption>
+    </figure>
+
+    <div class="uso">
+      <span class="rot">Como usar</span>
+      Este é o argumento mais forte que vocês têm sobre iteração, e ele é
+      <strong>verificável</strong>: qualquer pessoa pode abrir o print do P1,
+      abrir o site hoje e conferir item por item. Guardem os dois lado a lado
+      na pasta do Drive.
+    </div>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section>
+    <h2>Como a ideia foi escolhida</h2>
+    <p class="lead prose">
+      Este está em branco de propósito: eu não sei quais alternativas vocês
+      consideraram antes de decidir pelo LUPA. Só vocês têm essa informação.
+    </p>
+
+    <figure>
+      <div class="scroller">
+        <svg viewBox="0 0 950 270" role="img"
+             aria-label="Modelo de fluxograma de decisão: do problema identificado partem três ideias de solução em branco, que passam por critérios de escolha e resultam na hipótese escolhida, o LUPA.">
+          <defs>
+            <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <rect class="bx" x="20" y="103" width="170" height="64" rx="3"/>
+          <text class="tt" x="36" y="128">Problema</text>
+          <text class="tx" x="36" y="148">identificado</text>
+
+          <rect class="bx-t" x="270" y="20" width="185" height="60" rx="3"/>
+          <text class="tx" x="286" y="47">Ideia 1</text>
+          <text class="lb" x="286" y="65">preencher</text>
+
+          <rect class="bx-t" x="270" y="105" width="185" height="60" rx="3"/>
+          <text class="tx" x="286" y="132">Ideia 2</text>
+          <text class="lb" x="286" y="150">preencher</text>
+
+          <rect class="bx-t" x="270" y="190" width="185" height="60" rx="3"/>
+          <text class="tx" x="286" y="217">Ideia 3</text>
+          <text class="lb" x="286" y="235">preencher</text>
+
+          <rect class="bx" x="535" y="93" width="185" height="84" rx="3"/>
+          <text class="tt" x="551" y="118">Critérios</text>
+          <text class="tx" x="551" y="138">Alcança a família?</text>
+          <text class="tx" x="551" y="156">Dá para fazer a tempo?</text>
+          <text class="tx" x="551" y="171" font-size="10.5">Ensina ou só julga?</text>
+
+          <rect class="bx-a" x="800" y="103" width="130" height="64" rx="3"/>
+          <text class="tt" x="816" y="128">Hipótese</text>
+          <text class="tx" x="816" y="148">escolhida: LUPA</text>
+
+          <!-- ramificação -->
+          <path class="ln" d="M 190 135 L 230 135 L 230 50 L 263 50" marker-end="url(#a2)"/>
+          <line class="ln" x1="230" y1="135" x2="263" y2="135" marker-end="url(#a2)"/>
+          <path class="ln" d="M 230 135 L 230 220 L 263 220" marker-end="url(#a2)"/>
+
+          <!-- convergência -->
+          <path class="ln" d="M 455 50 L 495 50 L 495 135 L 528 135" marker-end="url(#a2)"/>
+          <line class="ln" x1="455" y1="135" x2="528" y2="135"/>
+          <path class="ln" d="M 455 220 L 495 220 L 495 135" />
+
+          <line class="ln" x1="720" y1="135" x2="793" y2="135" marker-end="url(#a2)"/>
+        </svg>
+      </div>
+      <figcaption>
+        Modelo em branco. As três caixas tracejadas esperam as alternativas
+        que a equipe realmente discutiu antes de decidir.
+      </figcaption>
+    </figure>
+
+    <div class="uso">
+      <span class="rot">Como usar</span>
+      Vale a pena preencher: o indicador <strong>“cita as ideias de solução e a
+      hipótese escolhida entre elas”</strong> deu 100/100 no relatório, ou seja,
+      vocês já contaram isso bem em algum lugar. Transformar em desenho torna a
+      escolha visível em dois segundos.
+    </div>
+  </section>
+
+  <!-- ============ PRISMA ============ -->
+  <section>
+    <h2>Como as fontes foram selecionadas</h2>
+    <p class="lead prose">
+      Adaptação do fluxo PRISMA — o padrão internacional para documentar a
+      seleção bibliográfica. A equipe não registrou quantas fontes descartou,
+      então este fluxo documenta o que é verificável: de onde vieram as fontes,
+      que filtro passaram e o que chegou ao fim.
+    </p>
+
+    <figure>
+      <div class="scroller">
+        <svg viewBox="0 0 900 630" role="img"
+             aria-label="Fluxo de seleção das fontes em quatro estágios: identificação, com nove fontes indicadas pelo professor e cinco já citadas no site; triagem por autoria e data; leitura na íntegra verificando se a fonte sustenta uma parte concreta do projeto; e quinze fontes incluídas, distribuídas em seis formatos. Uma caixa lateral lista os critérios de exclusão e registra que as quantidades descartadas não foram anotadas na época.">
+          <defs>
+            <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- faixa lateral de estágios -->
+          <rect x="8" y="40" width="26" height="120" rx="2" fill="var(--accent-soft)"/>
+          <text class="mo-a" x="21" y="100" text-anchor="middle"
+                transform="rotate(-90 21 100)">IDENTIFICAÇÃO</text>
+
+          <rect x="8" y="190" width="26" height="80" rx="2" fill="var(--accent-soft)"/>
+          <text class="mo-a" x="21" y="230" text-anchor="middle"
+                transform="rotate(-90 21 230)">TRIAGEM</text>
+
+          <rect x="8" y="310" width="26" height="80" rx="2" fill="var(--accent-soft)"/>
+          <text class="mo-a" x="21" y="350" text-anchor="middle"
+                transform="rotate(-90 21 350)">ELEGIBILIDADE</text>
+
+          <rect x="8" y="430" width="26" height="150" rx="2" fill="var(--accent-soft)"/>
+          <text class="mo-a" x="21" y="505" text-anchor="middle"
+                transform="rotate(-90 21 505)">INCLUÍDOS</text>
+
+          <!-- coluna principal -->
+          <rect class="bx" x="60" y="40" width="420" height="120" rx="3"/>
+          <text class="tt" x="76" y="64">De onde vieram as fontes</text>
+          <text class="tx" x="76" y="88" font-size="11">Indicadas pelo professor orientador . . . . . . . . . . . . 9</text>
+          <text class="tx" x="76" y="106" font-size="11">Já citadas no site desde a etapa escolar . . . . . . . 5</text>
+          <text class="tx" x="76" y="124" font-size="11">Encontradas em busca da própria equipe . . . . . . .</text>
+          <text class="lb" x="76" y="146">há sobreposição entre as três origens</text>
+
+          <rect class="bx" x="60" y="190" width="420" height="80" rx="3"/>
+          <text class="tt" x="76" y="216">Triagem: quem assina e quando</text>
+          <text class="tx" x="76" y="238" font-size="11">Autoria ou instituição responsável identificável</text>
+          <text class="tx" x="76" y="256" font-size="11">Data de publicação visível</text>
+
+          <rect class="bx" x="60" y="310" width="420" height="80" rx="3"/>
+          <text class="tt" x="76" y="336">Elegibilidade: leitura na íntegra</text>
+          <text class="tx" x="76" y="358" font-size="11">Sustenta uma parte concreta do LUPA?</text>
+          <text class="tx" x="76" y="376" font-size="11">Link público e estável, sem barreira de pagamento</text>
+
+          <rect class="bx-a" x="60" y="430" width="420" height="150" rx="3"/>
+          <text class="tt" x="76" y="456" font-size="14">Fontes incluídas na fundamentação (n = 15)</text>
+          <text class="tx" x="76" y="482" font-size="11">Artigos científicos . . . . . . . . . . . . . . 4</text>
+          <text class="tx" x="76" y="502" font-size="11">Relatórios institucionais . . . . . . . . 7</text>
+          <text class="tx" x="76" y="522" font-size="11">Manual técnico . . . . . . . . . . . . . . . . 1</text>
+          <text class="tx" x="76" y="542" font-size="11">E-book . . . . . . . . . . . . . . . . . . . . . . . 1</text>
+          <text class="tx" x="76" y="562" font-size="11">Vídeo . . . . . . . . . . . . . . . . . . . . . . . . 1</text>
+          <text class="tx" x="290" y="562" font-size="11">Material educativo . . . 1</text>
+
+          <!-- o que ficou de fora -->
+          <rect class="bx-t" x="560" y="190" width="320" height="200" rx="3"/>
+          <text class="tt" x="578" y="216">O que ficou de fora</text>
+          <text class="lb" x="578" y="240">sem autoria ou sem data</text>
+          <text class="lb" x="578" y="258">fora do tema da desinformação digital</text>
+          <text class="lb" x="578" y="276">sem relação com escola ou família</text>
+          <text class="lb" x="578" y="294">não sustentava nada de concreto no LUPA</text>
+          <line class="ln-d" x1="578" y1="316" x2="862" y2="316"/>
+          <text class="tx" x="578" y="340" font-size="11">Quantas fontes caíram em cada</text>
+          <text class="tx" x="578" y="358" font-size="11">etapa: não anotamos na época.</text>
+          <text class="lb" x="578" y="378">limitação assumida, não estimada</text>
+
+          <!-- setas verticais -->
+          <line class="ln" x1="270" y1="160" x2="270" y2="184" marker-end="url(#a7)"/>
+          <line class="ln" x1="270" y1="270" x2="270" y2="304" marker-end="url(#a7)"/>
+          <line class="ln" x1="270" y1="390" x2="270" y2="424" marker-end="url(#a7)"/>
+
+          <!-- setas de exclusão -->
+          <line class="ln-d" x1="480" y1="230" x2="554" y2="230" marker-end="url(#a7)"/>
+          <line class="ln-d" x1="480" y1="350" x2="554" y2="350" marker-end="url(#a7)"/>
+
+          <text class="mo" x="560" y="466">CRITÉRIO DE INCLUSÃO</text>
+          <text class="lb" x="560" y="488">A fonte só entrou se sustentasse</text>
+          <text class="lb" x="560" y="504">uma parte concreta do LUPA —</text>
+          <text class="lb" x="560" y="520">por isso cada referência do site</text>
+          <text class="lb" x="560" y="536">traz a nota “Como foi usada”.</text>
+          <text class="lb" x="560" y="562">Os 15 títulos em /pesquisa atendem</text>
+          <text class="lb" x="560" y="578">a todos os critérios acima.</text>
+        </svg>
+      </div>
+      <figcaption>
+        Fluxo de seleção das fontes, adaptado do modelo PRISMA 2020. Todos os
+        números mostrados são verificáveis: as 9 indicações do professor, as 5
+        fontes que já estavam no site e as 15 incluídas, conferíveis uma a uma
+        em <strong>/pesquisa</strong>. Os critérios foram reconstruídos a
+        partir das fontes incluídas — as 15 os atendem. As quantidades
+        descartadas não foram registradas na época e por isso não aparecem.
+      </figcaption>
+    </figure>
+
+    <div class="uso">
+      <span class="rot">Como usar</span>
+      Duas regras. Primeira: nunca chamem isto de “revisão sistemática” — é uma
+      <strong>adaptação do fluxo PRISMA</strong>. Vocês fizeram uma busca
+      criteriosa, não uma revisão formal com protocolo registrado, e a
+      diferença importa num projeto sobre não exagerar afirmações. Segunda: se
+      alguém perguntar quantas fontes foram descartadas, a resposta é
+      <strong>“não registramos”</strong> — dita sem rodeio e sem número
+      inventado. Um avaliador consegue conferir tudo o que está no diagrama;
+      um número estimado é a única coisa ali que ele poderia derrubar.
+    </div>
+  </section>
+
+  <!-- ============ 3 ============ -->
+  <section>
+    <h2>O falso positivo do banco de checagens</h2>
+    <p class="lead prose">
+      O erro que vocês vão narrar na live, desenhado. É o único fluxograma aqui
+      que serve como material de apoio da apresentação — e materiais de apoio
+      valem 50 pontos.
+    </p>
+
+    <figure>
+      <div class="scroller">
+        <svg viewBox="0 0 950 400" role="img"
+             aria-label="Fluxo do erro do falso positivo: ao testar portais conhecidos, o LUPA consultava o banco da IFCN pelo nome do portal e recebia checagens que apenas mencionavam aquele portal, aplicando trinta pontos negativos e derrubando a nota de confiável para requer atenção. A equipe investigou e aplicou duas correções, e o reteste voltou a pontuar corretamente.">
+          <defs>
+            <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text class="mo" x="20" y="26">O QUE ACONTECIA</text>
+
+          <rect class="bx" x="20" y="40" width="245" height="70" rx="3"/>
+          <text class="tx" x="36" y="66">A capitã testa portais</text>
+          <text class="tx" x="36" y="84">conhecidos: globo.com</text>
+          <text class="tx" x="36" y="102">e uol.com</text>
+
+          <line class="ln" x1="265" y1="75" x2="303" y2="75" marker-end="url(#a3)"/>
+
+          <rect class="bx" x="310" y="40" width="255" height="70" rx="3"/>
+          <text class="tx" x="326" y="66">O LUPA consulta o banco</text>
+          <text class="tx" x="326" y="84">da IFCN usando o</text>
+          <text class="tx" x="326" y="102">NOME do portal</text>
+
+          <line class="ln" x1="565" y1="75" x2="603" y2="75" marker-end="url(#a3)"/>
+
+          <rect class="bx" x="610" y="40" width="320" height="70" rx="3"/>
+          <text class="tx" x="626" y="66">O banco devolve checagens que</text>
+          <text class="tx" x="626" y="84">apenas MENCIONAM aquele portal —</text>
+          <text class="tx" x="626" y="102">não a notícia que a pessoa queria ver</text>
+
+          <!-- consequência -->
+          <text class="mo" x="20" y="168">CONSEQUÊNCIA</text>
+
+          <rect x="310" y="150" width="150" height="52" rx="3"
+                fill="var(--confiavel-fill)" stroke="var(--confiavel)" stroke-width="1.4"/>
+          <text x="385" y="172" text-anchor="middle" fill="#fff"
+                font-family="var(--font-display)" font-size="15" font-weight="700">82</text>
+          <text x="385" y="190" text-anchor="middle" fill="#fff"
+                font-family="var(--font-display)" font-size="11">Confiável</text>
+
+          <line class="ln" x1="465" y1="176" x2="518" y2="176" marker-end="url(#a3)"/>
+          <text class="lb" x="491" y="166" text-anchor="middle" fill="var(--suspeito)">−30 pts</text>
+
+          <rect x="525" y="150" width="175" height="52" rx="3"
+                fill="var(--atencao-fill)" stroke="var(--atencao)" stroke-width="1.4"/>
+          <text x="612" y="172" text-anchor="middle" fill="#3A2A00"
+                font-family="var(--font-display)" font-size="15" font-weight="700">52</text>
+          <text x="612" y="190" text-anchor="middle" fill="#3A2A00"
+                font-family="var(--font-display)" font-size="11">Requer atenção</text>
+
+          <text class="tx" x="720" y="180">Um jornal legítimo rebaixado</text>
+
+          <!-- ponte para a correção -->
+          <path class="ln-d" d="M 612 202 L 612 232 L 160 232 L 160 262" marker-end="url(#a3)"/>
+          <text class="lb" x="386" y="226" text-anchor="middle">a equipe estranha o resultado e investiga</text>
+
+          <!-- correções -->
+          <text class="mo" x="20" y="256">O QUE FIZEMOS</text>
+
+          <rect class="bx" x="20" y="264" width="280" height="82" rx="3"/>
+          <text class="tt" x="36" y="288">Correção 1</text>
+          <text class="tx" x="36" y="309">Consultar o banco só em</text>
+          <text class="tx" x="36" y="327">páginas de notícia, nunca</text>
+          <text class="tx" x="36" y="341" font-size="10.5">em páginas iniciais de portais</text>
+
+          <line class="ln" x1="300" y1="305" x2="338" y2="305" marker-end="url(#a3)"/>
+
+          <rect class="bx" x="345" y="264" width="280" height="82" rx="3"/>
+          <text class="tt" x="361" y="288">Correção 2</text>
+          <text class="tx" x="361" y="309">Filtro de relevância: exige</text>
+          <text class="tx" x="361" y="327">2 palavras de 5+ letras em</text>
+          <text class="tx" x="361" y="341" font-size="10.5">comum com o texto analisado</text>
+
+          <line class="ln" x1="625" y1="305" x2="663" y2="305" marker-end="url(#a3)"/>
+
+          <rect class="bx-a" x="670" y="264" width="260" height="82" rx="3"/>
+          <text class="tt" x="686" y="288">Reteste</text>
+          <text class="tx" x="686" y="309">Portais legítimos voltam</text>
+          <text class="tx" x="686" y="327">a pontuar corretamente</text>
+
+          <text class="mo-a" x="20" y="380">APRENDIZADO — UM SINAL DE ALERTA NÃO É A MESMA COISA QUE UMA PROVA</text>
+        </svg>
+      </div>
+      <figcaption>
+        O caminho do erro, sua consequência na nota e as duas correções
+        aplicadas em 1º de maio de 2026 (commits 8f8af76 e 23f109d).
+      </figcaption>
+    </figure>
+
+    <div class="uso">
+      <span class="rot">Como usar</span>
+      Este é o slide da apresentação ao vivo. As cores da nota não são
+      decoração: são <strong>as mesmas faixas do LUPA</strong> — verde de 71 a
+      100, âmbar de 31 a 70. Quem assiste entende a gravidade sem precisar de
+      explicação.
+    </div>
+  </section>
+
+  <!-- ============ 4 ============ -->
+  <section>
+    <h2>O que acontece quando alguém cola um link</h2>
+    <p class="lead prose">
+      “Explica como os componentes funcionam no seu protótipo” tirou 87. Um
+      avaliador comentou que os componentes foram mostrados superficialmente —
+      este desenho é a resposta.
+    </p>
+
+    <figure>
+      <div class="scroller">
+        <svg viewBox="0 0 780 560" role="img"
+             aria-label="Fluxo de uma análise no LUPA: o usuário cola um link, o backend dispara cinco verificações em paralelo — verificações objetivas, Gemini, VirusTotal, Wayback Machine e banco da IFCN — cujos pesos são somados e convertidos numa faixa de 0 a 100, devolvida com as justificativas.">
+          <defs>
+            <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <rect class="bx" x="290" y="20" width="200" height="50" rx="3"/>
+          <text class="tx" x="390" y="50" text-anchor="middle">Alguém cola um link</text>
+
+          <line class="ln" x1="390" y1="70" x2="390" y2="98" marker-end="url(#a4)"/>
+
+          <rect class="bx-a" x="290" y="105" width="200" height="50" rx="3"/>
+          <text class="tt" x="390" y="135" text-anchor="middle">Servidor do LUPA</text>
+
+          <text class="lb" x="500" y="135">dispara tudo ao mesmo tempo</text>
+
+          <!-- distribuição -->
+          <path class="ln" d="M 390 155 L 390 175 L 80 175 L 80 198" marker-end="url(#a4)"/>
+          <path class="ln" d="M 390 155 L 390 175 L 235 175 L 235 198" marker-end="url(#a4)"/>
+          <line class="ln" x1="390" y1="175" x2="390" y2="198" marker-end="url(#a4)"/>
+          <path class="ln" d="M 390 155 L 390 175 L 545 175 L 545 198" marker-end="url(#a4)"/>
+          <path class="ln" d="M 390 155 L 390 175 L 700 175 L 700 198" marker-end="url(#a4)"/>
+
+          <!-- camadas -->
+          <rect class="bx" x="15" y="200" width="130" height="96" rx="3"/>
+          <text class="tt" x="27" y="222" font-size="11.5">Verificações</text>
+          <text class="tt" x="27" y="236" font-size="11.5">objetivas</text>
+          <text class="tx" x="27" y="256" font-size="10.5">HTTPS, idade do</text>
+          <text class="tx" x="27" y="270" font-size="10.5">domínio, linguagem</text>
+          <text class="tx" x="27" y="284" font-size="10.5">sensacionalista</text>
+
+          <rect class="bx" x="170" y="200" width="130" height="96" rx="3"/>
+          <text class="tt" x="182" y="222" font-size="11.5">Gemini</text>
+          <text class="tx" x="182" y="242" font-size="10.5">Leitura do sentido</text>
+          <text class="tx" x="182" y="256" font-size="10.5">do texto: contradições</text>
+          <text class="tx" x="182" y="270" font-size="10.5">e apelos emocionais</text>
+          <text class="mo-a" x="182" y="288" font-size="9.5">MAIOR PESO</text>
+
+          <rect class="bx" x="325" y="200" width="130" height="96" rx="3"/>
+          <text class="tt" x="337" y="222" font-size="11.5">VirusTotal</text>
+          <text class="tx" x="337" y="242" font-size="10.5">Cruza o endereço</text>
+          <text class="tx" x="337" y="256" font-size="10.5">com 70+ antivírus</text>
+          <text class="tx" x="337" y="270" font-size="10.5">e bases de phishing</text>
+
+          <rect class="bx" x="480" y="200" width="130" height="96" rx="3"/>
+          <text class="tt" x="492" y="222" font-size="11.5">Wayback</text>
+          <text class="tx" x="492" y="242" font-size="10.5">Há quanto tempo</text>
+          <text class="tx" x="492" y="256" font-size="10.5">o site existe e se</text>
+          <text class="tx" x="492" y="270" font-size="10.5">mudou de repente</text>
+
+          <rect class="bx" x="635" y="200" width="130" height="96" rx="3"/>
+          <text class="tt" x="647" y="222" font-size="11.5">Banco IFCN</text>
+          <text class="tx" x="647" y="242" font-size="10.5">Checagens já</text>
+          <text class="tx" x="647" y="256" font-size="10.5">publicadas por</text>
+          <text class="tx" x="647" y="270" font-size="10.5">agências certificadas</text>
+
+          <!-- convergência -->
+          <path class="ln" d="M 80 296 L 80 320 L 390 320 L 390 342" marker-end="url(#a4)"/>
+          <path class="ln" d="M 235 296 L 235 320 L 390 320"/>
+          <line class="ln" x1="390" y1="296" x2="390" y2="320"/>
+          <path class="ln" d="M 545 296 L 545 320 L 390 320"/>
+          <path class="ln" d="M 700 296 L 700 320 L 390 320"/>
+
+          <rect class="bx" x="290" y="345" width="200" height="50" rx="3"/>
+          <text class="tx" x="390" y="375" text-anchor="middle">Soma dos pesos</text>
+
+          <line class="ln" x1="390" y1="395" x2="390" y2="423" marker-end="url(#a4)"/>
+
+          <!-- faixas -->
+          <rect x="90" y="428" width="180" height="42" rx="3" fill="var(--suspeito)"/>
+          <text x="180" y="454" text-anchor="middle" fill="#fff"
+                font-family="var(--font-display)" font-size="11.5" font-weight="650">0 – 30 · Suspeito</text>
+
+          <rect x="270" y="428" width="240" height="42" fill="var(--atencao-fill)"/>
+          <text x="390" y="454" text-anchor="middle" fill="#3A2A00"
+                font-family="var(--font-display)" font-size="11.5" font-weight="650">31 – 70 · Requer atenção</text>
+
+          <rect x="510" y="428" width="180" height="42" rx="3" fill="var(--confiavel-fill)"/>
+          <text x="600" y="454" text-anchor="middle" fill="#fff"
+                font-family="var(--font-display)" font-size="11.5" font-weight="650">71 – 100 · Confiável</text>
+
+          <line class="ln" x1="390" y1="470" x2="390" y2="498" marker-end="url(#a4)"/>
+
+          <rect class="bx-a" x="230" y="500" width="320" height="50" rx="3"/>
+          <text class="tt" x="390" y="522" text-anchor="middle">Nota + justificativas</text>
+          <text class="tx" x="390" y="540" text-anchor="middle" font-size="10.5">nunca a nota sozinha</text>
+        </svg>
+      </div>
+      <figcaption>
+        As cinco camadas rodam em paralelo e nenhuma decide sozinha: a nota é a
+        soma dos pesos, e sai sempre acompanhada das justificativas que a geraram.
+      </figcaption>
+    </figure>
+
+    <div class="uso">
+      <span class="rot">Como usar</span>
+      Serve para a pasta do Drive <em>e</em> para responder à arguição. Se um
+      jurado perguntar “como o LUPA decide a nota?”, este desenho responde antes
+      da frase terminar.
+    </div>
+  </section>
+
+  <!-- ============ 5 ============ -->
+  <section>
+    <h2>O ecossistema</h2>
+    <p class="lead prose">
+      O avaliador 2 destacou que o LUPA “vai além de uma ferramenta de
+      verificação, criando um ecossistema de aprendizagem”. Vale mostrar isso
+      em uma imagem só.
+    </p>
+
+    <figure>
+      <div class="scroller">
+        <svg viewBox="0 0 780 400" role="img"
+             aria-label="Mapa do ecossistema do LUPA: o analisador ao centro, cercado por cinco áreas — aprender, jogos, biblioteca, portal comunitário e modo professor.">
+          <line class="ln" x1="390" y1="200" x2="390" y2="95" opacity="0.5"/>
+          <line class="ln" x1="470" y1="185" x2="600" y2="145" opacity="0.5"/>
+          <line class="ln" x1="470" y1="225" x2="600" y2="290" opacity="0.5"/>
+          <line class="ln" x1="310" y1="225" x2="180" y2="290" opacity="0.5"/>
+          <line class="ln" x1="310" y1="185" x2="180" y2="145" opacity="0.5"/>
+
+          <rect class="bx" x="290" y="30" width="200" height="62" rx="3"/>
+          <text class="tt" x="390" y="55" text-anchor="middle">Aprender</text>
+          <text class="tx" x="390" y="75" text-anchor="middle" font-size="10.5">método SIFT, dicas, glossário</text>
+
+          <rect class="bx" x="560" y="110" width="200" height="62" rx="3"/>
+          <text class="tt" x="660" y="135" text-anchor="middle">Jogos</text>
+          <text class="tx" x="660" y="155" text-anchor="middle" font-size="10.5">Agente LUPA, Detetive, Phishing</text>
+
+          <rect class="bx" x="560" y="262" width="200" height="62" rx="3"/>
+          <text class="tt" x="660" y="287" text-anchor="middle">Modo Professor</text>
+          <text class="tx" x="660" y="307" text-anchor="middle" font-size="10.5">turmas e painel da turma</text>
+
+          <rect class="bx" x="20" y="262" width="200" height="62" rx="3"/>
+          <text class="tt" x="120" y="287" text-anchor="middle">Portal Comunitário</text>
+          <text class="tx" x="120" y="307" text-anchor="middle" font-size="10.5">boatos regionais no mapa</text>
+
+          <rect class="bx" x="20" y="110" width="200" height="62" rx="3"/>
+          <text class="tt" x="120" y="135" text-anchor="middle">Biblioteca</text>
+          <text class="tx" x="120" y="155" text-anchor="middle" font-size="10.5">livros e materiais comentados</text>
+
+          <rect class="bx-a" x="290" y="175" width="200" height="76" rx="3"/>
+          <text class="tt" x="390" y="203" text-anchor="middle" font-size="14">Analisador</text>
+          <text class="tx" x="390" y="223" text-anchor="middle" font-size="10.5">links, vídeos, imagens e textos</text>
+          <text class="tx" x="390" y="239" text-anchor="middle" font-size="10.5">nota de 0 a 100 com justificativas</text>
+
+          <text class="mo" x="20" y="380">O ANALISADOR É A PORTA DE ENTRADA — AS OUTRAS ÁREAS ENSINAM A NÃO PRECISAR DELE</text>
+        </svg>
+      </div>
+      <figcaption>
+        As cinco áreas em volta do analisador. A frase de baixo é o argumento
+        pedagógico do projeto: a ferramenta existe para formar quem a usa.
+      </figcaption>
+    </figure>
+
+    <div class="uso">
+      <span class="rot">Como usar</span>
+      Bom para abrir a apresentação e bom para a ficha do Anexo II. É o desenho
+      que explica em cinco segundos por que o LUPA não é “mais um verificador”.
+    </div>
+  </section>
+
+  <footer class="page">
+    <p class="prose" style="margin-bottom:12px">
+      <strong>Antes de usar:</strong> os detalhes de P1 e P2 vieram da página
+      <em>/evolucao</em> do próprio site — PRD, tela no Lovable, migração para o
+      Claude Code. Se a história real tiver outra ordem, me digam e eu ajusto.
+      O fluxograma da escolha da ideia é o único que depende inteiramente de
+      vocês.
+    </p>
+    <p class="prose" style="margin:0">
+      Feito para a entrega da Etapa Regional do HackaNAV 2026 · equipe do
+      Complexo Educacional Contemporâneo, Natal/RN.
+    </p>
+  </footer>
+
+</div>
