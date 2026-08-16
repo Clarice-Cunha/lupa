@@ -17,7 +17,7 @@ python docs/gerar_referencias.py
 Write-Host "Gerando o PDF dos fluxogramas..." -ForegroundColor Cyan
 python docs/gerar_fluxogramas.py
 
-foreach ($nome in @("DIARIO_DE_BORDO", "REFERENCIAS_ABNT", "COMO_LER_O_CODIGO")) {
+foreach ($nome in @("DIARIO_DE_BORDO", "REFERENCIAS_ABNT", "COMO_LER_O_CODIGO", "ANEXO_II_CONTEUDO")) {
     Write-Host "Gerando $nome.pdf..." -ForegroundColor Cyan
 
     # xurl permite quebrar URLs longas em qualquer ponto; sem ele os links
