@@ -26,11 +26,15 @@ precisam de confirmação com o professor orientador.
 | Estudante 1 | Clarice Cunha Pinto (capitã) |
 | Estudante 2 | Benjamim de Almeida das Chagas |
 | Estudante 3 | Pedro Moreno de Lima Bessa |
-| Nome do professor | Hector `[CONFERIR nome completo]` |
+| Nome do professor | Hector Gabriel Ribeiro Liberalino |
 | Tema escolhido | Soluções para o Combate à Desinformação Digital |
-| Escola | Complexo Educacional Contemporâneo — unidade Lagoa Nova `[CONFERIR]` |
+| Escola | Contemporâneo Lagoa Nova |
 | Cidade | Natal `[CONFERIR]` |
-| Estado | RN `[CONFERIR]` |
+| Estado | RN |
+
+Nome da equipe no Portal: **CB**. Região: **Nordeste**. Nota da fase anterior:
+**1760**. Todos conferidos no relatório oficial de avaliação. A cidade não
+aparece no relatório, mas a unidade Lagoa Nova fica em Natal.
 
 **Atenção ao nome do terceiro integrante.** O relatório oficial da fase
 anterior registra *Miguel Cavalcanti Filgueira*, mas o integrante real é
