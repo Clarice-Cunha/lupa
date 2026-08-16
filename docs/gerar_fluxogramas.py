@@ -68,9 +68,13 @@ def localizar_navegador() -> Path:
 
 
 def remover_blocos_uso(html: str) -> str:
-    """Remove todos os blocos <div class="uso">…</div> (orientações internas)."""
+    """Remove todos os blocos <div class="uso">…</div> (orientações internas).
+
+    O [^>]* aceita atributos extras na tag, como um style. Sem ele, um bloco
+    com qualquer atributo escaparia da limpeza e iria parar no PDF.
+    """
     return re.sub(
-        r'\n\s*<div class="uso">.*?</div>', "", html, flags=re.DOTALL
+        r'\n\s*<div class="uso"[^>]*>.*?</div>', "", html, flags=re.DOTALL
     )
 
 
@@ -86,10 +90,31 @@ def remover_secao_em_branco(html: str) -> str:
     return html[:inicio] + html[fim:]
 
 
+# Palavras que denunciam texto escrito para a equipe, não para quem vai ler o
+# PDF. Se alguma sobrar depois da limpeza, é sinal de que o texto está no lugar
+# errado: orientação interna pertence a um bloco "uso".
+MARCAS_DE_TEXTO_INTERNO = [
+    "vocês",
+    "usem ",
+    "refaçam",
+    "a banca quer",
+    "vale mostrar",
+    "tirou 87",
+]
+
+
+def avisar_sobre_texto_interno(html: str) -> None:
+    encontradas = [m for m in MARCAS_DE_TEXTO_INTERNO if m.lower() in html.lower()]
+    if encontradas:
+        print("  ATENCAO: texto voltado para a equipe sobrou no PDF ->", encontradas)
+        print('  Mova esse trecho para um bloco <div class="uso">.')
+
+
 def montar_html_para_impressao() -> str:
     html = ORIGEM.read_text(encoding="utf-8")
     html = remover_blocos_uso(html)
     html = remover_secao_em_branco(html)
+    avisar_sobre_texto_interno(html)
     restantes = html.count("<h2>")
     print(f"Fluxogramas incluidos no PDF: {restantes}")
 
