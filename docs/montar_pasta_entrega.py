@@ -94,22 +94,36 @@ DICA DE NOME DE ARQUIVO
 """,
     ),
     "04-EVOLUCAO-DO-PROTOTIPO": (
-        ["DIARIO_DE_BORDO.pdf", "FLUXOGRAMAS.pdf"],
+        [
+            "DIARIO_DE_BORDO.pdf",
+            "FLUXOGRAMAS.pdf",
+            "imagens/site/P2-01-analisador.png",
+            "imagens/site/P2-02-jogos.png",
+            "imagens/site/P2-03-modo-professor.png",
+            "imagens/site/P2-04-pesquisa-e-dados.png",
+            "imagens/site/P2-05-evolucao.png",
+            "imagens/site/P2-06-biblioteca.png",
+        ],
         """JÁ ESTÁ AQUI
   DIARIO_DE_BORDO.pdf ........ 42 marcos datados, cada um com uma
                                versão para leigos e uma nota técnica.
                                Inclui o marco do falso positivo do
                                IFCN, que é a história contada na live.
   FLUXOGRAMAS.pdf ............ 6 fluxogramas, um por página
+  P2-01 a P2-06 .............. seis telas da versão atual do site,
+                               capturadas em 1440x900
 
 AINDA FALTA
   [ ] P1-lovable-tela-inicial.png
-      A captura do primeiro protótipo. A equipe já tem esse arquivo.
+      A captura do primeiro protótipo, feita no Lovable. A equipe já
+      tem esse arquivo. É a única prova visual de que existiu um
+      "antes" — sem ela, não há comparação.
 
-  [ ] P2-versao-atual-*.png
-      Quatro ou cinco telas do site de hoje: analisador, resultado com
-      nota, jogos, modo professor. Enquadramento parecido com o da P1,
-      para a comparação ficar óbvia.
+  [ ] P2-07-resultado-de-analise.png
+      A tela de resultado de uma análise real, com a nota e as
+      justificativas. Precisa ser capturada à mão, com o servidor de
+      análise no ar. Uma análise de verdade vale mais que uma simulada,
+      e esta é a tela que prova que o protótipo funciona.
 
   [ ] PRD-original.pdf
       O documento de requisitos escrito antes de qualquer código.
@@ -250,7 +264,9 @@ def main() -> None:
             if not origem.exists():
                 ausentes.append(nome)
                 continue
-            shutil.copy2(origem, pasta / nome)
+            # O nome pode vir com subpasta (imagens/site/...), mas o destino
+            # é sempre direto dentro da subpasta da entrega
+            shutil.copy2(origem, pasta / origem.name)
             copiados += 1
 
     # O link do repositório é um arquivo de uma linha só
