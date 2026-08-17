@@ -16,7 +16,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from servidor_local import CSS_LIMPEZA, COOKIE_ACESSO, servidor_local  # noqa: E402
+from servidor_local import CSS_LIMPEZA, servidor_local  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parent.parent
 SAIDA = RAIZ / "docs" / "imagens" / "site"
@@ -43,14 +43,11 @@ def main() -> None:
             viewport={"width": LARGURA, "height": ALTURA},
             device_scale_factor=2,  # dobro da resolução, para não borrar
         )
-        contexto.add_cookies(COOKIE_ACESSO)
         pagina = contexto.new_page()
 
         print(f"Capturando {len(TELAS)} telas em {LARGURA}x{ALTURA}...")
         for rota, arquivo in TELAS.items():
             pagina.goto(f"{endereco}{rota}", wait_until="networkidle")
-            if "/acesso" in pagina.url:
-                raise SystemExit("Caiu na tela de senha — o cookie não foi aceito.")
             # As seções entram com animação; esperar evita capturar no meio dela
             pagina.wait_for_timeout(1200)
             pagina.add_style_tag(content=CSS_LIMPEZA)

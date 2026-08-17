@@ -19,7 +19,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from servidor_local import CSS_LIMPEZA, COOKIE_ACESSO, servidor_local  # noqa: E402
+from servidor_local import CSS_LIMPEZA, servidor_local  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parent.parent
 DESTINO = RAIZ / "docs" / "FICHA_TECNICA.pdf"
@@ -30,12 +30,8 @@ def main() -> None:
         print("Gerando o PDF...")
         navegador = p.chromium.launch(channel="chrome")
         contexto = navegador.new_context()
-        contexto.add_cookies(COOKIE_ACESSO)
         pagina = contexto.new_page()
         pagina.goto(f"{endereco}/ficha-tecnica", wait_until="networkidle")
-
-        if "/acesso" in pagina.url:
-            raise SystemExit("Caiu na tela de senha — o cookie não foi aceito.")
 
         # As seções entram com animação; esperar evita capturar no meio dela
         pagina.wait_for_timeout(1500)
