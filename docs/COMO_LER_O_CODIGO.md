@@ -166,8 +166,13 @@ conta de Karina Pinto, mãe da capitã da equipe, que não participou do projeto
 configuração foi corrigida quando o problema foi percebido. O registro está descrito
 também no README do repositório.
 
-A equipe usou assistentes de inteligência artificial durante o desenvolvimento, o que
-está declarado abertamente na página `/ficha-tecnica` do site. As decisões de produto —
-o que o LUPA faz, como pontua, o que recusa fazer — foram todas da equipe, e o Marco 14
-do diário de bordo é o exemplo mais claro disso: diante de uma sugestão de remover a
-consulta às agências de checagem, a equipe decidiu procurar outra saída.
+O código foi escrito com a assistência de uma inteligência artificial de programação —
+o **Claude Code**, da Anthropic — a partir das definições da equipe. A seção *Como o
+código foi escrito*, na página `/ficha-tecnica` do site, detalha a divisão: a equipe
+definiu o que o LUPA faz, as regras de pontuação, a pesquisa e o conteúdo educativo, e
+testou os resultados; a IA transformou essas decisões em código.
+
+As decisões de produto — o que o LUPA faz, como pontua, o que recusa fazer — foram todas
+da equipe, e o Marco 14 do diário de bordo é o exemplo mais claro disso: diante de uma
+sugestão de remover a consulta às agências de checagem, a equipe decidiu procurar outra
+saída.

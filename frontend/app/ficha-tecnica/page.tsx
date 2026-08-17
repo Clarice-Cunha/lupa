@@ -36,7 +36,7 @@ const EQUIPE: Membro[] = [
     papel: "Capitã da equipe e desenvolvimento",
     contribuicoes: [
       "Coordenação da equipe e responsável pelos envios oficiais da competição",
-      "Desenvolvimento da ferramenta: transformou em código as ideias definidas pela equipe",
+      "Condução do desenvolvimento da ferramenta, com assistência de IA para a escrita do código — ver a seção “Como o código foi escrito”",
       "Testes de confiabilidade do analisador — identificou o falso positivo da checagem IFCN em portais de notícia",
     ],
   },
@@ -418,6 +418,47 @@ export default function PaginaFichaTecnica() {
                 irônicos ou muito técnicos. Por isso o LUPA é ferramenta de
                 apoio à checagem — nunca substituto do julgamento humano nem
                 das agências profissionais.
+              </p>
+            </div>
+          </Secao>
+
+          {/* ---------------- Como o código foi escrito ---------------- */}
+          <Secao
+            icone={<Code2 className="h-5 w-5" />}
+            cor="text-sky-600 dark:text-sky-400"
+            corFundo="bg-sky-100 dark:bg-sky-900/40"
+            titulo="Como o código foi escrito"
+            atraso={0.27}
+          >
+            <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300">
+              <p className="text-justify">
+                O código do LUPA foi escrito com a assistência de uma
+                inteligência artificial de programação — o{" "}
+                <strong>Claude Code</strong>, da Anthropic — a partir das
+                definições da equipe. Esta seção existe porque um projeto
+                sobre confiar em informação não deveria ser vago quanto à
+                própria origem.
+              </p>
+              <p className="text-justify">
+                <strong>O que a equipe fez:</strong> escolheu o problema,
+                definiu o que o LUPA faz e o que ele se recusa a fazer,
+                decidiu as regras de pontuação — as faixas, o início em 50,
+                quais verificações entram e quanto cada uma pesa —, fez a
+                pesquisa que embasa o projeto, escreveu o conteúdo educativo,
+                testou os resultados e pediu correção quando a nota não
+                correspondia ao que via. Foi assim que o falso positivo das
+                agências de checagem apareceu.
+              </p>
+              <p className="text-justify">
+                <strong>O que a IA fez:</strong> transformou essas decisões em
+                código que funciona e explicou o que cada parte faz. Ela não
+                decidiu nenhuma regra do LUPA.
+              </p>
+              <p className="text-justify">
+                Programar com assistência de IA é prática corrente no
+                desenvolvimento de software hoje. Declaramos mesmo assim,
+                porque a alternativa seria pedir ao leitor uma confiança que o
+                próprio LUPA ensina a não dar.
               </p>
             </div>
           </Secao>
