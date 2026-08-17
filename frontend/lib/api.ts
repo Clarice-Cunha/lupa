@@ -270,6 +270,14 @@ export async function listarSugestoes(): Promise<Sugestao[]> {
   return (await resposta.json()) as Sugestao[];
 }
 
+/** Confere a chave de moderação. Devolve true só se o backend aceitar. */
+export async function verificarChaveModeracao(chave: string): Promise<boolean> {
+  const resposta = await fetch(`${API_URL}/moderacao/verificar`, {
+    headers: { "X-Moderacao-Chave": chave },
+  });
+  return resposta.ok;
+}
+
 export async function listarSugestoesInternas(chave: string): Promise<SugestaoInterno[]> {
   const resposta = await fetch(`${API_URL}/sugestoes/interno`, {
     headers: { "X-Moderacao-Chave": chave },

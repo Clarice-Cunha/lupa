@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ShieldCheck, Lock, Mail, Copy, Check, Search, GraduationCap, Loader2, CheckCircle2, XCircle, MessageCircle, Phone } from "lucide-react";
 import {
+  verificarChaveModeracao,
   type Boato,
   type StatusBoato,
   listarBoatos,
@@ -691,6 +692,8 @@ export default function PaginaModeracao() {
   const [chaveDigitada, setChaveDigitada] = useState("");
   const [chave, setChave] = useState("");
   const [autenticado, setAutenticado] = useState(false);
+  const [verificando, setVerificando] = useState(false);
+  const [erroLogin, setErroLogin] = useState<string | null>(null);
 
   const [aba, setAba] = useState<"boatos" | "sugestoes" | "turmas" | "avaliacoes" | "contatos">("boatos");
 
@@ -776,11 +779,27 @@ export default function PaginaModeracao() {
     }
   }, [autenticado, carregar, carregarSugestoes, carregarAvaliacoes, carregarContatos, chave]);
 
-  function entrar(e: { preventDefault(): void }) {
+  async function entrar(e: { preventDefault(): void }) {
     e.preventDefault();
-    if (chaveDigitada.trim()) {
-      setChave(chaveDigitada.trim());
-      setAutenticado(true);
+    const digitada = chaveDigitada.trim();
+    if (!digitada) return;
+
+    // A senha é conferida pelo backend, não aqui. Verificar no navegador seria
+    // inútil: qualquer pessoa consegue ler e alterar o código que roda na
+    // própria máquina. Quem guarda o segredo é o servidor.
+    setVerificando(true);
+    setErroLogin(null);
+    try {
+      if (await verificarChaveModeracao(digitada)) {
+        setChave(digitada);
+        setAutenticado(true);
+      } else {
+        setErroLogin("Chave incorreta.");
+      }
+    } catch {
+      setErroLogin("Não foi possível falar com o servidor. Tente de novo.");
+    } finally {
+      setVerificando(false);
     }
   }
 
@@ -833,11 +852,19 @@ export default function PaginaModeracao() {
               autoFocus
               className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
             />
+            {erroLogin && (
+              <p className="flex items-center gap-2 text-sm text-rose-600 dark:text-rose-400">
+                <XCircle className="h-4 w-4 shrink-0" />
+                {erroLogin}
+              </p>
+            )}
             <button
               type="submit"
-              className="w-full rounded-xl bg-indigo-600 py-3 text-sm font-semibold text-white hover:bg-indigo-700 transition"
+              disabled={verificando}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Entrar
+              {verificando && <Loader2 className="h-4 w-4 animate-spin" />}
+              {verificando ? "Conferindo..." : "Entrar"}
             </button>
           </form>
         </div>

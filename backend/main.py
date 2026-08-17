@@ -488,6 +488,20 @@ def conferir_chave_moderacao(chave_recebida: str) -> None:
         raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
 
 
+@app.get("/moderacao/verificar")
+def endpoint_verificar_chave(
+    x_moderacao_chave: str = Header(default=""),
+) -> dict[str, bool]:
+    """Confere a chave sem devolver dado nenhum.
+
+    Existe para o painel poder recusar a senha errada na hora de entrar. Sem
+    isso, a tela de login só conseguiria checar se o campo não está vazio, e a
+    senha errada só apareceria depois, como falha ao carregar cada aba.
+    """
+    conferir_chave_moderacao(x_moderacao_chave)
+    return {"ok": True}
+
+
 @app.patch("/boatos/{id}", response_model=Boato)
 def endpoint_atualizar_boato(
     id: str,
