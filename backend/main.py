@@ -460,9 +460,10 @@ def endpoint_criar_boato(request: Request, entrada: BoatoEntrada) -> Boato:
 # Chave de acesso ao painel de moderação.
 #
 # Sem valor padrão, de propósito. Uma senha escrita aqui como reserva vira
-# senha pública no instante em que o repositório abre — foi exatamente o que
-# aconteceu em 16/08/2026 com o antigo "lupa2026", que continuou valendo em
-# produção porque a variável nunca havia sido configurada.
+# senha pública no instante em que o repositório abre — foi o que aconteceu em
+# 16/08/2026 com o antigo "lupa2026". A variável existia no Render, mas com o
+# mesmo valor do código, então o padrão nunca chegou a ser substituído: ele
+# apenas foi copiado. Um padrão conveniente é um padrão que ninguém troca.
 #
 # Se MODERACAO_CHAVE não estiver definida no ambiente, nenhuma requisição é
 # aceita. Um painel que para de funcionar é um problema visível, que alguém
