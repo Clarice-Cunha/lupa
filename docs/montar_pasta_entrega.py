@@ -276,12 +276,6 @@ Endereço do site: https://lupa-clarice-cunha-s-projects.vercel.app
 
 CONFERENCIAS_FINAIS = """[ ] A pasta abre em janela anônima, sem estar logado no Google
 [ ] A pasta foi compartilhada com projetos@naveavela.com.br
-[ ] Abrir https://lupa-lilac.vercel.app em janela anônima e confirmar
-    que o site entra direto, sem pedir senha (o portão foi removido
-    em 16/08/2026; falta só confirmar que a Vercel publicou)
-[ ] Conferir se MODERACAO_CHAVE está configurada no painel do Render.
-    Sem ela o backend usa a senha que está escrita no código, e o
-    repositório é público desde 16/08/2026.
 [ ] O vídeo foi inserido no slide 6 da apresentação
 [ ] O Anexo II foi preenchido e salvo em PDF
 [ ] Quem envia é a capitã, pelo Portal Nave a Vela
@@ -293,6 +287,16 @@ mais comum.
 
 Prazo de envio: 17 a 20 de agosto de 2026
 Lives de apresentação: 24 a 28 de agosto de 2026
+
+================================================================
+JÁ RESOLVIDO EM 16/08/2026 — não precisa refazer
+
+  [x] Repositório do GitHub tornado público
+  [x] Senha de acesso ao site removida (o site abre para qualquer um)
+  [x] Chave do painel de moderação trocada no Render. A antiga estava
+      escrita no código e virou pública junto com o repositório.
+  [x] Formulário do painel passou a conferir a senha no servidor.
+      Antes ele só verificava se o campo não estava vazio.
 """
 
 
