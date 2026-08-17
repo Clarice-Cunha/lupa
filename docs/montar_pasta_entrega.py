@@ -276,7 +276,12 @@ Endereço do site: https://lupa-lilac.vercel.app
 
 CONFERENCIAS_FINAIS = """[ ] A pasta abre em janela anônima, sem estar logado no Google
 [ ] A pasta foi compartilhada com projetos@naveavela.com.br
-[ ] A senha do site foi liberada
+[ ] Abrir https://lupa-lilac.vercel.app em janela anônima e confirmar
+    que o site entra direto, sem pedir senha (o portão foi removido
+    em 16/08/2026; falta só confirmar que a Vercel publicou)
+[ ] Conferir se MODERACAO_CHAVE está configurada no painel do Render.
+    Sem ela o backend usa a senha que está escrita no código, e o
+    repositório é público desde 16/08/2026.
 [ ] O vídeo foi inserido no slide 6 da apresentação
 [ ] O Anexo II foi preenchido e salvo em PDF
 [ ] Quem envia é a capitã, pelo Portal Nave a Vela
