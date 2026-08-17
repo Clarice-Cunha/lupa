@@ -9,6 +9,7 @@ Depois abra no navegador:
 """
 
 import os
+import secrets
 import tempfile
 import time
 
@@ -457,8 +458,33 @@ def endpoint_criar_boato(request: Request, entrada: BoatoEntrada) -> Boato:
 
 
 # Chave de acesso ao painel de moderação.
-# Configure MODERACAO_CHAVE no arquivo .env para um valor secreto em produção.
-_MODERACAO_CHAVE = os.getenv("MODERACAO_CHAVE", "lupa2026")
+#
+# Sem valor padrão, de propósito. Uma senha escrita aqui como reserva vira
+# senha pública no instante em que o repositório abre — foi exatamente o que
+# aconteceu em 16/08/2026 com o antigo "lupa2026", que continuou valendo em
+# produção porque a variável nunca havia sido configurada.
+#
+# Se MODERACAO_CHAVE não estiver definida no ambiente, nenhuma requisição é
+# aceita. Um painel que para de funcionar é um problema visível, que alguém
+# corrige; um painel aberto ao mundo não avisa ninguém.
+_MODERACAO_CHAVE = os.getenv("MODERACAO_CHAVE", "")
+
+
+def conferir_chave_moderacao(chave_recebida: str) -> None:
+    """Interrompe a requisição se a chave não conferir.
+
+    A comparação usa secrets.compare_digest, que leva o mesmo tempo para
+    qualquer chave errada. O operador == comum pode parar no primeiro
+    caractere diferente, e essa diferença de tempo, medida muitas vezes,
+    permite descobrir a senha caractere por caractere.
+    """
+    if not _MODERACAO_CHAVE:
+        raise HTTPException(
+            status_code=503,
+            detail="Moderação indisponível: MODERACAO_CHAVE não está configurada.",
+        )
+    if not secrets.compare_digest(chave_recebida, _MODERACAO_CHAVE):
+        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
 
 
 @app.patch("/boatos/{id}", response_model=Boato)
@@ -471,8 +497,7 @@ def endpoint_atualizar_boato(
 
     Requer o cabeçalho HTTP 'X-Moderacao-Chave' com a senha configurada.
     """
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    conferir_chave_moderacao(x_moderacao_chave)
     try:
         return atualizar_boato(id, atualizacao)
     except ValueError as e:
@@ -495,8 +520,7 @@ def endpoint_listar_validacoes(
 
     Requer o cabeçalho 'X-Moderacao-Chave'.
     """
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    conferir_chave_moderacao(x_moderacao_chave)
     try:
         return listar_validacoes()
     except Exception as e:
@@ -513,8 +537,7 @@ def endpoint_aprovar_validacao(
 
     Requer o cabeçalho 'X-Moderacao-Chave'.
     """
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    conferir_chave_moderacao(x_moderacao_chave)
     try:
         return aprovar_validacao(id, dados.aprovado)
     except ValueError as e:
@@ -590,8 +613,7 @@ def endpoint_listar_sugestoes_internas(
     x_moderacao_chave: str = Header(default=""),
 ) -> list[SugestaoInterno]:
     """Lista sugestões com email — uso exclusivo do painel de moderação."""
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    conferir_chave_moderacao(x_moderacao_chave)
     return listar_sugestoes_internas()
 
 
@@ -619,8 +641,7 @@ def endpoint_responder_sugestao(
     Requer o cabeçalho 'X-Moderacao-Chave'. A resposta fica visível
     publicamente na página de colaboração.
     """
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    conferir_chave_moderacao(x_moderacao_chave)
     try:
         return responder_sugestao(id, dados.resposta)
     except ValueError as e:
@@ -698,8 +719,7 @@ def endpoint_buscar_turmas(
     Permite recuperar o código de uma turma quando o professor entra em contato.
     Retorna código público — nunca a chave de acesso privada.
     """
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=403, detail="Chave de moderação incorreta.")
+    conferir_chave_moderacao(x_moderacao_chave)
     try:
         return buscar_turmas(nome_professor, nome_turma)
     except Exception as e:
@@ -718,8 +738,7 @@ def endpoint_listar_contatos(
 
     Exclusivo para a equipe LUPA (requer X-Moderacao-Chave).
     """
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    conferir_chave_moderacao(x_moderacao_chave)
     try:
         return listar_contatos()
     except Exception as e:
@@ -749,8 +768,7 @@ def endpoint_atualizar_contato(
 
     Requer o cabeçalho 'X-Moderacao-Chave'.
     """
-    if x_moderacao_chave != _MODERACAO_CHAVE:
-        raise HTTPException(status_code=401, detail="Chave de moderação inválida.")
+    conferir_chave_moderacao(x_moderacao_chave)
     try:
         return atualizar_contato(id, dados)
     except ValueError as e:

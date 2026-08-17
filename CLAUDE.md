@@ -20,7 +20,8 @@ Site educacional que analisa links (sites, YouTube, uploads de vídeo) e retorna
 
 **Princípio central**: o LUPA **não afirma verdade absoluta** — é apoio à checagem e ao pensamento crítico.
 
-O PRD completo está em `docs/PRD.pdf` (documento de referência original, datado de 07/04/2026).
+O PRD (documento de referência original, datado de 07/04/2026) **não está neste
+repositório** — ele fica com a equipe, no Drive do projeto.
 O plano de desenvolvimento está em `plan.md`.
 
 ## Stack definida

@@ -7,7 +7,7 @@ O LUPA recebe um link de site, um vídeo do YouTube, uma imagem, um arquivo de v
 **Público-alvo:** estudantes, professores, famílias e comunidade escolar.
 
 - **Site:** https://lupa-clarice-cunha-s-projects.vercel.app
-- **API:** https://lupa-api.onrender.com
+- **API:** https://lupa-backend.onrender.com (documentação interativa em `/docs`)
 
 ---
 

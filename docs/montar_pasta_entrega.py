@@ -271,7 +271,7 @@ uma pontuação de confiabilidade de 0 a 100, sempre acompanhada das
 justificativas que produziram aquela nota. O projeto não afirma
 verdade absoluta: ele é apoio à checagem e ao pensamento crítico.
 
-Endereço do site: https://lupa-lilac.vercel.app
+Endereço do site: https://lupa-clarice-cunha-s-projects.vercel.app
 """
 
 CONFERENCIAS_FINAIS = """[ ] A pasta abre em janela anônima, sem estar logado no Google
