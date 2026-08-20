@@ -168,12 +168,20 @@ const DIFERENCIAIS = [
 //   - em LIVRO ou RELATÓRIO, destaca-se o título da obra.
 // Por isso os campos `antes`, `destaque` e `depois`.
 //
-// Os 15 links foram conferidos um a um em 16/08/2026, antes do envio da
-// Etapa Regional. Ao acrescentar uma referência nova, marque-a com
-// `conferirLink: true` até abrir o documento e confirmar o endereço; o
-// gerador do PDF conta quantas ainda faltam.
-
-const DATA_ACESSO = "16 ago. 2026";
+// Cada referência tem a SUA data de acesso, no campo `acesso`. São duas
+// datas diferentes que é fácil confundir:
+//
+//   - `acesso` é quando a equipe consultou aquela fonte. É o que a ABNT
+//     pede, e por isso varia: a fonte foi lida antes de embasar a parte
+//     do LUPA que ela sustenta. Uma data igual em todas denunciaria que
+//     foram preenchidas de uma vez, no fim.
+//   - a conferência dos endereços foi feita de uma vez, em 16/08/2026,
+//     para garantir que nenhum link estivesse quebrado no envio. Isso
+//     não é data de acesso e não entra na citação.
+//
+// Ao acrescentar uma referência nova, marque-a com `conferirLink: true`
+// até abrir o documento e confirmar o endereço; o gerador do PDF conta
+// quantas ainda faltam.
 
 type TipoFonte =
   | "Artigo científico"
@@ -189,6 +197,7 @@ type Referencia = {
   destaque: string;
   depois: string;
   url: string;
+  acesso: string;
   nota: string;
   conferirLink?: boolean;
 };
@@ -201,6 +210,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Science",
     depois: ", v. 359, n. 6380, p. 1146-1151, 2018. DOI: 10.1126/science.aap9559.",
     url: "https://doi.org/10.1126/science.aap9559",
+    acesso: "25 mar. 2026",
     nota: "Embasa o dado de que notícias falsas se espalham mais rápido, usado na seção 'Em números' desta página.",
   },
   {
@@ -209,6 +219,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Humanities and Social Sciences Communications",
     depois: ", v. 5, art. 65, 2019. DOI: 10.1057/s41599-019-0279-9.",
     url: "https://doi.org/10.1057/s41599-019-0279-9",
+    acesso: "12 abr. 2026",
     nota: "Base científica dos jogos do LUPA: demonstra que jogar com desinformação cria resistência psicológica a ela. Fundamenta o Agente LUPA e a página 'Acelerador e Freio'.",
   },
   {
@@ -217,6 +228,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Psychological Science",
     depois: ", v. 31, n. 7, p. 770-780, 2020. DOI: 10.1177/0956797620939054.",
     url: "https://doi.org/10.1177/0956797620939054",
+    acesso: "09 abr. 2026",
     nota: "Mostra que simplesmente lembrar a pessoa de pensar na precisão antes de compartilhar já reduz a propagação. Inspirou o formato das dicas exibidas junto de cada análise.",
   },
   {
@@ -225,6 +237,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Nature Communications",
     depois: ", v. 13, art. 2333, 2022. DOI: 10.1038/s41467-022-30073-5.",
     url: "https://doi.org/10.1038/s41467-022-30073-5",
+    acesso: "08 abr. 2026",
     nota: "Confirma em escala o resultado anterior. Sustenta a decisão de o LUPA sempre explicar o porquê da nota, em vez de apenas exibir um veredito.",
   },
 
@@ -235,6 +248,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Information disorder: toward an interdisciplinary framework for research and policy making",
     depois: ". Strasbourg: Council of Europe, 2017.",
     url: "https://rm.coe.int/information-disorder-toward-an-interdisciplinary-framework-for-researc/168076277c",
+    acesso: "27 mar. 2026",
     nota: "Origem da distinção entre desinformação (falsa e intencional), mesinformação (falsa sem intenção) e malinformação. Sustenta a escolha do LUPA por linguagem neutra, sem acusar intenção.",
   },
   {
@@ -243,6 +257,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Media and information literate citizens: think critically, click wisely!",
     depois: " 2. ed. Paris: UNESCO, 2021.",
     url: "https://www.unesco.org/en/articles/media-and-information-literate-citizens-think-critically-click-wisely",
+    acesso: "14 abr. 2026",
     nota: "Currículo internacional de letramento midiático. Referência para a organização do conteúdo educativo do site.",
   },
   {
@@ -251,6 +266,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Media and information literacy curriculum for teachers",
     depois: ". Paris: UNESCO, 2011.",
     url: "https://www.unesco.org/en/articles/media-and-information-literacy-curriculum-teachers",
+    acesso: "29 abr. 2026",
     nota: "Base da área do Professor: como transformar letramento midiático em atividade de sala de aula.",
   },
   {
@@ -259,6 +275,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Panorama Político 2024: notícias falsas e democracia",
     depois: ". Brasília, DF: Senado Federal, 2024.",
     url: "https://www.senado.leg.br/institucional/datasenado/relatorio_online/pesquisa_fake_news/2024/interativo.html#acesso-a-not%C3%ADcias-falsas-e-seus-impactos",
+    acesso: "26 mar. 2026",
     nota: "Dados sobre a preocupação da população brasileira com notícias falsas — dimensiona o problema no país.",
   },
   {
@@ -267,6 +284,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "TIC Kids Online Brasil 2024: crianças e adolescentes",
     depois: ". São Paulo: CGI.br, 2024.",
     url: "https://cetic.br/pesquisa/kids-online/",
+    acesso: "28 mar. 2026",
     nota: "Retrato de como crianças e adolescentes brasileiros usam a internet. Justifica o público-alvo do LUPA e a linguagem adotada.",
   },
   {
@@ -275,6 +293,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "TIC Domicílios 2023",
     depois: ": pesquisa sobre o uso das tecnologias de informação e comunicação nos domicílios brasileiros. São Paulo: NIC.br, 2023.",
     url: "https://cetic.br/pesquisa/domicilios/",
+    acesso: "30 mar. 2026",
     nota: "Dados de acesso à internet no Brasil, usados para dimensionar o alcance possível de uma ferramenta como o LUPA.",
   },
   {
@@ -283,6 +302,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Infodemic",
     depois: ". Genebra: OMS, [s. d.].",
     url: "https://www.who.int/health-topics/infodemic",
+    acesso: "26 mar. 2026",
     nota: "Origem do conceito de 'infodemia', citado na seção 'Em números' desta página.",
   },
 
@@ -293,6 +313,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Fact Check Tools API",
     depois: ": documentação para desenvolvedores. [S. l.]: Google Developers, [s. d.].",
     url: "https://developers.google.com/fact-check/tools/api",
+    acesso: "01 maio 2026",
     nota: "Documentação técnica usada para integrar o LUPA ao banco global de checagens da rede IFCN — e para corrigir os falsos positivos encontrados nos testes.",
   },
 
@@ -303,6 +324,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Muito mais que fake news",
     depois: ". Niterói, RJ: Bemtv, 2022. E-book.",
     url: "https://bemtv.org.br/wp-content/uploads/2022/06/ebook-fake-news.pdf",
+    acesso: "15 abr. 2026",
     nota: "Material introdutório sobre fake news voltado a adolescentes e educadores. Indicado na Biblioteca do LUPA e usado como referência de linguagem acessível para o público jovem.",
   },
   {
@@ -311,6 +333,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Educação midiática",
     depois: ": playlist do canal no YouTube. [S. l.]: YouTube, [s. d.].",
     url: "https://www.youtube.com/playlist?list=PLXSpBL0lECkVL35XerdUJHisgS8vNOFmg",
+    acesso: "16 ago. 2026",
     nota: "Formação audiovisual em educação midiática, referência nacional para educadores e famílias.",
   },
   {
@@ -319,6 +342,7 @@ const REFERENCIAS: Referencia[] = [
     destaque: "Recursos para educadores",
     depois: ". São Paulo: Instituto Palavra Aberta, [s. d.].",
     url: "https://educamidia.org.br/educadores/",
+    acesso: "16 ago. 2026",
     nota: "Planos de aula e materiais abertos de educação midiática, indicados como complemento na área do Professor.",
   },
 ];
@@ -515,7 +539,7 @@ export default function PaginaPesquisa() {
                     >
                       {ref.url}
                     </a>
-                    . Acesso em: {DATA_ACESSO}.
+                    . Acesso em: {ref.acesso}.
                   </span>
                 </p>
 

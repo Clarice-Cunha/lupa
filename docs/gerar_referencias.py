@@ -43,13 +43,13 @@ def extrair_campo(bloco: str, campo: str) -> str:
     return limpar(achado.group(1)) if achado else ""
 
 
-def extrair_referencias(codigo: str) -> tuple[list[dict], str]:
-    """Devolve a lista de referências e a data de acesso declarada na página."""
-    data_acesso = extrair_campo(codigo, "const DATA_ACESSO")
-    if not data_acesso:
-        achado = re.search(rf"DATA_ACESSO\s*=\s*{STRING}", codigo)
-        data_acesso = limpar(achado.group(1)) if achado else "(data não encontrada)"
+def extrair_referencias(codigo: str) -> list[dict]:
+    """Devolve a lista de referências, cada uma com a sua data de acesso.
 
+    A data é de cada fonte, não da lista: a ABNT pede quando aquele documento
+    foi consultado, e cada um foi consultado antes da parte do LUPA que ele
+    embasou.
+    """
     inicio = codigo.index("const REFERENCIAS: Referencia[] = [")
     fim = codigo.index("\n];", inicio)
     bloco = codigo[inicio:fim]
@@ -67,14 +67,15 @@ def extrair_referencias(codigo: str) -> tuple[list[dict], str]:
                 "destaque": extrair_campo(parte, "destaque"),
                 "depois": extrair_campo(parte, "depois"),
                 "url": extrair_campo(parte, "url").strip(),
+                "acesso": extrair_campo(parte, "acesso").strip(),
                 "nota": extrair_campo(parte, "nota").strip(),
                 "conferir": "conferirLink: true" in parte,
             }
         )
-    return referencias, data_acesso
+    return referencias
 
 
-def montar_citacao(ref: dict, data_acesso: str) -> str:
+def montar_citacao(ref: dict) -> str:
     """Monta a referência no formato ABNT NBR 6023.
 
     O elemento em negrito muda conforme o tipo de obra: em artigo de periódico
@@ -86,12 +87,12 @@ def montar_citacao(ref: dict, data_acesso: str) -> str:
     citacao = re.sub(r"\s+", " ", citacao).strip()
     # A URL entre < > vira um link de verdade no PDF — e só assim o LaTeX
     # consegue quebrá-la no fim da linha em vez de estourar a margem
-    return f"{citacao} Disponível em: <{ref['url']}>. Acesso em: {data_acesso}."
+    return f"{citacao} Disponível em: <{ref['url']}>. Acesso em: {ref['acesso']}."
 
 
 def gerar_markdown() -> str:
     codigo = ORIGEM.read_text(encoding="utf-8")
-    referencias, data_acesso = extrair_referencias(codigo)
+    referencias = extrair_referencias(codigo)
 
     por_tipo: dict[str, list[dict]] = {}
     for ref in referencias:
@@ -104,7 +105,7 @@ def gerar_markdown() -> str:
         "---\n",
         'title: "Referências do LUPA"\n',
         'subtitle: "Fundamentação teórica do projeto — HackaNAV 2026, Etapa Regional"\n',
-        f'date: "Acesso em {data_acesso}"\n',
+        'date: "Links conferidos em 16 ago. 2026"\n',
         "lang: pt-BR\n",
         "---\n\n",
         f"São **{len(referencias)} fontes** distribuídas em **{len(tipos)} formatos "
@@ -123,7 +124,7 @@ def gerar_markdown() -> str:
     for tipo in tipos:
         linhas.append(f"\n## {tipo}\n")
         for ref in por_tipo[tipo]:
-            linhas.append(f"\n{montar_citacao(ref, data_acesso)}\n")
+            linhas.append(f"\n{montar_citacao(ref)}\n")
             linhas.append(f"\n> **Como foi usada:** {ref['nota']}\n")
             if ref["conferir"]:
                 # Sem emoji: a fonte usada no PDF não tem o desenho e ele
