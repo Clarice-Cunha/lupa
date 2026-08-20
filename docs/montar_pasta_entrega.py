@@ -110,6 +110,9 @@ DESCRICOES: dict[str, str] = {
     "APRESENTACAO_REGIONAL_LUPA.pptx": (
         "Os slides da apresentação ao vivo, no modelo oficial do evento."
     ),
+    "APRESENTACAO_REGIONAL_LUPA.pdf": (
+        "Os mesmos slides em PDF, para leitura sem PowerPoint."
+    ),
     "ANEXO_II_CONTEUDO.pdf": (
         "O conteúdo de cada campo do Anexo II, em texto corrido."
     ),
@@ -232,7 +235,11 @@ respostas prontas para perguntas da avaliação — entregá-los seria
 mostrar o roteiro antes da pergunta.""",
     ),
     "07-APRESENTACAO": (
-        ["APRESENTACAO_REGIONAL_LUPA.pptx", "ANEXO_II_CONTEUDO.pdf"],
+        [
+            "APRESENTACAO_REGIONAL_LUPA.pptx",
+            "APRESENTACAO_REGIONAL_LUPA.pdf",
+            "ANEXO_II_CONTEUDO.pdf",
+        ],
         "Os slides da apresentação ao vivo e o conteúdo do Anexo II.",
         """[ ] Inserir o vídeo da etapa anterior no slide 6
     Pelo menu Inserir > Vídeo, colando a URL. Não dá para fazer por
