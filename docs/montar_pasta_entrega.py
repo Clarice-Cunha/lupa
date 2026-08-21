@@ -82,6 +82,16 @@ DESCRICOES: dict[str, str] = {
     "P2-04-pesquisa-e-dados.png": "Etapa P2 — a página de pesquisa e referências.",
     "P2-05-evolucao.png": "Etapa P2 — a linha do tempo do projeto.",
     "P2-06-biblioteca.png": "Etapa P2 — a biblioteca de conteúdo educativo.",
+    "P2-07-Análise.png": (
+        "Etapa P2 — o resultado de uma análise real, com a pontuação e as "
+        "justificativas que a produziram."
+    ),
+    "P2-08-Referências.png": "Etapa P2 — a lista de referências do projeto.",
+    "P2-09-Colaborações.png": "Etapa P2 — o canal aberto para contribuições.",
+    "Foto 2 - Rascunhos do desenvolvimento do LUPA.JPG": (
+        "Rascunhos feitos à mão durante o desenvolvimento."
+    ),
+    "Foto 4 - Equipe CB.jpeg": "Os três integrantes da equipe.",
     "P2-07-resultado-de-analise.png": (
         "Etapa P2 — o resultado de uma análise real, com a pontuação e as "
         "justificativas que a produziram."
@@ -337,12 +347,17 @@ def escrever_leia_me(pasta: Path, subpasta: str, resumo: str) -> None:
         if item.is_file() and item.name != "LEIA-ME.txt"
     ]
 
-    partes = [subpasta, "=" * len(subpasta), "", textwrap.fill(resumo, width=LARGURA)]
-    if presentes:
-        partes.append("")
-        partes += [bloco_do_arquivo(nome) for nome in ordenar(presentes)]
+    destino = pasta / "LEIA-ME.txt"
+    if not presentes:
+        # O resumo descreve o que a pasta deveria conter. Numa pasta vazia
+        # isso vira promessa: quem abre o LEIA-ME nao encontra o que ele diz.
+        destino.unlink(missing_ok=True)
+        print(f"  ATENCAO: {subpasta} esta vazia — LEIA-ME removido")
+        return
 
-    (pasta / "LEIA-ME.txt").write_text("\n".join(partes), encoding="utf-8-sig")
+    partes = [subpasta, "=" * len(subpasta), "", textwrap.fill(resumo, width=LARGURA), ""]
+    partes += [bloco_do_arquivo(nome) for nome in ordenar(presentes)]
+    destino.write_text("\n".join(partes), encoding="utf-8-sig")
 
 
 def escrever_checklist() -> None:
